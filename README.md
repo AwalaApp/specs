@@ -11,13 +11,13 @@ The main specs are:
 
 _Cargo relay networks_ (CRNs) can be established with one of the following _bindings_. They are the transport medium for gateways to exchange _cargoes_ through a _relayer_.
 
-- [RS-004 (CoSocket)](rs004-cosocket.md): Cargo relay over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the recommended way to establish a CRN.
+- [RS-004 (CoSocket)](rs004-cosocket.md): Cargo relay over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the most efficient way to establish a CRN.
 - [RS-006 (CoHTTP)](rs006-cohttp.md): Cargo relay over HTTP. An alternative to CoSocket, to lower the barrier to adopt Relaynet.
 - [RS-008 (CogRPC)](rs008-cogrpc.md): Cargo relay over gRPC. Another alternative to CoSocket, to lower the barrier to adopt Relaynet.
 
 _Parcel delivery networks_ (PDNs) can be established with one of the following _bindings_. They are the transport medium for an endpoint and a gateway to exchange _parcels_.
 
-- [RS-005 (PoSocket)](rs005-posocket.md): Parcel delivery over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the recommended way to establish a PDN.
+- [RS-005 (PoSocket)](rs005-posocket.md): Parcel delivery over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the most efficient way to establish a PDN.
 - [RS-007 (PoHTTP)](rs007-pohttp.md): Parcel delivery over HTTP. An alternative to PoSocket, to lower the barrier to adopt Relaynet.
 - [RS-009 (PogRPC)](rs009-pogrpc.md): Parcel delivery over gRPC. Another alternative to CoSocket, to lower the barrier to adopt Relaynet.
 
