@@ -19,6 +19,6 @@ _Parcel delivery networks_ (PDNs) can be established with one of the following _
 
 - [RS-005 (PoSocket)](rs005-posocket.md): Parcel delivery over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the most efficient way to establish a PDN.
 - [RS-007 (PoHTTP)](rs007-pohttp.md): Parcel delivery over HTTP. An alternative to PoSocket, to lower the barrier to adopt Relaynet.
-- [RS-009 (PogRPC)](rs009-pogrpc.md): Parcel delivery over gRPC. Another alternative to CoSocket, to lower the barrier to adopt Relaynet.
+- [RS-009 (PogRPC)](rs009-pogrpc.md): Parcel delivery over gRPC. Another alternative to PoSocket, to lower the barrier to adopt Relaynet.
 
 Finally, [RS-010](rs010-pdn-browser.md) defines a JavaScript interface that browsers or browser extensions can expose to make it easier and safer for client-side apps to send and receive parcels.
