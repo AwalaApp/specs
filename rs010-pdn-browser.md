@@ -2,6 +2,7 @@
 
 - Id: RS-010.
 - Status: Placeholder.
+- Type: Implementation.
 
 ## Abstract
 

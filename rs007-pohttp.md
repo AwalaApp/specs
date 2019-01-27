@@ -2,5 +2,6 @@
 
 - Id: RS-007.
 - Status: Placeholder.
+- Type: Implementation.
 
 ## Abstract

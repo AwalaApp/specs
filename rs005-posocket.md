@@ -2,6 +2,7 @@
 
 - Id: RS-005.
 - Status: Working draft.
+- Type: Implementation.
 
 ## Abstract
 
