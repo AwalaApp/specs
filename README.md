@@ -7,7 +7,7 @@ The main specs are:
 - [RS-000 (Relaynet Core)](rs000-core.md) defines the foundation of the protocol suite.
 - [RS-001 (RAMF)](rs001-ramf.md) defines the _Relaynet Abstract Message Format_, a binary format used to serialize _parcels_ and _cargoes_ -- the two types of messages transported on Relaynet.
 - [RS-002 (Relaynet PKI)](rs002-rpki.md) defines how to use the certificates for endpoints and gateways.
-- [RS-003 (Key Agreement)](rs003-key-agreement.md) defines an optional key agreement protocol to establish and protect sessions between two gateways or two endpoints.
+- [RS-003 (Key Agreement)](rs003-key-agreement.md) defines the key agreement protocol to establish and protect sessions between two gateways or two endpoints.
 
 _Cargo relay networks_ (CRNs) can be established with one of the following _bindings_. They are the transport medium for gateways to exchange _cargoes_ through a _relayer_.
 
