@@ -1,4 +1,4 @@
-# Service Integration Levels
+# Service Integration Scale
 
 - Id: RS-012.
 - Status: Working draft.
@@ -6,7 +6,7 @@
 
 ## Abstract
 
-This document describes the different ways in which Relaynet can be integrated in a centralised or decentralised service.
+This document categorizes the degrees to which Relaynet can be integrated in a centralised or decentralised service.
 
 ## Categorization
 
