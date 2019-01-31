@@ -1,4 +1,4 @@
-# Relaynet Public Key Infrastructure (RPKI) and Revocation Profile
+# Relaynet Public Key Infrastructure and Revocation Profile
 
 - Id: RS-002.
 - Status: Placeholder.
@@ -6,7 +6,7 @@
 
 ## Abstract
 
-This document describes how to issue, revoke and interpret X.509 certificates for endpoints and gateways in Relaynet.
+This document describes how to issue, distribute, store, revoke and interpret X.509 certificates in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this PKI profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280).
 
 ## Attributes
 

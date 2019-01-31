@@ -57,6 +57,8 @@ Each node in Relaynet MUST have a unique address, and the type of address is det
 
 These protocols define the [same-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) between gateways, endpoints and applications.
 
+The [Relaynet PKI](rs002-pki.md) defines the use of certificates in these protocols. The [Internet PKI](https://tools.ietf.org/html/rfc5280) does not apply here.
+
 ### Service Messaging Protocol
 
 This protocol defines the interactions between two applications in a centralized service, or amongst two or more applications in a decentralized service.
@@ -138,7 +140,7 @@ The client MUST authenticate the server with the following constraints:
 
 Likewise, the server MUST authenticate the client and the binding MUST specify the mechanism(s) to do so, including whether or how to do client registration.
 
-When using X.509 certificates for client/server authentication, they SHOULD not be [Relaynet PKI](rs002-rpki.md) certificates or their corresponding keys because they are meant to be used for a different purpose.
+Clients and servers MUST comply with the [Internet PKI](https://tools.ietf.org/html/rfc5280) when using TLS. When not using TLS, they SHOULD NOT use [Relaynet PKI](rs002-pki.md) certificates for client/server authentication because they are only meant to be used in messaging protocols.
 
 For performance reasons, the client and the server SHOULD not use the loopback network interface when they are on the same computer, and SHOULD instead use Unix sockets or any other Inter-Process Communication (IPC) mechanism supported by the host system.
 
