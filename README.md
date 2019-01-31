@@ -1,3 +1,5 @@
+[![Gitter chat](https://badges.gitter.im/relaynet/community.png)](https://gitter.im/relaynet/community)
+
 # Relaynet Protocol Suite Specifications
 
 This repository contains all the specifications part of [Relaynet](https://relaynet.link/).
