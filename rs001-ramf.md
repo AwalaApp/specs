@@ -3,6 +3,7 @@
 - Id: RS-001.
 - Status: Working draft.
 - Type: Implementation.
+- Proof of concept: https://github.com/relaynet/poc/blob/master/core/serialization.js
 
 ## Abstract
 
