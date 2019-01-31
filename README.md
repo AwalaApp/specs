@@ -8,6 +8,7 @@ The main specs are:
 - [RS-001 (RAMF)](rs001-ramf.md) defines the _Relaynet Abstract Message Format_, a binary format used to serialize _parcels_ and _cargoes_ -- the two types of messages transported on Relaynet.
 - [RS-002 (Relaynet PKI)](rs002-rpki.md) defines how to use the certificates for endpoints and gateways.
 - [RS-003 (Key Agreement)](rs003-key-agreement.md) defines the key agreement protocol to establish and protect sessions between two gateways or two endpoints.
+- [RS-012 (Service Integration Scale)](rs012-service-integration.md) categorizes the degrees to which Relaynet can be integrated in a service.
 
 _Cargo relay networks_ (CRNs) can be established with one of the following _bindings_. They are the transport medium for gateways to exchange _cargoes_ through a _relayer_.
 
@@ -21,4 +22,8 @@ _Parcel delivery networks_ (PDNs) can be established with one of the following _
 - [RS-007 (PoHTTP)](rs007-pohttp.md): Parcel delivery over HTTP. An alternative to PoSocket, to lower the barrier to adopt Relaynet.
 - [RS-009 (PogRPC)](rs009-pogrpc.md): Parcel delivery over gRPC. Another alternative to PoSocket, to lower the barrier to adopt Relaynet.
 
-Finally, [RS-010](rs010-pdn-browser.md) defines a JavaScript interface that browsers or browser extensions can expose to make it easier and safer for client-side apps to send and receive parcels.
+Other specs:
+
+- [RS-010](rs010-pdn-browser.md) defines a JavaScript interface that browsers or browser extensions can expose to make it easier and safer for client-side apps to send and receive parcels.
+- [RS-011 (AsyncRPC)](rs011-asyncrpc.md) defines a service that encapsulates RPCs in Relaynet messages. Only meant as a steppingstone until the actual service supports Relaynet.
+- [RS-013 (PubSub)](rs013-pubsub.md) adds support for the [Publish-Subscribe pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html) in Relaynet.
