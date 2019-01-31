@@ -47,6 +47,6 @@ Recipients and brokers of a RAMF message MUST validate the message as soon as po
 - Check that the sender certificate is valid.
 - Check the date and TTL to make sure the message is still valid (and mitigate replay attacks).
 
-To avoid replay attacks, the message id SHOULD be persistent until the TTL expires, and until then, reject any incoming message from the same sender and the same id.
+To avoid replay attacks, the message id SHOULD be persisted until the TTL expires, and until then, reject any incoming message from the same sender and the same id.
 
 Nodes can further protect from replay attacks, amongst other attack vectors, by establishing a secure session with the [Relaynet Key Agreement Protocol](rs003-key-agreement.md). 
