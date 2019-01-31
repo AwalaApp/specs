@@ -27,3 +27,5 @@ PubSub parcels could be pushed to a blockchain. And a _relaying gateway_ could s
 ## Messaging Protocols
 
 - Broadcast parcels could be unencrypted (CMS type "data"), or encrypted with one or more certificates (CMS type "enveloped data").
+- The [Cargo Collection Authorization](rs000-core.md#cargo-collection-authorization) MUST include zero or more topic subscriptions.
+- A topic subscription is a structure that contains a topic address (potentially using glob patterns) and any conditions that the broadcast parcel must meet, such as having a specific origin endpoint (by address).

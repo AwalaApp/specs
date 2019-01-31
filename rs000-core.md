@@ -115,13 +115,34 @@ The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains one or
 
 #### Cargo Collection Authorization
 
-A RAMF message whereby Gateway A allows Relayer R to collect cargo on its behalf from Gateway B. Its payload contains the following information:
+A RAMF message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
 
-- Zero or more topic subscriptions.
+Its payload MUST be encrypted with Gateway B's certificate and its plaintext MUST contains the following information:
+
 - The (issuing endpoint address, certificate serial number) tuple for each _Parcel Delivery Deauthorization_ issued by Gateway A's endpoints.
-- Binding-level constraints to authenticate the relayer, like expecting a specific Distinguished Name in its client-side TLS certificate.
+- Binding-level constraints to authenticate the relayer, like expecting a specific _Distinguished Name_ in its client-side TLS certificate.
 
-(TODO: Define serialization)
+The payload plaintext MUST be serialized with [Protocol Buffers v3](https://developers.google.com/protocol-buffers/docs/proto3) using the `CargoCollectionAuthorization` message as defined below:
+
+```proto
+syntax = "proto3";
+
+package relaynet.messaging.gateway;
+
+import "google/protobuf/any.proto";
+
+message CargoCollectionAuthorization {
+    repeated ParcelDeliveryDeauthorization parcel_delivery_deauthorizations = 1;
+
+    // The key MUST be the name of the binding (lower case) and the value is defined by the binding.
+    map<string, google.protobuf.Any> relayer_constraints = 2;
+}
+
+message ParcelDeliveryDeauthorization {
+    string endpoint_address = 1;
+    string endpoint_certificate_serial_number = 2;
+}
+```
 
 ## Message Transport Bindings
 
@@ -163,11 +184,11 @@ This is a protocol that establishes a _Cargo Relay Network_ (CRN) between an a g
 The binding MUST support the following:
 
 - The relayer can send parcels to the gateway, and vice versa. The node delivering the parcel MUST NOT remove it until the target node has acknowledged it.
-- A relayer can request a _cargo collection authorization_ from the current gateway, so that the relayer can collect messages for the current gateway at the other end.
+- A relayer can request a [cargo collection authorization](#cargo-collection-authorization) from the current gateway, so that the relayer can collect messages for the current gateway at the other end. The binding MAY allow the gateway to place restrictions on its use, using the appropriate field in the cargo collection authorization.
 
 A user gateway MAY require the relayer to provide a Cargo Collection Authorization (CRA) from the relaying gateway. A relaying gateway MUST require at least one CRA because:
 
-- It could have a potentially large number of queued cargoes for different user gateways.
+- It needs the user gateway's certificate to identify the parcels that should be delivered to that gateway. Such parcels use a [parcel delivery authorization](#parcel-delivery-authorization) as the sender certificate chain, which MUST contain the user gateway's certificate.
 - The relaying gateway should have some degree of trust that the relayer will actually send the cargo to the target gateway.
 
 The relayer SHOULD follow the following process when it interacts with a gateway:
