@@ -79,7 +79,7 @@ The sender certificate is either self-signed or issued by the recipient (see _Pa
 
 Gateways MUST override any previously queued parcel with the same id. Endpoints can use this to replace stale messages in the same relay.
 
-The payload plaintext contains the service message and its media type, and is serialized with the following binary sequence (with little-endian encoding):
+The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the service message and its media type, and is serialized with the following binary sequence (with little-endian encoding):
 
 1. An 8-bit unsigned integer (1 octet) representing the length of the service message type.
 1. A UTF-8 encoded string representing the type of the service message. For example, `application/x-protobuf; messageType="twitter.Tweet"`.
@@ -106,7 +106,10 @@ Its purpose is to encapsulate one or more parcels, encrypting them with the targ
 
 Cargoes are serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the ASCII character "C" (for "cargo") as its _concrete message format signature_. Relayers and gateways MUST follow the post-deserialization validation listed in the RAMF specification.
 
-The payload plaintext contains one or more parcels, and is serialized with the following binary sequence (with little-endian encoding), which is repeated for each parcel:
+The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains one or more parcels, and is serialized with the following binary sequence (with little-endian encoding), which is repeated for each parcel:
+
+1. A 32-bit unsigned integer (4 octets) representing the length of the parcel.
+1. The parcel serialized in the RAMF.
 
 #### Cargo Collection Authorization
 
@@ -162,8 +165,8 @@ The binding MUST support the following:
 
 A user gateway MAY require the relayer to provide a Cargo Collection Authorization (CRA) from the relaying gateway. A relaying gateway MUST require at least one CRA because:
 
-  - It could have a potentially large number of queued cargoes for different user gateways.
-  - The relaying gateway should have some degree of trust that the relayer will actually send the cargo to the target gateway.
+- It could have a potentially large number of queued cargoes for different user gateways.
+- The relaying gateway should have some degree of trust that the relayer will actually send the cargo to the target gateway.
 
 The relayer SHOULD follow the following process when it interacts with a gateway:
 
