@@ -51,7 +51,7 @@ Each node in Relaynet MUST have a unique address, and the type of address is det
   - `domainNameOrIpAddress` is the host name as a DNS record or IPv4/IPv6 address. If using a DNS record, the binding SHOULD specify the type of allowed DNS records (e.g., A, CNAME, SRV).
   - `port` is the Layer 4 (e.g., TCP) port on which the host listens. This does not apply when using SRV records.
   - `extra` is any additional information necessary to reach the node. For example, it could be a URL path in bindings using HTTP.
-- A _private node_ has the fingerprint of its certificate as their address (`scheme:certificateFingerprint`), and its peer in the message transport binding knows how to reach it. The fingerprint MUST be the SHA-256 digest, hex-encoded, and it MUST be prefixed with a zero `0` to denote the version of the address, as a different algorithm to calculate the address can be defined in the future.
+- A _private node_ has the digest of its public key as its address (`scheme:publicKeyDigest`), and its peer in the message transport binding knows how to reach it. The digest uses SHA-256 and is hex-encoded. It MUST also be prefixed with a zero `0` to denote the version of the address, as a different algorithm to calculate the address can be defined in the future.
 
 ## Messaging Protocols
 
