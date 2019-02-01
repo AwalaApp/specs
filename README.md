@@ -7,7 +7,7 @@ This repository contains all the specifications part of [Relaynet](https://relay
 The main specs are:
 
 - [RS-000 (Relaynet Core)](rs000-core.md) defines the foundation of the protocol suite.
-- [RS-001 (RAMF)](rs001-ramf.md) defines the _Relaynet Abstract Message Format_, a binary format used to serialize _parcels_ and _cargoes_ -- the two types of messages transported on Relaynet.
+- [RS-001 (RAMF)](rs001-ramf.md) defines the _Relaynet Abstract Message Format_, an efficient binary format used to serialize messages.
 - [RS-002 (Relaynet PKI)](rs002-pki.md) defines how to use the certificates for endpoints and gateways.
 - [RS-003 (Key Agreement)](rs003-key-agreement.md) defines the key agreement protocol to establish and protect sessions between two gateways or two endpoints.
 - [RS-012 (Service Integration Scale)](rs012-service-integration.md) categorizes the degrees to which Relaynet can be integrated in a service.
