@@ -10,7 +10,8 @@ This specification extends [Relaynet Core (RS-000)](rs000-core.md) to support th
 
 ## Introduction
 
-- Think of this as a public message queue, with producers, consumers and queues/topics. Endpoints will tell their corresponding gateways which queues/topics they want to be subscribed to — So that means the cargo should also keep track of the queues/topics it contains.
+- Endpoints will tell their corresponding gateways which topics they want to be subscribed to.
+- Gateways MAY push broadcast parcels to a blockchain, for other gateways in the network to consume such parcels and pass them on to their endpoints.
 - Use cases
   - In a world where the Twitter service is DTN-native, it could represent a tweet as a SDU (that is, one tweet is the sole content of a parcel). This would allow a political dissident to broadcast a message to their followers, so that the message can both (1) reach Twitter and (2) be read by anyone who gets hold of the parcel.
   - File distribution, especially software updates.
