@@ -28,4 +28,4 @@ Other specs:
 
 - [RS-010](rs010-pdn-browser.md) defines a JavaScript interface that browsers or browser extensions can expose to make it easier and safer for client-side apps to send and receive parcels.
 - [RS-011 (AsyncRPC)](rs011-asyncrpc.md) defines a service that encapsulates RPCs in Relaynet messages. Only meant as a steppingstone until the actual service supports Relaynet.
-- [RS-013 (PubSub)](rs013-pubsub.md) adds support for the [Publish-Subscribe pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html) in Relaynet.
+- [RS-013 (Message Broadcast)](rs013-pubsub.md) adds support for the [Publish-Subscribe pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html) in Relaynet.
