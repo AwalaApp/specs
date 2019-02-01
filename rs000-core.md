@@ -6,11 +6,11 @@
 
 ## Abstract
 
-This document describes the core elements of the Relaynet protocol suite, whose purpose is to make software tolerant to potentially large network latencies through the use of [asynchronous messaging](https://www.techopedia.com/definition/26454/asynchronous-messaging).
+This document describes the core elements of the Relaynet protocol suite, whose purpose is to distributed systems tolerant to potentially large network latencies through the use of [asynchronous messaging](https://www.techopedia.com/definition/26454/asynchronous-messaging).
 
 ## Introduction
 
-Software running on different computers is typically integrated using some form of [Remote Procedure Call (RPC)](https://en.wikipedia.org/wiki/Remote_procedure_call), a seemingly simple and familiar pattern that resembles local function calls in programming. Services running on HTTP, such as RESTful or gRPC APIs, employ this pattern.
+Distributed systems are typically integrated using some form of [Remote Procedure Call (RPC)](https://en.wikipedia.org/wiki/Remote_procedure_call), a seemingly simple and familiar pattern that resembles local function calls in programming. Services running on HTTP, such as RESTful or gRPC APIs, employ this pattern.
 
 RPCs work well in a reliable network -- One with a low [round-trip time (RTT)](https://en.wikipedia.org/wiki/Round-trip_delay_time) and an adequate [throughput](https://en.wikipedia.org/wiki/Throughput). The higher the RRT or the lower throughput can be, the more complicated an RPC implementation becomes. And with an extremely high RRT and/or an extremely low throughput, RPCs do not work at all.
 
