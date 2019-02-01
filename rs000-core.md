@@ -73,15 +73,15 @@ In terms of addressing, _host endpoints_ and _private endpoints_ MUST use the sc
 
 #### Parcel
 
-A parcel encapsulates a service message and encrypts it with the target endpoint's certificate. 
+A parcel encapsulates a service message and is serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the ASCII character "P" (for "parcel") as its _concrete message format signature_. Gateways and the target endpoint MUST enforce the post-deserialization validation listed in the RAMF specification.
 
-Parcels are serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the ASCII character "P" (for "parcel") as its _concrete message format signature_. Gateways and the target endpoint MUST follow the post-deserialization validation listed in the RAMF specification.
-
-The sender certificate is either self-signed or issued by the recipient (see _Parcel Delivery Authorization_).
+The sender certificate MUST be either self-signed or issued by the recipient. The latter is only valid when using a [Parcel Delivery Authorization](#parcel-delivery-authorization) certificate.
 
 Gateways MUST override any previously queued parcel with the same id. Endpoints can use this to replace stale messages in the same relay.
 
-The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the service message and its media type, and is serialized with the following binary sequence (with little-endian encoding):
+The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`), using either the target endpoint's certificate (`KeyTransRecipientInfo`) or the [Relaynet Key Agreement protocol](rs003-key-agreement.md) parameters (`KeyAgreeRecipientInfo`). Extensions to this document MAY support additional CMS structures.
+
+The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the service message and its media type, and is serialized with the following binary sequence (little-endian):
 
 1. An 8-bit unsigned integer (1 octet) representing the length of the service message type.
 1. A UTF-8 encoded string representing the type of the service message. For example, `application/x-protobuf; messageType="twitter.Tweet"`.
@@ -102,13 +102,15 @@ This protocol defines the interactions between two gateways.
 
 In terms of addressing, _host gateways_ and _private gateways_ MUST use the schemes `rngh` and `rngp`, respectively. For example, `rngh:example.com` or `rngh+grpc:example.com` (if using the [gRPC binding](rs008-cogrpc.md)).
 
+When using the [Relaynet Key Agreement protocol](rs003-key-agreement.md), the two gateways MUST maintain a single session across the different message types.
+
 #### Cargo
 
-Its purpose is to encapsulate one or more parcels, encrypting them with the target gateway's certificate.
+Its purpose is to encapsulate one or more parcels. Cargoes are serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the ASCII character "C" (for "cargo") as its _concrete message format signature_. Relayers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
 
-Cargoes are serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the ASCII character "C" (for "cargo") as its _concrete message format signature_. Relayers and gateways MUST follow the post-deserialization validation listed in the RAMF specification.
+The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`), using either the target gateway's certificate (`KeyTransRecipientInfo`) or the [Relaynet Key Agreement protocol](rs003-key-agreement.md) parameters (`KeyAgreeRecipientInfo`). Extensions to this document MAY support additional CMS structures.
 
-The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains one or more parcels, and is serialized with the following binary sequence (with little-endian encoding), which is repeated for each parcel:
+The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains one or more parcels, and is serialized with the following binary sequence (in little-endian), which is repeated for each parcel:
 
 1. A 32-bit unsigned integer (4 octets) representing the length of the parcel.
 1. The parcel serialized in the RAMF.
@@ -117,7 +119,9 @@ The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains one or
 
 A RAMF message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
 
-Its payload MUST be encrypted with Gateway B's certificate and its plaintext MUST contains the following information:
+The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`), using either the target gateway's certificate (`KeyTransRecipientInfo`) or the [Relaynet Key Agreement protocol](rs003-key-agreement.md) parameters (`KeyAgreeRecipientInfo`).
+
+Its payload plaintext MUST contains the following information:
 
 - The (issuing endpoint address, certificate serial number) tuple for each _Parcel Delivery Deauthorization_ issued by Gateway A's endpoints.
 - Binding-level constraints to authenticate the relayer, like expecting a specific _Distinguished Name_ in its client-side TLS certificate.
@@ -134,7 +138,8 @@ import "google/protobuf/any.proto";
 message CargoCollectionAuthorization {
     repeated ParcelDeliveryDeauthorization parcel_delivery_deauthorizations = 1;
 
-    // The key MUST be the name of the binding (lower case) and the value is defined by the binding.
+    // The key MUST be the name of the binding (lower case) and the value MUST
+    // be defined by the binding.
     map<string, google.protobuf.Any> relayer_constraints = 2;
 }
 

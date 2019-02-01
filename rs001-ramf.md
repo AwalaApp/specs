@@ -32,7 +32,7 @@ A message is serialized using the following byte sequence ([little-endian](https
    - Number of seconds since Date.
    - Zero means the message does not expire.
    - 24-bit, unsigned integer (3 octets). So maximum is over 6 months.
-1. Payload. Encoded as a [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652) [enveloped data](https://tools.ietf.org/html/rfc5652#section-6) with exactly one recipient and using the [Relaynet Key Agreement protocol](rs003-key-agreement.md). The ciphertext is length-prefixed with a 32-bit unsigned integer (4 octets), so the maximum length is ~3.73GiB.
+1. Payload. Contains the [service data unit](https://en.wikipedia.org/wiki/Service_data_unit) encoded with the [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652). The [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be length-prefixed with a 32-bit unsigned integer (4 octets), so the maximum length is ~3.73GiB.
 1. Signature.
    - As [CMS signed data](https://tools.ietf.org/html/rfc5652#section-5) structure with exactly one signer and zero embedded certificates. The signer is the sender, and its certificate is available above.
    - The cleartext to the signature should be the entire message, from the format signature to the payload.
