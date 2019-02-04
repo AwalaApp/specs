@@ -18,7 +18,7 @@ In contrast to RPCs, asynchronous messaging does not depend on a reliable networ
 
 Given the ubiquity of the RPC integration style, societies with access to computers or smartphones but no (reliable) Internet access are kept from using the Internet. The best they can hope for is a [sneakernet](https://en.wikipedia.org/wiki/Sneakernet) that provides them with limited, curated content.
 
-Relaynet is designed to change that through the use of asynchronous messaging, and by leveraging sneakernets to transport data to and from the Internet in a secure manner.
+Relaynet is designed to change that through the use of asynchronous messaging, and by leveraging sneakernets to transport data to and from the Internet in a secure manner. The result is a [delay-tolerant](https://en.wikipedia.org/wiki/Delay-tolerant_networking), [overlay](https://en.wikipedia.org/wiki/Overlay_network) network with [onion routing](https://en.wikipedia.org/wiki/Onion_routing).
 
 ## Concepts
 
@@ -31,13 +31,15 @@ Relaynet is designed to change that through the use of asynchronous messaging, a
 - A **cargo** encapsulates one or more parcels
 - A **relayer** _relays_ cargo from one gateway to one or more gateways.
 
+For example, if Twitter supported Relaynet, Twitter would be the _service_, the Twitter mobile apps would be _applications_, the Twitter API would also be an _application_. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the _endpoint_ in the Twitter API could be a new API endpoint (e.g., `https://api.twitter.com/relaynet`).
+
 The following diagram shows how these entities interact with each other:
 
 ![](assets/rs000/protocol-layers.png)
 
-In Relaynet, [same-layer and adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) are defined by _messaging protocols_ and _message transport bindings_, respectively.
+Relaynet can also be described in terms of the [OSI model](https://en.wikipedia.org/wiki/OSI_model) as shown in the diagram below -- With [same-layer and adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) defined by _messaging protocols_ and _message transport bindings_, respectively.
 
-For example, if Twitter supported Relaynet, Twitter would be the _service_, the Twitter mobile apps would be _applications_, the Twitter API would also be an _application_. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the _endpoint_ in the Twitter API could be a new API endpoint (e.g., `https://api.twitter.com/relaynet`).
+![](assets/rs000/osi-layers-mapping.png)
 
 ## Addressing
 
