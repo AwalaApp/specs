@@ -14,17 +14,19 @@ Distributed systems are typically integrated using some form of [Remote Procedur
 
 RPCs work well in a reliable network -- One with a low [round-trip time (RTT)](https://en.wikipedia.org/wiki/Round-trip_delay_time) and an adequate [throughput](https://en.wikipedia.org/wiki/Throughput). The higher the RRT or the lower throughput can be, the more complicated an RPC implementation becomes. And with an extremely high RRT and/or an extremely low throughput, RPCs do not work at all.
 
-In contrast to RPCs, asynchronous messaging does not depend on a reliable network. In fact, it does not require the ability for one node to reach another node directly. It does, however, require the introduction of a [broker](https://en.wikipedia.org/wiki/Message_broker) to queue and dispatch messages.
+In contrast to RPCs, asynchronous messaging does not depend on a reliable network as it does not require the two nodes to be directly connected. It does, however, require the introduction of a [broker](https://en.wikipedia.org/wiki/Message_broker) to queue and dispatch messages. Martin Fowler eloquently summarizes why asynchronous messaging is a better integration style in [Enterprise Integration Patterns](https://en.wikipedia.org/wiki/Enterprise_Integration_Patterns) (page 54):
+
+> Asynchronous messaging is fundamentally a pragmatic reaction to the problems of distributed systems. Sending a message does not require both systems to be up and ready at the same time. Furthermore, thinking about the communication in an asynchronous manner forces developers to recognize that working with a remote application is slower, which encourages design of components with high cohesion (lots of work locally) and low adhesion (selective work remotely).
 
 Given the ubiquity of the RPC integration style, societies with access to computers or smartphones but no (reliable) Internet access are kept from using the Internet. The best they can hope for is a [sneakernet](https://en.wikipedia.org/wiki/Sneakernet) that provides them with limited, curated content.
 
 Relaynet is designed to change that through the use of asynchronous messaging, and by leveraging sneakernets to transport data to and from the Internet in a secure manner. The result is a [delay-tolerant](https://en.wikipedia.org/wiki/Delay-tolerant_networking), [overlay](https://en.wikipedia.org/wiki/Overlay_network) network with [onion routing](https://en.wikipedia.org/wiki/Onion_routing).
 
-Martin Fowler eloquently summarizes why asynchronous messaging is a better integration style in [Enterprise Integration Patterns](https://en.wikipedia.org/wiki/Enterprise_Integration_Patterns) (page 54):
-
-> Asynchronous messaging is fundamentally a pragmatic reaction to the problems of distributed systems. Sending a message does not require both systems to be up and ready at the same time. Furthermore, thinking about the communication in an asynchronous manner forces developers to recognize that working with a remote application is slower, which encourages design of components with high cohesion (lots of work locally) and low adhesion (selective work remotely).
-
 ## Concepts
+
+The following diagram illustrates the various components of the network and how they interact with each other:
+
+![](assets/rs000/protocol-layers.png)
 
 - A **service** is a collection of _applications_ that communicate amongst themselves. A service can be centralized (client-server) or decentralized (peer-to-peer).
 - **Applications** exchange _messages_ amongst themselves, and because they can't communicate directly, they each use an _endpoint_ as a broker.
@@ -37,13 +39,11 @@ Martin Fowler eloquently summarizes why asynchronous messaging is a better integ
 
 For example, if Twitter supported Relaynet, Twitter would be the _service_, the Twitter mobile apps would be _applications_, the Twitter API would also be an _application_. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the _endpoint_ in the Twitter API could be a new API endpoint (e.g., `https://api.twitter.com/relaynet`).
 
-The following diagram shows how these entities interact with each other:
-
-![](assets/rs000/protocol-layers.png)
-
-Relaynet can also be described in terms of the [OSI model](https://en.wikipedia.org/wiki/OSI_model) as shown in the diagram below -- With [same-layer and adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) defined by _messaging protocols_ and _message transport bindings_, respectively.
+Relaynet can also be described in terms of the [OSI model](https://en.wikipedia.org/wiki/OSI_model) as shown in the diagram below -- With [same-layer and adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) defined by [_messaging protocols_](#messaging-protocols) and [_message transport bindings_](#message-transport-bindings), respectively.
 
 ![](assets/rs000/osi-layers-mapping.png)
+
+Note that defining same-layer interactions at the application and relay layers is outside the scope of the protocol suite. Relaynet only prescribes the interactions with their adjacent layers. Each service has full control over its applications (see [_service messaging protocol_](#service-messaging-protocol)), and each relayer has full control over its relay layer.
 
 ## Addressing
 
