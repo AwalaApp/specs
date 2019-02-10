@@ -61,19 +61,19 @@ Each node in Relaynet MUST have a unique address, and the type of address is det
 
 ## Messaging Protocols
 
-These protocols define the [same-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) between gateways, endpoints and applications.
+These protocols establish the corresponding [_channels_](https://www.enterpriseintegrationpatterns.com/patterns/messaging/MessageChannel.html) for applications, endpoints and gateways. Building on the OSI model mapping above, these protocols define the [same-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/).
 
 The [Relaynet PKI](rs002-pki.md) defines the use of certificates in these protocols. The [Internet PKI](https://tools.ietf.org/html/rfc5280) does not apply here.
 
 ### Service Messaging Protocol
 
-This protocol defines the interactions between two applications in a centralized service, or amongst two or more applications in a decentralized service.
+This protocol establishes the channel between two applications in a service.
  
 The service has full control over this protocol, including the types of messages that its applications exchange (their contents, serialization format, etc).
 
 ### Endpoint Messaging Protocol
 
-This protocol determines the interactions between two endpoints.
+This protocol establishes the channel between two endpoints.
 
 In terms of addressing, _host endpoints_ and _private endpoints_ MUST use the schemes `rneh` and `rnep`, respectively. For example, `rneh:example.com` or `rneh+grpc:example.com` (if using the [gRPC binding](rs009-pogrpc.md)).
 
@@ -104,7 +104,7 @@ Service applications are responsible for the issuance, transmission, storage and
 
 ### Gateway Messaging Protocol
 
-This protocol defines the interactions between two gateways.
+This protocol establishes the channel between two gateways.
 
 In terms of addressing, _host gateways_ and _private gateways_ MUST use the schemes `rngh` and `rngp`, respectively. For example, `rngh:example.com` or `rngh+grpc:example.com` (if using the [gRPC binding](rs008-cogrpc.md)).
 
@@ -157,9 +157,9 @@ message ParcelDeliveryDeauthorization {
 
 ## Message Transport Bindings
 
-Bindings define the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) between endpoints/gateways and gateways/relayers. Bindings are protocols that leverage pre-existing [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols (e.g., HTTP) or they can be purpose-built.
+A message transport binding, or _binding_ for short, is a protocol that defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) between endpoints/gateways and gateways/relayers. Bindings can either leverage pre-existing [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols (e.g., HTTP) or be purpose-built.
 
-This document describes the requirements applicable to all bindings, but does not define any concrete binding as they are defined in separate documents.
+This document describes the requirements applicable to all bindings, but does not define any concrete binding as they MUST be defined in separate documents.
 
 A binding MUST define its clients and servers, and how they implement this specification. Typically, the server listens on an address/port location, and the client initiates the communication. A peer-to-peer model could be represented with nodes that act as both clients and servers.
 
@@ -208,3 +208,9 @@ The relayer SHOULD follow the following process when it interacts with a gateway
 1. Request cargo collection authorization for target gateway.
 1. Wait a few seconds in case there are responses to the cargo(es) that were delivered earlier.
 1. Collect cargoes.
+
+## Open Questions
+
+- Which errors should be propagate to the message sender? And how?
+  - Errors include: Message expired, invalid sender certificate, unauthorized sender, malformed message, unavailable target.
+  - We need to distinguish channel-level errors (i.e., [_invalid message channel_ in EIP](https://www.enterpriseintegrationpatterns.com/patterns/messaging/InvalidMessageChannel.html)) from transport-level errors (i.e., [_dead letter channel_ in EIP](https://www.enterpriseintegrationpatterns.com/patterns/messaging/DeadLetterChannel.html)).
