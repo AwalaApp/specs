@@ -20,7 +20,7 @@ In contrast to RPCs, asynchronous messaging does not depend on a reliable networ
 
 Given the ubiquity of the RPC integration style, societies with access to computers or smartphones but no (reliable) Internet access are kept from using the Internet. The best they can hope for is a [sneakernet](https://en.wikipedia.org/wiki/Sneakernet) that provides them with limited, curated content.
 
-Relaynet is designed to change that through the use of asynchronous messaging, and by leveraging sneakernets to transport data to and from the Internet in a secure manner. The result is a [delay-tolerant](https://en.wikipedia.org/wiki/Delay-tolerant_networking), [overlay](https://en.wikipedia.org/wiki/Overlay_network) network with [onion routing](https://en.wikipedia.org/wiki/Onion_routing).
+Relaynet is designed to change that through the use of asynchronous messaging, and by leveraging alternative methods like sneakernets to transport data to and from the Internet in a secure manner. The result is a [delay-tolerant](https://en.wikipedia.org/wiki/Delay-tolerant_networking), [overlay](https://en.wikipedia.org/wiki/Overlay_network) network with [onion routing](https://en.wikipedia.org/wiki/Onion_routing).
 
 ## Concepts
 
@@ -30,7 +30,7 @@ The following diagram illustrates the various components of the network and how 
 
 - A **service** is a collection of _applications_ that communicate amongst themselves. A service can be centralized (client-server) or decentralized (peer-to-peer).
 - **Applications** exchange _messages_ amongst themselves, and because they can't communicate directly, they each use an _endpoint_ as a broker.
-- A **message** is serialized in the format determined by the service and doesn't have to be encrypted or signed.
+- A **(service) message** is serialized in the format determined by the service and does not have to be encrypted or signed.
 - An **endpoint** receives a message from its application and converts it into a _parcel_ for the target application's endpoint, and because they still can't communicate directly, they each use a _gateway_ as a broker. When an endpoint receives a parcel from the gateway, it has to decrypt the message and pass it to its application.
 - A **parcel** encapsulates a message by encrypting it with the target endpoint's certificate and signing it with the origin endpoint's key.
 - A **gateway** receives parcels from endpoints and puts them into cargo for another gateway, using a _relayer_ as a broker. When a gateway receives cargo from a relayer, it decrypts the parcels and delivers them to their corresponding target endpoints.
@@ -63,25 +63,25 @@ Each node in Relaynet MUST have a unique address, and the type of address is det
 
 These protocols establish the corresponding [_channels_](https://www.enterpriseintegrationpatterns.com/patterns/messaging/MessageChannel.html) for applications, endpoints and gateways. Building on the OSI model mapping above, these protocols define the [same-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/).
 
-The [Relaynet PKI](rs002-pki.md) defines the use of certificates in these protocols. The [Internet PKI](https://tools.ietf.org/html/rfc5280) does not apply here.
+Endpoints and gateways MUST comply with the [Relaynet PKI profile](rs002-pki.md), which specifies the use of certificates in these protocols. The [Internet PKI profile](https://tools.ietf.org/html/rfc5280) does not apply to messaging protocols.
 
 ### Service Messaging Protocol
 
-This protocol establishes the channel between two applications in a service.
- 
-The service has full control over this protocol, including the types of messages that its applications exchange (their contents, serialization format, etc).
+This protocol establishes the channel between two applications in a service. The service has full control over this protocol, including the types of messages that its applications exchange (their contents, serialization format, etc).
+
+Applications MAY provision [_Parcel Delivery Authorizations_ (PDAs)](rs002-pki.md#parcel-delivery-authorization-pda) from their corresponding endpoints. PDAs MUST be encapsulated in service messages; for example, an application sends a message to another application in order to subscribe to updates, the authorizing application could attach the PDA to the message.
 
 ### Endpoint Messaging Protocol
 
-This protocol establishes the channel between two endpoints.
+This protocol establishes the channel between two endpoints. The only type of message that this specification defines at this level is the [_parcel_](#parcel).
 
-In terms of addressing, _host endpoints_ and _private endpoints_ MUST use the schemes `rneh` and `rnep`, respectively. For example, `rneh:example.com` or `rneh+grpc:example.com` (if using the [gRPC binding](rs009-pogrpc.md)).
+_Host endpoints_ and _private endpoints_ MUST use the schemes `rneh` and `rnep`, respectively. For example, `rneh:example.com` or `rneh+grpc:example.com` (if using the [gRPC binding](rs009-pogrpc.md)).
 
 #### Parcel
 
-A parcel encapsulates a service message and is serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the ASCII character "P" (for "parcel") as its _concrete message format signature_. Gateways and the target endpoint MUST enforce the post-deserialization validation listed in the RAMF specification.
+A parcel encapsulates a service message and is serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the octet `0x50` ("P" in ASCII) as its _concrete message format signature_. Gateways and the target endpoint MUST enforce the post-deserialization validation listed in the RAMF specification.
 
-The sender certificate MUST be either self-signed or issued by the recipient. The latter is only valid when using a [Parcel Delivery Authorization](#parcel-delivery-authorization) certificate.
+The sender certificate MUST be a valid certificate per [Relaynet PKI](rs002-pki.md).
 
 Gateways MUST override any previously queued parcel with the same id. Endpoints can use this to replace stale messages in the same relay.
 
@@ -94,25 +94,17 @@ The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the se
 1. A 32-bit unsigned integer (4 octets) representing the length of the service message.
 1. The service message serialized in the format dictated by the service.
 
-#### Parcel Delivery Authorization
-
-A X.509 certificate chain whereby Endpoint A instructs its gateway and its relaying gateway to accept parcels from Endpoint B to Endpoint A.
-
-Applications behind private endpoints are expected to include this certificate in their service messages where they request to subscribe to messages from the target app.
-
-Service applications are responsible for the issuance, transmission, storage and revocation of Parcel Delivery Authorizations. Gateways are responsible for enforcing them.
-
 ### Gateway Messaging Protocol
 
 This protocol establishes the channel between two gateways.
 
-In terms of addressing, _host gateways_ and _private gateways_ MUST use the schemes `rngh` and `rngp`, respectively. For example, `rngh:example.com` or `rngh+grpc:example.com` (if using the [gRPC binding](rs008-cogrpc.md)).
+_Host gateways_ and _private gateways_ MUST use the schemes `rngh` and `rngp`, respectively. For example, `rngh:example.com` or `rngh+grpc:example.com` (if using the [gRPC binding](rs008-cogrpc.md)).
 
 When using the [Relaynet Key Agreement protocol](rs003-key-agreement.md), the two gateways MUST maintain a single session across the different message types.
 
 #### Cargo
 
-Its purpose is to encapsulate one or more parcels. Cargoes are serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the ASCII character "C" (for "cargo") as its _concrete message format signature_. Relayers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
+Its primary purpose is to encapsulate one or more messages from the [endpoint channel](#endpoint-messaging-protocol) (e.g., parcels). Cargoes are serialized as RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message format signature. Relayers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
 
 The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`), using either the target gateway's certificate (`KeyTransRecipientInfo`) or the [Relaynet Key Agreement protocol](rs003-key-agreement.md) parameters (`KeyAgreeRecipientInfo`). Extensions to this document MAY support additional CMS structures.
 
@@ -123,13 +115,13 @@ The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains one or
 
 #### Cargo Collection Authorization
 
-A RAMF message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
+A RAMF message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. Its concrete message format signature is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
 
 The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`), using either the target gateway's certificate (`KeyTransRecipientInfo`) or the [Relaynet Key Agreement protocol](rs003-key-agreement.md) parameters (`KeyAgreeRecipientInfo`).
 
 Its payload plaintext MUST contains the following information:
 
-- The (issuing endpoint address, certificate serial number) tuple for each _Parcel Delivery Deauthorization_ issued by Gateway A's endpoints.
+- [_Parcel Delivery Deauthorizations_](rs002-pki.md#parcel-delivery-deauthorization-pdd) issued by Gateway A's endpoints or Gateway A itself to revoke [PDAs](rs002-pki.md#parcel-delivery-authorization-pda).
 - Binding-level constraints to authenticate the relayer, like expecting a specific _Distinguished Name_ in its client-side TLS certificate.
 
 The payload plaintext MUST be serialized with [Protocol Buffers v3](https://developers.google.com/protocol-buffers/docs/proto3) using the `CargoCollectionAuthorization` message as defined below:
@@ -140,6 +132,7 @@ syntax = "proto3";
 package relaynet.messaging.gateway;
 
 import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
 
 message CargoCollectionAuthorization {
     repeated ParcelDeliveryDeauthorization parcel_delivery_deauthorizations = 1;
@@ -151,13 +144,14 @@ message CargoCollectionAuthorization {
 
 message ParcelDeliveryDeauthorization {
     string endpoint_address = 1;
-    string endpoint_certificate_serial_number = 2;
+    string pda_serial_numbers = 2;
+    google.protobuf.Timestamp expiry = 3;
 }
 ```
 
 ## Message Transport Bindings
 
-A message transport binding, or _binding_ for short, is a protocol that defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) between endpoints/gateways and gateways/relayers. Bindings can either leverage pre-existing [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols (e.g., HTTP) or be purpose-built.
+A message transport binding, or simply _binding_, is a protocol that defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) between endpoints/gateways and gateways/relayers. Bindings can either leverage pre-existing [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols (e.g., HTTP) or be purpose-built.
 
 This document describes the requirements applicable to all bindings, but does not define any concrete binding as they MUST be defined in separate documents.
 
@@ -180,17 +174,17 @@ Bindings MAY extend this specification, but they MUST NOT override it.
 
 ### Parcel Delivery Binding
 
-This is a protocol that establishes a _Parcel Delivery Network_ (PDN) between an endpoint and a gateway, so that the two can exchange parcels.
+This is a protocol that establishes a _Parcel Delivery Network_ (PDN) between an endpoint and a gateway, with the primary purpose of exchanging parcels.
 
 The binding MUST support the following:
 
 - The endpoint can send parcels to the gateway, and vice versa. The node delivering the parcel MUST NOT remove it until the target node has acknowledged it.
-- A private endpoint can ask its gateway to issue a certificate for the endpoint, so that it can be subsequently used to issue a _Parcel Delivery Authorization_.
-- A private endpoint can send a _Parcel Delivery Deauthorization_ to instruct its gateway not accept incoming parcels with that parcel delivery authorization.
+- A private endpoint can ask its gateway to issue a certificate for the endpoint, so that it can be subsequently used to issue a PDA.
+- A private endpoint can send a PDD to its gateway.
 
 ### Cargo Relay Binding
 
-This is a protocol that establishes a _Cargo Relay Network_ (CRN) between an a gateway and a relayer, so that the two can exchange cargo.
+This is a protocol that establishes a _Cargo Relay Network_ (CRN) between an a gateway and a relayer, with the primary purpose of exchanging cargo.
 
 The binding MUST support the following:
 
@@ -199,8 +193,8 @@ The binding MUST support the following:
 
 A user gateway MAY require the relayer to provide a Cargo Collection Authorization (CRA) from the relaying gateway. A relaying gateway MUST require at least one CRA because:
 
-- It needs the user gateway's certificate to identify the parcels that should be delivered to that gateway. Such parcels use a [parcel delivery authorization](#parcel-delivery-authorization) as the sender certificate chain, which MUST contain the user gateway's certificate.
-- The relaying gateway should have some degree of trust that the relayer will actually send the cargo to the target gateway.
+- The relaying gateway needs the user gateway's certificate to identify the parcels that should be delivered to that gateway. Such parcels use PDAs whose chains contain the user gateway's certificate.
+- The relaying gateway needs to establish some degree of trust that the relayer will actually send the cargo to the target gateway.
 
 The relayer SHOULD follow the following process when it interacts with a gateway:
 

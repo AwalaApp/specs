@@ -44,9 +44,20 @@ A message is serialized using the following byte sequence ([little-endian](https
 Recipients and brokers of a RAMF message MUST validate the message as soon as possible, before any further processing or relay. At a minimum, they MUST:
 
 - Check the signature.
-- Check that the sender certificate is valid.
 - Check the date and TTL to make sure the message is still valid (and mitigate replay attacks).
+- Check that the sender certificate is valid per [Relaynet PKI](rs002-pki.md).
+- Check that the date is within the period of time during which the certificate was valid.
 
 To avoid replay attacks, the message id SHOULD be persisted until the TTL expires, and until then, reject any incoming message from the same sender and the same id.
 
 Nodes can further protect from replay attacks, amongst other attack vectors, by establishing a secure session with the [Relaynet Key Agreement Protocol](rs003-key-agreement.md). 
+
+## Reserved Concrete Message Format Signatures
+
+The following concrete signatures have been reserved by other Relaynet specifications:
+
+- `0x10` for [certificate rotation](rs002-pki.md#certificate-and-key-rotation).
+- `0x11` for [gateway certificate revocation](rs002-pki.md#gateway-certificate-revocation-gcr).
+- `0x43` ("C" in ASCII) for [cargoes](rs000-core.md#cargo).
+- `0x44` for [cargo collection authorizations](rs000-core.md#cargo-collection-authorization).
+- `0x50` ("P" in ASCII) for [parcels](rs000-core.md#parcel).
