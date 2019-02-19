@@ -22,7 +22,7 @@ A message is serialized using the following byte sequence ([little-endian](https
    - Concrete message format signature (1 octet).
    - Format version (1 octet). An 8-bit unsigned integer.
 1. Signature hashing algorithm, defined early to allow the recipient to start calculating the message digest as the message is being streamed. This is an ASCII with a fixed length of 8 octets, padded with `0x00` octets at the end if fewer octets are needed.
-1. Recipient address. UTF-8 encoded, and length-prefixed with a 16-bit unsigned integer (2 octets). Consequently, the address can be as long as 256 characters.
+1. Recipient address. UTF-8 encoded, and length-prefixed with a 16-bit unsigned integer (2 octets). Consequently, the address can be as long as 255 characters.
 1. Sender certificate (chain).
    - DER encoded.
    - Length-prefixed with 13-bit unsigned integer (2 octets), so the maximum length is ~8kib.
