@@ -1,13 +1,13 @@
 # Cargo Relay over TCP/Unix Sockets (CoSocket)
 
 - Id: RS-004.
-- Status: Placeholder.
+- Status: Working draft.
 - Type: Implementation.
 - Proof of concept: https://github.com/relaynet/poc/tree/master/CoSocket
 
 ## Abstract
 
-This document describes CoSocket, a [cargo relay binding](rs000-core.md#cargo-relay-binding) on top of TCP or Unix sockets. As a purpose-built [Application Layer](https://en.wikipedia.org/wiki/Application_layer) protocol, this is the most efficient binding.
+This document describes CoSocket, a [cargo relay binding](rs000-core.md#cargo-relay-binding) on top of TCP or Unix sockets. As a purpose-built [Application Layer](https://en.wikipedia.org/wiki/Application_layer) protocol, this is the most efficient binding to relay cargo.
 
 ## Introduction
 
@@ -88,7 +88,7 @@ The packet has the following sequence:
 
 ## Persistent Connections
 
-Two gateways MAY maintain a persistent connection to exchange cargo in near-real time. This would be necessary when the target gateway is not a server that can be reached by the other gateway (e.g., the target is behind a [NAT gateway](https://en.wikipedia.org/wiki/Network_address_translation)).
+Two gateways MAY maintain a persistent connection to exchange cargo in near-real time. This could be necessary when the target gateway is not a server that can be reached by the other gateway (e.g., the target is behind a [NAT gateway](https://en.wikipedia.org/wiki/Network_address_translation)).
 
 Relayers MUST always quit the connection as soon as no further cargoes are expected in either direction.
 
