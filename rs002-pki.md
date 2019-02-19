@@ -115,7 +115,7 @@ An endpoint MUST use the [message transport binding](rs000-core.md#message-trans
 - (Optional) Serial numbers of the PDAs to revoke. It may be absent to revoke all the PDAs issued by the endpoint.
 - (Required) Expiry date of the deauthorization. If revoking all PDAs from the endpoint, this MUST be the expiry date of the endpoint certificate. If revoking a specific PDA, this MUST be the expiry date of the PDA.
 
-Gateway MUST include all their active PDDs in their [_Cargo Collection Authorizations_](rs000-core.md#cargo-collection-authorization), and they MUST enforce PDDs for as long as they are active.
+Gateway MUST include all their active PDDs in their [_Cargo Collection Authorizations_](rs000-core.md#cargo-collection-authorization-cca), and they MUST enforce PDDs for as long as they are active.
  
 Relaying gateways MAY cache PDDs until they expire in order to refuse future parcels whose PDA has been revoked.
 

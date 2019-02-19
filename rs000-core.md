@@ -32,9 +32,9 @@ The following diagram illustrates the various components of the network and how 
 - **Applications** exchange _messages_ amongst themselves, and because they can't communicate directly, they each use an _endpoint_ as a broker.
 - A **(service) message** is serialized in the format determined by the service and does not have to be encrypted or signed.
 - An **endpoint** receives a message from its application and converts it into a _parcel_ for the target application's endpoint, and because they still can't communicate directly, they each use a _gateway_ as a broker. When an endpoint receives a parcel from the gateway, it has to decrypt the message and pass it to its application.
-- A **parcel** encapsulates a message by encrypting it with the target endpoint's certificate and signing it with the origin endpoint's key.
+- A **parcel** encapsulates exactly one service message, which is encrypted with the target endpoint's certificate and signed with the origin endpoint's key.
 - A **gateway** receives parcels from endpoints and puts them into cargo for another gateway, using a _relayer_ as a broker. When a gateway receives cargo from a relayer, it decrypts the parcels and delivers them to their corresponding target endpoints.
-- A **cargo** encapsulates one or more parcels
+- A **cargo** encapsulates one or more parcels, encrypted with the target gateway's certificate and signed with the origin gateway's key.
 - A **relayer** _relays_ cargo from one gateway to one or more gateways.
 
 For example, if Twitter supported Relaynet, Twitter would be the _service_, the Twitter mobile apps would be _applications_, the Twitter API would also be an _application_. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the _endpoint_ in the Twitter API could be a new API endpoint (e.g., `https://api.twitter.com/relaynet`).
@@ -67,7 +67,7 @@ Endpoints and gateways MUST comply with the [Relaynet PKI profile](rs002-pki.md)
 
 ### Service Messaging Protocol
 
-This protocol establishes the channel between two applications in a service. The service has full control over this protocol, including the types of messages that its applications exchange (their contents, serialization format, etc).
+This protocol establishes the channel between two applications in a service. The _service provider_ has full control over this protocol, including the types of messages that its applications exchange (their contents, serialization format, etc).
 
 Applications MAY provision [_Parcel Delivery Authorizations_ (PDAs)](rs002-pki.md#parcel-delivery-authorization-pda) from their corresponding endpoints. PDAs MUST be encapsulated in service messages; for example, an application sends a message to another application in order to subscribe to updates, the authorizing application could attach the PDA to the message.
 
@@ -113,13 +113,13 @@ The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains one or
 1. A 32-bit unsigned integer (4 octets) representing the length of the parcel.
 1. The parcel serialized in the RAMF.
 
-#### Cargo Collection Authorization
+#### Cargo Collection Authorization (CCA)
 
 A RAMF message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. Its concrete message format signature is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
 
 The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`), using either the target gateway's certificate (`KeyTransRecipientInfo`) or the [Relaynet Key Agreement protocol](rs003-key-agreement.md) parameters (`KeyAgreeRecipientInfo`).
 
-Its payload plaintext MUST contains the following information:
+Its payload plaintext MUST contain the following information:
 
 - [_Parcel Delivery Deauthorizations_](rs002-pki.md#parcel-delivery-deauthorization-pdd) issued by Gateway A's endpoints or Gateway A itself to revoke [PDAs](rs002-pki.md#parcel-delivery-authorization-pda).
 - Binding-level constraints to authenticate the relayer, like expecting a specific _Distinguished Name_ in its client-side TLS certificate.
@@ -184,24 +184,22 @@ The binding MUST support the following:
 
 ### Cargo Relay Binding
 
-This is a protocol that establishes a _Cargo Relay Network_ (CRN) between an a gateway and a relayer, with the primary purpose of exchanging cargo.
+This is a protocol that establishes a _Cargo Relay Network_ (CRN) between an a gateway and a relayer, or between two gateways, with the primary purpose of exchanging cargo bidirectionally.
 
-The binding MUST support the following:
+The action of transmitting a cargo over a CRN is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There is only one hop in a relay if the two gateways exchange the cargo directly, or multiple hops if relayers act as intermediaries. A relaying gateway MAY also be an intermediary, in which case it MUST _forward_ the cargo to its target gateway.
 
-- The relayer can send parcels to the gateway, and vice versa. The node delivering the parcel MUST NOT remove it until the target node has acknowledged it.
-- A relayer can request a [cargo collection authorization](#cargo-collection-authorization) from the current gateway, so that the relayer can collect messages for the current gateway at the other end. The binding MAY allow the gateway to place restrictions on its use, using the appropriate field in the cargo collection authorization.
+Completing one relay MAY involve hops with different bindings. For example, the CRN between a user gateway and a relayer could use [CoSocket](rs004-cosocket.md), whilst the CRN between the relayer and the relaying gateway could use [CogRPC](rs008-cogrpc.md).
 
-A user gateway MAY require the relayer to provide a Cargo Collection Authorization (CRA) from the relaying gateway. A relaying gateway MUST require at least one CRA because:
+The node sending the cargo MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the cargo is safely stored -- Consequently, if the cargo is being saved to disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync).
 
-- The relaying gateway needs the user gateway's certificate to identify the parcels that should be delivered to that gateway. Such parcels use PDAs whose chains contain the user gateway's certificate.
-- The relaying gateway needs to establish some degree of trust that the relayer will actually send the cargo to the target gateway.
+A gateway MAY send a CCA to a relayer so that the relayer can collect cargo for the current gateway in the next hop.
 
-The relayer SHOULD follow the following process when it interacts with a gateway:
+A user gateway MAY require the relayer to provide a CCA from the relaying gateway, but a relaying gateway MUST require at least one CCA because:
 
-1. Relayer delivers cargo(es) and if necessary waits for all ACKs to arrive.
-1. Request cargo collection authorization for target gateway.
-1. Wait a few seconds in case there are responses to the cargo(es) that were delivered earlier.
-1. Collect cargoes.
+- The relaying gateway needs the user gateway's certificate to identify the parcels that belong to the user gateway (user gateway's certificate is part of the PDA).
+- The relaying gateway could not delete a cargo after delivering it if it does not have some guarantee that the cargo could reach its destination.
+
+In a CRN between a gateway and a relayer, the relayer SHOULD deliver the cargo and wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
 
 ## Open Questions
 

@@ -1,4 +1,4 @@
-# CoSocket: Cargo Relay over TCP/Unix Sockets
+# Cargo Relay over TCP/Unix Sockets (CoSocket)
 
 - Id: RS-004.
 - Status: Placeholder.
@@ -7,4 +7,105 @@
 
 ## Abstract
 
+This document describes CoSocket, a [cargo relay binding](rs000-core.md#cargo-relay-binding) on top of TCP or Unix sockets. As a purpose-built [Application Layer](https://en.wikipedia.org/wiki/Application_layer) protocol, this is the most efficient binding.
+
 ## Introduction
+
+As a cargo relay binding, CoSocket's objective is to provide the basis for a gateway to exchange cargo with a relayer or another gateway.
+
+Gateways and relayers can act as client and servers. One of them has to be the server so that the other can connect to it via TCP or a Unix socket, but once communication has been established, they become peers and can send [packets](#packets) to each other indistinctively.
+
+CoSocket is a [binary protocol](https://en.wikipedia.org/wiki/Binary_protocol) with [little-endian](https://en.wikipedia.org/wiki/Endianness#Little-endian) byte order.
+
+## Primitives
+
+The packets in this protocol use the following primitives:
+
+- _Varchar_: A UTF-8 string, length-prefixed with a 8-bit unsigned integer (1 octet). Consequently, the string can have a length of up to 255 octets.
+- _Payload length_: A 32-bit unsigned integer (4 octets), used as a length-prefix for a payload.
+
+## Packets
+
+Each packet starts with a header serialized as one octet.
+
+### Cargo Collection Request
+
+This packet encapsulates a [Cargo Collection Authorization (CCA)](rs000-core.md#cargo-collection-authorization-cca) and represents a request to collect cargo for a specific gateway.
+
+A relayer MUST send this packet to a gateway to indicate it is ready to receive cargo and to prove it is authorized to receive cargo for the gateway in the CCA.
+
+The packet comprises the following sequence:
+
+1. Header: `0x00`.
+1. The _payload length_ for the CCA.
+1. The CCA.
+
+### Cargo Delivery
+
+This packet encapsulates a cargo and has the following sequence:
+
+1. Header: `0x01`.
+1. A string that uniquely identifies this cargo delivery, serialized as a varchar. This MAY be different from the cargo id, so it could be a [UUID4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)) value, for example.
+1. The _payload length_ for the cargo.
+1. The cargo.
+
+### Cargo Delivery (File Descriptor Version)
+
+This is an alternative to [Cargo Delivery](#cargo-delivery) using file descriptors, so this is only available on Unix sockets. The sequence is as follows:
+
+1. Header: `0x02`.
+1. The string that uniquely identifies this cargo delivery, serialized as a varchar.
+1. (TODO: Define how the file descriptor is actually passed)
+
+### Cargo Collection
+
+This packet represents an acknowledgement that a cargo delivery was successfully received and has the following sequence:
+
+1. Header: `0x03`.
+1. The cargo delivery id, serialized as varchar.
+
+### Cargo Delivery Completion
+
+Used to signal that there are no further cargoes for the specified gateway. It has the following sequence:
+
+1. Header: `0x04`.
+1. The address of the gateway for which there are no further cargoes, serialized as varchar.
+
+The sender of this packet MUST also quit if its peer has already confirmed that it will not send any further cargoes.
+
+### Quit
+
+Used by a peer to indicate that it is about to close the connection. The sender MUST close the connection immediately after sending this packet.
+
+The packet has the following sequence:
+
+1. Header: `0xff`.
+1. Reason: A 16-bit unsigned integer representing the reason why the connection was terminated:
+   - `0x00`: Operation completed without errors.
+   - `0x01`: Invalid packet.
+   - `0x02`: Quota reached.
+   - `0x03`: Internal error.
+
+## Persistent Connections
+
+Two gateways MAY maintain a persistent connection to exchange cargo in near-real time. This would be necessary when the target gateway is not a server that can be reached by the other gateway (e.g., the target is behind a [NAT gateway](https://en.wikipedia.org/wiki/Network_address_translation)).
+
+Relayers MUST always quit the connection as soon as no further cargoes are expected in either direction.
+
+## Examples
+
+### Relayer as TCP Server
+
+TODO: Upload sequence diagram.
+
+### Relayer as Unix Socket Client
+
+TODO: Upload sequence diagram.
+
+### Cargo Forwarding
+
+TODO: Upload sequence diagram.
+
+# Relevant Specifications
+
+[Relaynet Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [cargo relay bindings](rs000-core.md#cargo-relay-binding) specifically, all of which apply to CoSocket. Amongst other things, it defines the use Transport Layer Security (TLS).
