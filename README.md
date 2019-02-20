@@ -11,6 +11,7 @@ The main specs are:
 - [RS-002 (Relaynet PKI)](rs002-pki.md) defines how to use the certificates for endpoints and gateways.
 - [RS-003 (Key Agreement)](rs003-key-agreement.md) defines the key agreement protocol to establish and protect sessions between two gateways or two endpoints.
 - [RS-012 (Service Integration Scale)](rs012-service-integration.md) categorizes the degrees to which Relaynet can be integrated in a service.
+- [RS-014 (Ping)](rs014-ping.md) defines a trivial service to test the implementation and integration of Relaynet components.
 
 _Cargo relay networks_ (CRNs) can be established with one of the following _bindings_. They are the transport medium for gateways to exchange _cargoes_ through a _relayer_.
 

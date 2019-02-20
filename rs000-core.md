@@ -174,13 +174,15 @@ Bindings MAY extend this specification, but they MUST NOT override it.
 
 ### Parcel Delivery Binding
 
-This is a protocol that establishes a _Parcel Delivery Network_ (PDN) between an endpoint and a gateway, with the primary purpose of exchanging parcels.
+This is a protocol that establishes a _Parcel Delivery Network_ (PDN) between an endpoint and a gateway, with the primary purpose of exchanging parcels bidirectionally.
 
-The binding MUST support the following:
+The node sending a parcel MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the parcel is safely stored -- Consequently, if the parcel is being saved to disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync).
 
-- The endpoint can send parcels to the gateway, and vice versa. The node delivering the parcel MUST NOT remove it until the target node has acknowledged it.
-- A private endpoint can ask its gateway to issue a certificate for the endpoint, so that it can be subsequently used to issue a PDA.
-- A private endpoint can send a PDD to its gateway.
+A private endpoint MAY request a certificate from its gateway so that it can be subsequently used to issue a PDA, in which case the gateway MUST fulfill the request.
+
+A private endpoint MAY send a PDD to its gateway so it can be included in future CCAs.
+
+When a relaying gateway delivers a parcel to its target endpoint, the endpoint SHOULD be provided with the relaying gateway's address if the gateway is able to accept parcels for the endpoint that sent the initial parcel.
 
 ### Cargo Relay Binding
 
@@ -190,7 +192,7 @@ The action of transmitting a cargo over a CRN is called _hop_, and the action of
 
 Completing one relay MAY involve hops with different bindings. For example, the CRN between a user gateway and a relayer could use [CoSocket](rs004-cosocket.md), whilst the CRN between the relayer and the relaying gateway could use [CogRPC](rs008-cogrpc.md).
 
-The node sending the cargo MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the cargo is safely stored -- Consequently, if the cargo is being saved to disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync).
+The node sending a cargo MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the cargo is safely stored -- Consequently, if the cargo is being saved to disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync).
 
 A gateway MAY send a CCA to a relayer so that the relayer can collect cargo for the current gateway in the next hop.
 
