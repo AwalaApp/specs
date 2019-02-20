@@ -26,7 +26,7 @@ The two applications MAY continue to run subsequent transactions. This could be 
 
 ### Ping
 
-This is the message that initiates a transaction. It MUST be a sequence of exactly 32 octets, and its type MUST be `application/vnd.relaynet.ping.ping`.
+This is the message that initiates a transaction. It MUST be a random sequence of exactly 32 octets, and its type MUST be `application/vnd.relaynet.ping.ping`.
 
 ### Pong
 
