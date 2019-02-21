@@ -17,6 +17,10 @@ Gateways and relayers can act as client and servers. One of them has to be the s
 
 CoSocket is a [binary protocol](https://en.wikipedia.org/wiki/Binary_protocol) with [little-endian](https://en.wikipedia.org/wiki/Endianness#Little-endian) byte order.
 
+## Binding Hint
+
+The [hint](rs000-core.md#addressing) for this binding MUST be `cosocket`. For example, `rngh+cosocket:example.com` would be a valid [host gateway](rs000-core.md#gateway-messaging-protocol) address.
+
 ## Primitives
 
 The packets in this protocol use the following primitives:
