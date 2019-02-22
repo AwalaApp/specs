@@ -180,7 +180,7 @@ A private endpoint MAY request a certificate from its gateway so that it can be 
 
 A private endpoint MAY send a PDD to its gateway so it can be included in future CCAs.
 
-When a relaying gateway delivers a parcel to a target endpoint, the endpoint SHOULD be provided with the relaying gateway's address if the gateway is able to accept parcels for the endpoint that sent the initial parcel. If the relaying gateway also supports the same binding to collect parcels, the address provided MUST use that binding's hint.
+When a relaying gateway delivers a parcel to its target endpoint, the endpoint SHOULD be provided with the relaying gateway's address if the gateway is able to accept parcels for the endpoint that sent the initial parcel. If the relaying gateway also supports the same binding to collect parcels, the address provided MUST use that binding's hint.
 
 ### Cargo Relay Binding
 
