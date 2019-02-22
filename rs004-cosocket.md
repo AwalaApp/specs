@@ -110,6 +110,6 @@ TODO: Upload sequence diagram.
 
 TODO: Upload sequence diagram.
 
-# Relevant Specifications
+## Relevant Specifications
 
 [Relaynet Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [cargo relay bindings](rs000-core.md#cargo-relay-binding) specifically, all of which apply to CoSocket. Amongst other things, it defines the use Transport Layer Security (TLS).

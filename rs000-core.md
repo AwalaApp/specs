@@ -151,13 +151,11 @@ message ParcelDeliveryDeauthorization {
 
 ## Message Transport Bindings
 
-A message transport binding, or simply _binding_, is a protocol that defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) between endpoints/gateways and gateways/relayers. Bindings can either leverage pre-existing [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols (e.g., HTTP) or be purpose-built.
+A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) between endpoints and gateways, or gateways and relayers. This document describes the requirements applicable to all bindings, but does not define any concrete binding as they are defined in separate documents. 
 
-This document describes the requirements applicable to all bindings, but does not define any concrete binding as they MUST be defined in separate documents.
+Bindings will typically leverage [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols, such as HTTP or purpose-built ones, but they can also use an Inter-Process Communication (IPC) mechanism provided by the host system. They will usually have a client and server in each communication, and an endpoint/gateway/relayer could play both roles in different communications.
 
-A binding MUST define its clients and servers, and how they implement this specification. Typically, the server listens on an address/port location, and the client initiates the communication. A peer-to-peer model could be represented with nodes that act as both clients and servers.
-
-The client MUST authenticate the server with the following constraints:
+The client MUST authenticate the server. When applicable, the following constraints MUST be enforced:
 
 - TLS MUST be used if the Layer 4 protocol is TCP, unless communication happens via the loopback network interface.
 - DTLS MUST be used if the Layer 4 protocol is UDP, unless communication happens via the loopback network interface.
@@ -168,7 +166,7 @@ Likewise, the server MUST authenticate the client and the binding MUST specify t
 
 Clients and servers MUST comply with the [Internet PKI](https://tools.ietf.org/html/rfc5280) when using TLS. When not using TLS, they SHOULD NOT use [Relaynet PKI](rs002-pki.md) certificates for client/server authentication because they are only meant to be used in messaging protocols.
 
-For performance reasons, the client and the server SHOULD not use the loopback network interface when they are on the same computer, and SHOULD instead use Unix sockets or any other Inter-Process Communication (IPC) mechanism supported by the host system.
+For performance reasons, the client and the server SHOULD NOT use the loopback network interface when they are on the same computer, and SHOULD instead use Unix sockets or any other IPC mechanism supported by the host system.
 
 Bindings MAY extend this specification, but they MUST NOT override it.
 
@@ -182,7 +180,7 @@ A private endpoint MAY request a certificate from its gateway so that it can be 
 
 A private endpoint MAY send a PDD to its gateway so it can be included in future CCAs.
 
-When a relaying gateway delivers a parcel to its target endpoint, the endpoint SHOULD be provided with the relaying gateway's address if the gateway is able to accept parcels for the endpoint that sent the initial parcel.
+When a relaying gateway delivers a parcel to a target endpoint, the endpoint SHOULD be provided with the relaying gateway's address if the gateway is able to accept parcels for the endpoint that sent the initial parcel. If the relaying gateway also supports the same binding to collect parcels, the address provided MUST use that binding's hint.
 
 ### Cargo Relay Binding
 
