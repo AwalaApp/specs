@@ -151,7 +151,7 @@ message ParcelDeliveryDeauthorization {
 
 ## Message Transport Bindings
 
-A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) between endpoints and gateways, or gateways and relayers. This document describes the requirements applicable to all bindings, but does not define any concrete binding as they are defined in separate documents. 
+A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) between endpoints and gateways, or gateways and relayers. This document describes the requirements applicable to all bindings, but does not define any concrete binding. 
 
 Bindings will typically leverage [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols, such as HTTP or purpose-built ones, but they can also use an Inter-Process Communication (IPC) mechanism provided by the host system. They will usually have a client and server in each communication, and an endpoint/gateway/relayer could play both roles in different communications.
 
