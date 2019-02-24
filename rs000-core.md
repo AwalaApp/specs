@@ -162,7 +162,7 @@ The client MUST authenticate the server. When applicable, the following constrai
 - When using the loopback network interface (i.e., localhost or `127.0.0.0/8`), server authentication MAY be skipped if the server listens on a system port (i.e., a port in the range 0-1023).
 - When using Unix sockets, the client MUST check that the expected user owns the file.
 
-Likewise, the server MUST authenticate the client and the binding MUST specify the mechanism(s) to do so, including whether or how to do client registration.
+Likewise, the server MUST authenticate the client unless stated otherwise in this specification. The binding MUST specify the mechanism(s) to do so, including whether or how to do client registration.
 
 Clients and servers MUST comply with the [Internet PKI](https://tools.ietf.org/html/rfc5280) when using TLS. When not using TLS, they SHOULD NOT use [Relaynet PKI](rs002-pki.md) certificates for client/server authentication because they are only meant to be used in messaging protocols.
 
@@ -174,13 +174,24 @@ Bindings MAY extend this specification, but they MUST NOT override it.
 
 This is a protocol that establishes a _Parcel Delivery Connection_ (PDC) between an endpoint and a gateway, with the primary purpose of exchanging parcels bidirectionally.
 
-The node sending a parcel MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the parcel is safely stored -- Consequently, if the parcel is being saved to disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync).
+The node delivering a parcel MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the parcel is safely stored -- Consequently, if the parcel is being saved to disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync).
 
-A private endpoint MAY request a certificate from its gateway so that it can be subsequently used to issue a PDA, in which case the gateway MUST fulfill the request.
+A PDC is _external_ if both nodes are public and the gateway is a relaying gateway. Otherwise, the PDC is _internal_. Each binding MUST support one or both types.
 
-A private endpoint MAY send a PDD to its gateway so it can be included in future CCAs.
+In an external PDC:
 
-When a relaying gateway delivers a parcel to its target endpoint, the endpoint SHOULD be provided with the relaying gateway's address if the gateway is able to accept parcels for the endpoint that sent the initial parcel. If the relaying gateway also supports the same binding to collect parcels, the address provided MUST use that binding's hint.
+- The endpoint and the gateway MAY act as client and server, respectively, and vice versa.
+- The gateway and the endpoint MAY only deliver parcels to each other and they MUST NOT attempt to collect parcels from each other. In other words, the endpoint has to initiate a connection to be able to send parcels to the gateway, whilst the  gateway has to initiate a connection to be able to send parcels to the endpoint.
+- The server MUST NOT require client authentication, but they MAY still refuse requests from suspicious and/or ill-behaved clients.
+- The gateway SHOULD include its address when it delivers parcels to the endpoint, but only if the gateway is able to collect parcels for the endpoint that sent the initial parcel.
+- The connection MUST be closed as soon as all parcels have been delivered.
+
+Whilst in an internal PDC:
+
+- The gateway MUST always be the server, and the endpoint MUST always be the client.
+- The endpoint MAY request a certificate from its gateway so that it can be subsequently used to issue a PDA. The gateway MUST fulfill the request.
+- The endpoint MAY also send PDDs to its gateway. The gateway MUST include all active PDDs in future CCAs.
+- The connection SHOULD remain open for as long as the two nodes are running.
 
 ### Cargo Relay Binding
 
