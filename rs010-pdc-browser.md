@@ -1,4 +1,4 @@
-# Web Browser Interface to Parcel Delivery Network
+# Web Browser Interface for Parcel Delivery Connections
 
 - Id: RS-010.
 - Status: Placeholder.

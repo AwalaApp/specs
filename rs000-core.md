@@ -172,7 +172,7 @@ Bindings MAY extend this specification, but they MUST NOT override it.
 
 ### Parcel Delivery Binding
 
-This is a protocol that establishes a _Parcel Delivery Network_ (PDN) between an endpoint and a gateway, with the primary purpose of exchanging parcels bidirectionally.
+This is a protocol that establishes a _Parcel Delivery Connection_ (PDC) between an endpoint and a gateway, with the primary purpose of exchanging parcels bidirectionally.
 
 The node sending a parcel MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the parcel is safely stored -- Consequently, if the parcel is being saved to disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync).
 
@@ -184,11 +184,11 @@ When a relaying gateway delivers a parcel to its target endpoint, the endpoint S
 
 ### Cargo Relay Binding
 
-This is a protocol that establishes a _Cargo Relay Network_ (CRN) between an a gateway and a relayer, or between two gateways, with the primary purpose of exchanging cargo bidirectionally.
+This is a protocol that establishes a _Cargo Relay Connection_ (CRC) between an a gateway and a relayer, or between two gateways, with the primary purpose of exchanging cargo bidirectionally.
 
-The action of transmitting a cargo over a CRN is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There is only one hop in a relay if the two gateways exchange the cargo directly, or multiple hops if relayers act as intermediaries. A relaying gateway MAY also be an intermediary, in which case it MUST _forward_ the cargo to its target gateway.
+The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There is only one hop in a relay if the two gateways exchange the cargo directly, or multiple hops if relayers act as intermediaries. A relaying gateway MAY also be an intermediary, in which case it MUST _forward_ the cargo to its target gateway.
 
-Completing one relay MAY involve hops with different bindings. For example, the CRN between a user gateway and a relayer could use [CoSocket](rs004-cosocket.md), whilst the CRN between the relayer and the relaying gateway could use [CogRPC](rs008-cogrpc.md).
+Completing one relay MAY involve hops with different bindings. For example, the CRC between a user gateway and a relayer could use [CoSocket](rs004-cosocket.md), whilst the CRC between the relayer and the relaying gateway could use [CogRPC](rs008-cogrpc.md).
 
 The node sending a cargo MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the cargo is safely stored -- Consequently, if the cargo is being saved to disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync).
 
@@ -199,7 +199,7 @@ A user gateway MAY require the relayer to provide a CCA from the relaying gatewa
 - The relaying gateway needs the user gateway's certificate to identify the parcels that belong to the user gateway (user gateway's certificate is part of the PDA).
 - The relaying gateway could not delete a cargo after delivering it if it does not have some guarantee that the cargo could reach its destination.
 
-In a CRN between a gateway and a relayer, the relayer SHOULD deliver the cargo and wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
+In a CRC between a gateway and a relayer, the relayer SHOULD deliver the cargo and wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
 
 ## Open Questions
 
