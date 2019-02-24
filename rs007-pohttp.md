@@ -14,17 +14,17 @@ PoHTTP was specifically designed to make it easier for maintainers of existing s
 
 In some cases, it may also be desirable for a relaying gateway to expose an HTTP interface so it can collect parcels from certain endpoints. For example, a Shell script in a legacy system could use `curl` to deliver parcels.
 
-Given the nature of the underlying protocol, this binding can only be used when the target is a [host node](rs000-core.md#addressing) -- That is, the HTTP server can only be a host endpoint or a host gateway.
+Given the nature of the underlying protocol, this binding can only be used when the target is a [public node](rs000-core.md#addressing) -- That is, the HTTP server can only be a public endpoint or gateway.
 
 ## Binding hint
 
-The [hint](rs000-core.md#addressing) for this binding MUST be `http`. For example, `rneh+http:api.example.com/relaynet` would be a valid [host endpoint](rs000-core.md#endpoint-messaging-protocol) address and it would correspond to the HTTP URL `https://api.example.com/relaynet` (note the `https` scheme).
+The [hint](rs000-core.md#addressing) for this binding MUST be `http`. For example, `rne+http://api.example.com/relaynet` would be a valid [public endpoint](rs000-core.md#endpoint-messaging-protocol) address and it would correspond to the HTTP URL `https://api.example.com/relaynet` (note the `https` scheme).
 
 ## Operations
 
 ### Parcel Collection
 
-A user gateway MAY allow its endpoints to collect parcels using this binding. Host endpoints and relaying gateways MUST NOT support this functionality.
+A user gateway MAY allow its endpoints to collect parcels using this binding. Public endpoints and relaying gateways MUST NOT support this functionality.
 
 Collecting parcels involves two steps:
 
@@ -48,13 +48,13 @@ To deliver each parcel, the client MUST make a `POST` request to the HTTP URL co
 
 The server MUST return a `202` (Accepted) response as soon as it successfully [stores or forwards](https://en.wikipedia.org/wiki/Store_and_forward) the parcel. A relaying gateway MUST return a `507` (Insufficient Storage), it MUST respond with an appropriate status code in the range 400-599, including `507` (Insufficient Storage) .
 
-If per [Parcel Delivery Binding](rs000-core.md#parcel-delivery-binding) in Relaynet Core, the client is a relaying gateway and it is required to provide the target endpoint with its address, it MUST do so with the request header `X-Relaynet-Gateway`. For example, `X-Relaynet-Gateway: rngh+http:gateway.humanitarian.org`.
+If per [Parcel Delivery Binding](rs000-core.md#parcel-delivery-binding) in Relaynet Core, the client is a relaying gateway and it is required to provide the target endpoint with its address. PoHTTP gateways MUST do so with the request header `X-Relaynet-Gateway`. For example, `X-Relaynet-Gateway: rng+http://gateway.humanitarian.org`.
 
 ## Client Authentication
 
 A user gateway MAY require its endpoints to provide authentication information in the `Authorization` request header and/or require the use of a client-side TLS certificate issued by a trusted Certificate Authority. Defining how that would work would be the responsibility of another Relaynet Specification.
 
-Host endpoints and relaying gateways MUST NOT require their clients to provide any authentication- or authorization-related information in the request headers, nor require the use of TLS-certificates. 
+Public endpoints and relaying gateways MUST NOT require their clients to provide any authentication- or authorization-related information in the request headers, nor require the use of TLS-certificates. 
 
 Regardless of the type of Relaynet node they represent, servers MAY still refuse requests from suspicious and/or ill-behaved clients.
 
@@ -82,4 +82,4 @@ Clients MUST support [Server Name Identification](https://en.wikipedia.org/wiki/
 
 ## Open Questions
 
-- This binding is meant for host endpoints and relaying gateways. User gateways should be using PoSocket or some other IPC-based binding, so should they be forbidden from supporting this binding? If so, this binding would not support parcel collection.
+- This binding is meant for public endpoints and relaying gateways. User gateways should be using PoSocket or some other IPC-based binding, so should they be forbidden from supporting this binding? If so, this binding would not support parcel collection.

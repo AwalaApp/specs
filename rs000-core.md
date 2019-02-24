@@ -51,8 +51,8 @@ This document only defines [point-to-point](https://www.enterpriseintegrationpat
 
 Each node in Relaynet MUST have a unique address, and the type of address is determined by how it is accessed in its message transport binding:
 
-- _Host nodes_ can be reached by host/port, which are included in the address in the form `scheme[+bindingHint]:domainNameOrIpAddress[:port][/extra]`, where:
-  - `scheme` is determined by the messaging protocol as defined below.
+- A _public node_ can be reached by host/port and its address uses the syntax `scheme[+bindingHint]:domainNameOrIpAddress[:port][/extra]`, where:
+  - `scheme` is determined by the messaging protocol (see below).
   - `bindingHint` specifies the message transport binding. If absent, [Application-Level Protocol Negotiation](https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation) MUST be done.
   - `domainNameOrIpAddress` is the host name as a DNS record or IPv4/IPv6 address. If using a DNS record, the binding SHOULD specify the type of allowed DNS records (e.g., A, CNAME, SRV).
   - `port` is the Layer 4 (e.g., TCP) port on which the host listens. This does not apply when using SRV records.
@@ -75,7 +75,7 @@ Applications MAY provision [_Parcel Delivery Authorizations_ (PDAs)](rs002-pki.m
 
 This protocol establishes the channel between two endpoints. The only type of message that this specification defines at this level is the [_parcel_](#parcel).
 
-_Host endpoints_ and _private endpoints_ MUST use the schemes `rneh` and `rnep`, respectively. For example, `rneh:example.com` or `rneh+grpc:example.com` (if using the [gRPC binding](rs009-pogrpc.md)).
+Endpoint addresses MUST use the scheme `rne`. For example, `rne://example.com` or `rne+grpc://example.com` (if using the [gRPC binding](rs009-pogrpc.md)) are valid public endpoint addresses, and `rne:0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private endpoint address.
 
 #### Parcel
 
@@ -98,7 +98,7 @@ The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the se
 
 This protocol establishes the channel between two gateways.
 
-_Host gateways_ and _private gateways_ MUST use the schemes `rngh` and `rngp`, respectively. For example, `rngh:example.com` or `rngh+grpc:example.com` (if using the [gRPC binding](rs008-cogrpc.md)).
+Gateway addresses MUST use the scheme `rng`. For example, `rng://example.com` and `rng+grpc://example.com` (if using the [gRPC binding](rs008-cogrpc.md)) are valid public gateway addresses, and `rng:0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private gateway address.
 
 When using the [Relaynet Key Agreement protocol](rs003-key-agreement.md), the two gateways MUST maintain a single session across the different message types.
 

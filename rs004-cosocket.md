@@ -19,7 +19,7 @@ CoSocket is a [binary protocol](https://en.wikipedia.org/wiki/Binary_protocol) w
 
 ## Binding Hint
 
-The [hint](rs000-core.md#addressing) for this binding MUST be `cosocket`. For example, `rngh+cosocket:example.com` would be a valid [host gateway](rs000-core.md#gateway-messaging-protocol) address.
+The [hint](rs000-core.md#addressing) for this binding MUST be `cosocket`. For example, `rng+cosocket://example.com` would be a valid [public gateway](rs000-core.md#gateway-messaging-protocol) address.
 
 ## Primitives
 
