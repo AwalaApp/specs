@@ -11,7 +11,7 @@ The main specs are:
 - [RS-002 (Relaynet PKI)](rs002-pki.md) defines how to use the certificates for endpoints and gateways.
 - [RS-003 (Key Agreement)](rs003-key-agreement.md) defines the key agreement protocol to establish and protect sessions between two gateways or two endpoints.
 
-[_Cargo relay binding_](rs000-core.md#cargo-relay-binding) are used to establish _cargo relay connections_ (CRCs) -- the transport medium for gateways to exchange _cargoes_ through a _relayer_. The following bindings are available:
+[_Cargo relay bindings_](rs000-core.md#cargo-relay-binding) are used to establish _cargo relay connections_ (CRCs) -- the transport medium for gateways to exchange _cargoes_ through a _relayer_. The following bindings are available:
 
 - [RS-004 (CoSocket)](rs004-cosocket.md): Cargo relay over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the most efficient binding for CRCs.
 - [RS-015 (CoWebSocket)](rs006-cohttp.md): Cargo relay over WebSockets. An alternative to CoSocket, to lower the barrier to adopt Relaynet.
