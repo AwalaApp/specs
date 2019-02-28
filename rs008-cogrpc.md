@@ -1,7 +1,5 @@
 # CogRPC: Cargo Relay over gRPC
 
 - Id: RS-008.
-- Status: Placeholder.
+- Status: Deprecated.
 - Type: Implementation.
-
-## Abstract

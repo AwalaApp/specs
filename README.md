@@ -13,11 +13,10 @@ The main specs are:
 - [RS-012 (Service Integration Scale)](rs012-service-integration.md) categorizes the degrees to which Relaynet can be integrated in a service.
 - [RS-014 (Ping)](rs014-ping.md) defines a trivial service to test the implementation and integration of Relaynet components.
 
-_Cargo relay connections_ (CRCs) can be established with one of the following _bindings_. They are the transport medium for gateways to exchange _cargoes_ through a _relayer_.
+[_Cargo relay binding_](rs000-core.md#cargo-relay-binding) are used to establish _cargo relay connections_ (CRCs) -- the transport medium for gateways to exchange _cargoes_ through a _relayer_. The following bindings are available:
 
-- [RS-004 (CoSocket)](rs004-cosocket.md): Cargo relay over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the most efficient way to establish a CRC.
-- [RS-006 (CoHTTP)](rs006-cohttp.md): Cargo relay over HTTP. An alternative to CoSocket, to lower the barrier to adopt Relaynet.
-- [RS-008 (CogRPC)](rs008-cogrpc.md): Cargo relay over gRPC. Another alternative to CoSocket, to lower the barrier to adopt Relaynet.
+- [RS-004 (CoSocket)](rs004-cosocket.md): Cargo relay over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the most efficient binding for CRCs.
+- [RS-015 (CoWebSocket)](rs006-cohttp.md): Cargo relay over WebSockets. An alternative to CoSocket, to lower the barrier to adopt Relaynet.
 
 _Parcel delivery connections_ (PDCs) can be established with one of the following _bindings_. They are the transport medium for an endpoint and a gateway to exchange _parcels_.
 
