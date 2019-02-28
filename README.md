@@ -18,9 +18,10 @@ The main specs are:
 - [RS-004 (CoSocket)](rs004-cosocket.md): Cargo relay over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the most efficient binding for CRCs.
 - [RS-015 (CoWebSocket)](rs006-cohttp.md): Cargo relay over WebSockets. An alternative to CoSocket, to lower the barrier to adopt Relaynet.
 
-_Parcel delivery connections_ (PDCs) can be established with one of the following _bindings_. They are the transport medium for an endpoint and a gateway to exchange _parcels_.
+[_Parcel delivery bindings_](rs000-core.md#parcel-delivery-binding) are used to establish _parcel delivery connections_ (PDCs) -- The transport medium for an endpoint and a gateway to exchange _parcels_. The following bindings are available:
 
-- [RS-005 (PoSocket)](rs005-posocket.md): Parcel delivery over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the most efficient way to establish a PDC.
+- [RS-005 (PoSocket)](rs005-posocket.md): Parcel delivery over TCP/Unix Sockets, for internal PDCs. This is a purpose-built Layer 7 protocol, and the most efficient binding for internal PDCs.
+- [RS-016 (PoWebSocket)](rs016-powebsocket.md): Parcel delivery over WebSockets, for internal PDCs. An alternative to PoSocket, to lower the barrier to adopt Relaynet
 - [RS-007 (PoHTTP)](rs007-pohttp.md): Parcel delivery over HTTP, for external PDCs.
 - [RS-009 (PogRPC)](rs009-pogrpc.md): Parcel delivery over gRPC, for external PDCs.
 
