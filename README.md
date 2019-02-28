@@ -22,8 +22,8 @@ _Cargo relay connections_ (CRCs) can be established with one of the following _b
 _Parcel delivery connections_ (PDCs) can be established with one of the following _bindings_. They are the transport medium for an endpoint and a gateway to exchange _parcels_.
 
 - [RS-005 (PoSocket)](rs005-posocket.md): Parcel delivery over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the most efficient way to establish a PDC.
-- [RS-007 (PoHTTP)](rs007-pohttp.md): Parcel delivery over HTTP. An alternative to PoSocket, to lower the barrier to adopt Relaynet.
-- [RS-009 (PogRPC)](rs009-pogrpc.md): Parcel delivery over gRPC. Another alternative to PoSocket, to lower the barrier to adopt Relaynet.
+- [RS-007 (PoHTTP)](rs007-pohttp.md): Parcel delivery over HTTP, for external PDCs.
+- [RS-009 (PogRPC)](rs009-pogrpc.md): Parcel delivery over gRPC, for external PDCs.
 
 Other specs:
 
