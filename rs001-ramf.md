@@ -63,3 +63,7 @@ The following concrete signatures have been reserved by other Relaynet specifica
 - `0x43` ("C" in ASCII) for [cargoes](rs000-core.md#cargo).
 - `0x44` for [cargo collection authorizations](rs000-core.md#cargo-collection-authorization-cca).
 - `0x50` ("P" in ASCII) for [parcels](rs000-core.md#parcel).
+
+## Open Questions
+
+- PCKS7 is much more widely supported than CMS. Should we downgrade to PCKS7? If so, is there anything else that would have to change as a result?
