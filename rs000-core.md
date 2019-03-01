@@ -163,7 +163,7 @@ In a client-server model, the client MUST enforce the following constraints to e
 - When using the loopback network interface (i.e., addresses in the range `127.0.0.0/8`), TLS or equivalent MUST be used if the server listens on a non-system port (i.e., a port greater than 1023). Servers listening on system ports can be trusted because that means that the host administrator is running it.
 - When using Unix sockets, the client MUST check that the expected user (if known) owns the file.
 
-Likewise, unless stated otherwise in this specification, the server MUST authenticate the client with a [handshake](https://en.wikipedia.org/wiki/Handshaking) that includes nonces to avoid replay attacks and requires Relaynet PKI certificates/keys to sign such nonces. Each binding MUST define the handshake in detail, and specify whether and how clients can register with the server.
+Likewise, unless stated otherwise in this specification, the server MUST authenticate the client with a [handshake](https://en.wikipedia.org/wiki/Handshaking) that includes nonces to avoid replay attacks and requires Relaynet PKI certificates/keys to sign such nonces. Each binding MUST define the handshake in detail, and specify whether and how clients should register with the server.
 
 In models other than client-server, such as those using message queues, peers MUST sign each message they send and the receiving node MUST verify the signature before processing the message.
 
