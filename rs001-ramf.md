@@ -39,7 +39,7 @@ A message is serialized using the following byte sequence ([little-endian](https
    - This is at the bottom to make it easy to generate and consume messages with a single pass.
    - The ciphertext is length-prefixed with a 12-bit unsigned integer (2 octets), so the maximum length is 4kib.
 
-## Post-deserialization validation
+## Post-Deserialization Validation
 
 Recipients and brokers of a RAMF message MUST validate the message as soon as possible, before any further processing or relay. At a minimum, they MUST:
 
@@ -47,6 +47,8 @@ Recipients and brokers of a RAMF message MUST validate the message as soon as po
 - Check the date and TTL to make sure the message is still valid (and mitigate replay attacks).
 - Check that the sender certificate is valid per [Relaynet PKI](rs002-pki.md).
 - Check that the date is within the period of time during which the certificate was valid.
+
+## Security Considerations
 
 To avoid replay attacks, the message id SHOULD be persisted until the TTL expires, and until then, reject any incoming message from the same sender and the same id.
 
