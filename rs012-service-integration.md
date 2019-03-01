@@ -66,8 +66,4 @@ The following diagram illustrates this scenario with Twitter:
 
 ![](assets/rs012/level0-offline.png)
 
-A service may eventually reach this level because it may be too expensive to support both Relaynet and the original RPC interface. Note that Relaynet can also be used when the two applications are connected to the Internet and there's no need to relay the data physically:
-
-![](assets/rs012/level0-online.png)
-
-To keep latency low, the user's gateway can operate in [cut-through mode](https://en.wikipedia.org/wiki/Cut-through_switching) when it can reach the target endpoint. Otherwise, it would remain in [store-and-forward mode](https://en.wikipedia.org/wiki/Store_and_forward), delivering the parcel to the target endpoint when it can eventually reach the endpoint. This technique can be seen as a form of [adaptive switching](https://en.wikipedia.org/wiki/Adaptive_switching).
+A service may eventually reach this level because it may be too expensive to support both Relaynet and the original RPC interface. Note that [Relaynet can still be used when the Internet is available](rs000-core.md#adaptive-switching).
