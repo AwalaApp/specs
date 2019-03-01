@@ -151,22 +151,23 @@ message ParcelDeliveryDeauthorization {
 
 ## Message Transport Bindings
 
-A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) between endpoints and gateways, or gateways and relayers. This document describes the requirements applicable to all bindings, but does not define any concrete binding. 
+A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) in Relaynet. [Parcel delivery bindings](#parcel-delivery-binding) define the communication between endpoints and gateways, and [cargo relay bindings](#cargo-relay-binding) define the communication between gateways and relayers, or between two gateways. This document describes the requirements applicable to all bindings, but does not define any concrete binding.
 
-Bindings will typically leverage [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols, such as HTTP or purpose-built ones, but they can also use an Inter-Process Communication (IPC) mechanism provided by the host system. They will usually have a client and server in each communication, and an endpoint/gateway/relayer could play both roles in different communications.
+Bindings will typically leverage [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols, such as HTTP or purpose-built ones, but they can also use an Inter-Process Communication (IPC) mechanism provided by the host system. Most bindings might use a client-server model where, for example, the endpoint is the client and the gateway is the server, but they might require the use of a broker (e.g., a message queue) instead.
 
-The client MUST authenticate the server. When applicable, the following constraints MUST be enforced:
+Communication MUST always be encrypted when it happens across different computers, otherwise it is optional. Communication happens on the same computer when either the loopback network interface (i.e., addresses in the range `127.0.0.0/8`) or IPC is used. When encryption is used, it SHOULD be provided by Transport Layer Security (TLS) per the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) or an equivalent technology (e.g., [DTLS](https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security)). Note that different asymmetric keys are required because [Relaynet PKI](rs002-pki.md) certificates cannot be used as server- or client-side certificates in TLS or DTLS.
 
-- TLS MUST be used if the Layer 4 protocol is TCP, unless communication happens via the loopback network interface.
-- DTLS MUST be used if the Layer 4 protocol is UDP, unless communication happens via the loopback network interface.
-- When using the loopback network interface (i.e., localhost or `127.0.0.0/8`), server authentication MAY be skipped if the server listens on a system port (i.e., a port in the range 0-1023).
-- When using Unix sockets, the client MUST check that the expected user owns the file.
+In a client-server model, the client MUST enforce the following constraints to establish trust with a server:
 
-Likewise, the server MUST authenticate the client unless stated otherwise in this specification. The binding MUST specify the mechanism(s) to do so, including whether or how to do client registration.
+- When using TLS or equivalent, the server MUST use a valid certificate for its PKI profile and it MUST be issued by a Certificate Authority trusted by the client.
+- When using the loopback network interface (i.e., addresses in the range `127.0.0.0/8`), TLS or equivalent MUST be used if the server listens on a non-system port (i.e., a port greater than 1023). Servers listening on system ports can be trusted because that means that the host administrator is running it.
+- When using Unix sockets, the client MUST check that the expected user (if known) owns the file.
 
-Clients and servers MUST comply with the [Internet PKI](https://tools.ietf.org/html/rfc5280) when using TLS. When not using TLS, they SHOULD NOT use [Relaynet PKI](rs002-pki.md) certificates for client/server authentication because they are only meant to be used in messaging protocols.
+Likewise, unless stated otherwise in this specification, the server MUST authenticate the client with a [handshake](https://en.wikipedia.org/wiki/Handshaking) that includes nonces to avoid replay attacks and requires Relaynet PKI certificates/keys to sign such nonces. Each binding MUST define the handshake in detail, and specify whether and how clients can register with the server.
 
-For performance reasons, the client and the server SHOULD NOT use the loopback network interface when they are on the same computer, and SHOULD instead use Unix sockets or any other IPC mechanism supported by the host system.
+In models other than client-server, such as those using message queues, peers MUST sign each message they send and the receiving node MUST verify the signature before processing the message.
+
+For performance reasons, nodes SHOULD NOT use the loopback network interface when they are on the same computer. Instead, they SHOULD use Unix sockets or any other IPC mechanism supported by the host system.
 
 Bindings MAY extend this specification, but they MUST NOT override it.
 
@@ -189,6 +190,7 @@ In an external PDC:
 Whilst in an internal PDC:
 
 - The gateway MUST always be the server, and the endpoint MUST always be the client.
+- The server MUST NOT start delivering parcels until the endpoint has signalled that it is ready to receive them.
 - The endpoint MAY request a certificate from its gateway so that it can be subsequently used to issue a PDA. The gateway MUST fulfill the request.
 - The endpoint MAY also send PDDs to its gateway. The gateway MUST include all active PDDs in future CCAs.
 - The connection SHOULD remain open for as long as the two nodes are running.
