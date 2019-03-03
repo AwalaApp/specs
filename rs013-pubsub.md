@@ -12,7 +12,7 @@ This specification will extend [Relaynet Core (RS-000)](rs000-core.md) to suppor
 
 - Endpoints will tell their corresponding gateways which topics they want to be subscribed to.
 - Gateways will push _broadcast parcels_ to a distributed database, for other gateways in the network to consume such parcels and pass them on to their endpoints.
-- The database will be analogous to a "mutable blockchain". Obviously, blockchains are mutable by definition, so the term isn't technically correct. This would be a system with the following properties:
+- The database will be analogous to a "mutable blockchain". Obviously, blockchains are immutable by definition, so the term isn't technically correct. This would be a system with the following properties:
   - Peer-to-peer. No central authority.
   - Nodes will be responsible for storing valid parcels until they expire.
   - Node operators should ideally be rewarded for hosting parcels.
