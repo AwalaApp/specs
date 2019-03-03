@@ -6,15 +6,21 @@
 
 ## Abstract
 
-This specification extends [Relaynet Core (RS-000)](rs000-core.md) to support the [Publish-Subscribe pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html) in centralized and decentralized services.
+This specification will extend [Relaynet Core (RS-000)](rs000-core.md) to support the [Publish-Subscribe pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html) in centralized and decentralized services. This document is a just placeholder because this functionality is not a top priority as of this writing.
 
 ## Introduction
 
 - Endpoints will tell their corresponding gateways which topics they want to be subscribed to.
-- Gateways MAY push broadcast parcels to a blockchain, for other gateways in the network to consume such parcels and pass them on to their endpoints.
+- Gateways will push _broadcast parcels_ to a distributed database, for other gateways in the network to consume such parcels and pass them on to their endpoints.
+- The database will be analogous to a "mutable blockchain". Obviously, blockchains are mutable by definition, so the term isn't technically correct. This would be a system with the following properties:
+  - Peer-to-peer. No central authority.
+  - Nodes will be responsible for storing valid parcels until they expire.
+  - Node operators should ideally be rewarded for hosting parcels.
+  - It may be necessary to support sharding, especially if the parcels aren't limited to just a few kilobytes.
 - Use cases
-  - In a world where the Twitter service is DTN-native, it could represent a tweet as a SDU (that is, one tweet is the sole content of a parcel). This would allow a political dissident to broadcast a message to their followers, so that the message can both (1) reach Twitter and (2) be read by anyone who gets hold of the parcel.
-  - File distribution, especially software updates.
+  - A social network could use this mechanism to distribute posts, especially those that have to reach millions of users.
+  In a world where the Twitter service is Relaynet-native, it could represent a tweet as a [SDU](https://en.wikipedia.org/wiki/Service_data_unit) (that is, one tweet is the sole content of a parcel). This would allow a political dissident to broadcast a message to their followers, so that the message can both (1) reach Twitter and (2) be read by anyone who gets hold of the parcel.
+  - Software update notifications.
 
 ## Addressing
 
@@ -23,7 +29,7 @@ Syntax: `rnt:serviceId[/topicId[?queryString]]`. Useful to broadcast messages. T
 - Centralised: A domain name or IP address.
 - Decentralised: A random, 128-bit hex string.
 
-PubSub parcels could be pushed to a blockchain. And a _relaying gateway_ could subscribe to the topics relevant to its peer gateways so they can relay relevant parcels.
+A _relaying gateway_ could subscribe to the topics relevant to its peer gateways so they can relay relevant parcels.
 
 ## Messaging Protocols
 
