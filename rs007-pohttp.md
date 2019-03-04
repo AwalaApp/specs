@@ -50,3 +50,7 @@ Since [message transport bindings](rs000-core.md#message-transport-bindings) MAY
 ## Relevant Specifications
 
 [Relaynet Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [parcel delivery bindings](rs000-core.md#parcel-delivery-binding) specifically, all of which apply to PoHTTP.
+
+## Open Questions
+
+- This is basically a webhook. Should it be renamed to _PoWebhook_?
