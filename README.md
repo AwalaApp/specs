@@ -4,29 +4,21 @@
 
 This repository contains all the specifications part of [Relaynet](https://relaynet.link/).
 
-The main specs are:
+The following specifications provide the foundation of the network and are therefore the top priority of the project. At this point, the best way to contribute to the project is by providing feedback on these specs.
 
-- [RS-000 (Relaynet Core)](rs000-core.md) defines the foundation of the protocol suite.
+- [RS-000 (Relaynet Core)](rs000-core.md) defines the foundation of the protocol suite. If you are new to Relaynet, this is the place to start.
 - [RS-001 (RAMF)](rs001-ramf.md) defines the _Relaynet Abstract Message Format_, an efficient binary format used to serialize messages.
 - [RS-002 (Relaynet PKI)](rs002-pki.md) defines how to use the certificates for endpoints and gateways.
-- [RS-003 (Key Agreement)](rs003-key-agreement.md) defines the key agreement protocol to establish and protect sessions between two gateways or two endpoints.
-
-[_Cargo relay bindings_](rs000-core.md#cargo-relay-binding) are used to establish _cargo relay connections_ (CRCs) -- the transport medium for gateways to exchange _cargoes_ through a _relayer_. The following bindings are available:
-
-- [RS-004 (CoSocket)](rs004-cosocket.md): Cargo relay over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the most efficient binding for CRCs.
-- [RS-015 (CoWebSocket)](rs015-cowebsocket.md): Cargo relay over WebSockets. An alternative to CoSocket, to lower the barrier to adopt Relaynet.
-
-[_Parcel delivery bindings_](rs000-core.md#parcel-delivery-binding) are used to establish _parcel delivery connections_ (PDCs) -- The transport medium for an endpoint and a gateway to exchange _parcels_. The following bindings are available:
-
-- [RS-005 (PoSocket)](rs005-posocket.md): Parcel delivery over TCP/Unix Sockets, for internal PDCs. This is a purpose-built Layer 7 protocol, and the most efficient binding for internal PDCs.
-- [RS-016 (PoWebSocket)](rs016-powebsocket.md): Parcel delivery over WebSockets, for internal PDCs. An alternative to PoSocket, to lower the barrier to adopt Relaynet
-- [RS-007 (PoHTTP)](rs007-pohttp.md): Parcel delivery over HTTP, for external PDCs.
-- [RS-009 (PogRPC)](rs009-pogrpc.md): Parcel delivery over gRPC, for external PDCs.
-
-Other specs:
-
-- [RS-012 (Service Integration Scale)](rs012-service-integration.md) categorizes the degrees to which Relaynet can be integrated in a service.
+- [RS-003 (Key Agreement)](rs003-key-agreement.md) defines the key agreement protocol to establish and protect sessions.
+- [RS-004 (CoSocket)](rs004-cosocket.md) is the part of the technology that helps transport the data using alternative methods like sneakernets.
+- [RS-016 (PoWebSocket)](rs016-powebsocket.md) defines a protocol that connects applications to the Relaynet network.
+- [RS-007 (PoHTTP)](rs007-pohttp.md) defines a protocol that connects Relaynet to the Internet.
 - [RS-014 (Ping)](rs014-ping.md) defines a trivial service to test end-to-end the implementation and integration of Relaynet components.
-- [RS-010](rs010-pdc-browser.md) defines a JavaScript interface that browsers or browser extensions can expose to make it easier and safer for client-side apps to send and receive parcels.
-- [RS-011 (AsyncRPC)](rs011-asyncrpc.md) defines a service that encapsulates RPCs in Relaynet messages. Only meant as a steppingstone until the actual service supports Relaynet.
-- [RS-013 (Message Broadcast)](rs013-pubsub.md) adds support for the [Publish-Subscribe pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html) in Relaynet.
+
+On the other hand, [RS-012 (Service Integration Scale)](rs012-service-integration.md) categorizes the degrees to which Relaynet can be integrated in a service. This can be useful to understand the vision of the project and how future applications could be built on top of Relaynet.
+
+The following documents are placeholders for future extensions:
+
+- [RS-010](rs010-pdc-browser.md) will define a JavaScript interface that browsers or browser extensions can expose to make it easier and safer for client-side apps to send and receive parcels.
+- [RS-011 (AsyncRPC)](rs011-asyncrpc.md) will define a service that encapsulates RPCs in Relaynet messages. Only meant as a steppingstone until the actual service supports Relaynet.
+- [RS-013 (Message Broadcast)](rs013-pubsub.md) will add support for the [Publish-Subscribe pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
