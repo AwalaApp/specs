@@ -1,0 +1,7 @@
+Endpoint->Gateway: Initiate connection
+note over Gateway: Generate nonce
+Gateway->Endpoint: Challenge to sign nonce
+note over Endpoint: Sign nonce with each key
+Endpoint->Gateway: Respond with nonce signatures
+note over Gateway: Verify each signature
+Gateway->Endpoint: Completed

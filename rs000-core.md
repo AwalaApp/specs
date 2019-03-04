@@ -153,21 +153,11 @@ message ParcelDeliveryDeauthorization {
 
 A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) in Relaynet. [Parcel delivery bindings](#parcel-delivery-binding) define the communication between endpoints and gateways, and [cargo relay bindings](#cargo-relay-binding) define the communication between gateways and relayers, or between two gateways. This document describes the requirements applicable to all bindings, but does not define any concrete binding.
 
-Bindings will typically leverage [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols, such as HTTP or purpose-built ones, but they can also use an Inter-Process Communication (IPC) mechanism provided by the host system. Most bindings might use a client-server model where, for example, the endpoint is the client and the gateway is the server, but they might require the use of a broker (e.g., a message queue) instead.
+Bindings will typically leverage [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols, such as HTTP or purpose-built ones, but they can also use an Inter-Process Communication (IPC) mechanism provided by the host system.
 
-Communication MUST always be encrypted when it happens across different computers, otherwise it is optional. Communication happens on the same computer when either the loopback network interface (i.e., addresses in the range `127.0.0.0/8`) or IPC is used. When encryption is used, it SHOULD be provided by Transport Layer Security (TLS) per the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) or an equivalent technology (e.g., [DTLS](https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security)). Note that different asymmetric keys are required because [Relaynet PKI](rs002-pki.md) certificates cannot be used as server- or client-side certificates in TLS or DTLS.
+Communication MUST be encrypted when the two nodes are on different computers, otherwise it is optional. Communication happens on the same computer when either the loopback network interface (i.e., addresses in the range `127.0.0.0/8`) or IPC is used. When encryption is used, it SHOULD be provided by Transport Layer Security (TLS) per the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) or an equivalent technology (e.g., [DTLS](https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security)). Note that different asymmetric keys are required because [Relaynet PKI](rs002-pki.md) certificates cannot be used as server- or client-side certificates in TLS or DTLS.
 
-In a client-server model, the client MUST enforce the following constraints to establish trust with a server:
-
-- When using TLS or equivalent, the server MUST use a valid certificate for its PKI profile and it MUST be issued by a Certificate Authority trusted by the client.
-- When using the loopback network interface (i.e., addresses in the range `127.0.0.0/8`), TLS or equivalent MUST be used if the server listens on a non-system port (i.e., a port greater than 1023). Servers listening on system ports can be trusted because that means that the host administrator is running it.
-- When using Unix sockets, the client MUST check that the expected user (if known) owns the file.
-
-Likewise, unless stated otherwise in this specification, the server MUST authenticate the client with a [handshake](https://en.wikipedia.org/wiki/Handshaking) that includes nonces to avoid replay attacks and requires Relaynet PKI certificates/keys to sign such nonces. Each binding MUST define the handshake in detail, and specify whether and how clients should register with the server.
-
-In models other than client-server, such as those using message queues, peers MUST sign each message they send and the receiving node MUST verify the signature before processing the message.
-
-For performance reasons, nodes SHOULD NOT use the loopback network interface when they are on the same computer. Instead, they SHOULD use Unix sockets or any other IPC mechanism supported by the host system.
+For performance reasons, nodes SHOULD use Unix domain sockets or any other IPC mechanism when they are on the same computer, instead of using the loopback network interface.
 
 Bindings MAY extend this specification, but they MUST NOT override it.
 
@@ -177,23 +167,43 @@ This is a protocol that establishes a _Parcel Delivery Connection_ (PDC) between
 
 The node delivering a parcel MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the parcel is safely stored -- Consequently, if the parcel is being saved to disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync).
 
-A PDC is _external_ if both nodes are public and the gateway is a relaying gateway. Otherwise, the PDC is _internal_. Each binding MUST support one or both types.
+Each binding MUST support _internal_ or _external_ PDCs, or both.
 
-In an external PDC:
+#### External PDC
 
-- The endpoint and the gateway MAY act as client and server, respectively, and vice versa.
+A PDC is _external_ if the gateway is a relaying gateway. Typically, both nodes will be public, but in some cases the relaying gateway may be private. In these connections,
+
+- Either node MAY act as client or server.
 - The gateway and the endpoint MAY only deliver parcels to each other and they MUST NOT attempt to collect parcels from each other. In other words, the endpoint has to initiate a connection to be able to send parcels to the gateway, whilst the  gateway has to initiate a connection to be able to send parcels to the endpoint.
 - The server MUST NOT require client authentication, but they MAY still refuse requests from suspicious and/or ill-behaved clients.
 - The gateway SHOULD include its address when it delivers parcels to the endpoint, but only if the gateway is able to collect parcels for the endpoint that sent the initial parcel.
 - The connection MUST be closed as soon as all parcels have been delivered.
 
-Whilst in an internal PDC:
+#### Internal PDC
 
-- The gateway MUST always be the server, and the endpoint MUST always be the client.
-- The server MUST NOT start delivering parcels until the endpoint has signalled that it is ready to receive them.
-- The endpoint MAY request a certificate from its gateway so that it can be subsequently used to issue a PDA. The gateway MUST fulfill the request.
-- The endpoint MAY also send PDDs to its gateway. The gateway MUST include all active PDDs in future CCAs.
-- The connection SHOULD remain open for as long as the two nodes are running.
+A PDC is _internal_ if the gateway is a user gateway. Typically, both nodes will be private and run on the same computer, but they might also be public and run on different computers in a private network. In addition to both nodes being able to send parcels to each other, the endpoint MAY also:
+
+- Request a certificate from the gateway, so the endpoint can issue PDAs.
+- Send PDDs to the gateway, to revoke previously issued PDAs.
+
+The endpoint MUST initiate the connection with the gateway. To find which binding to use and the address for the gateway, the endpoint MUST get the _Gateway Connection URL_. For example, the Gateway Connection URL `ws://127.0.0.1/path` specifies [PoWebSocket](rs016-powebsocket.md) as the binding and `127.0.0.1:80/path` as the WebSocket address of the gateway. The endpoint MUST get the connection URL from one of the following places, sorted by precedence:
+
+1. Its application, if the end-user set the URL.
+1. The environment variable `RELAYNET_GATEWAY_URL`.
+1. The file `/etc/relaynet-gateway` on Unix-like systems or `C:\Windows\System32\Drivers\etc\relaynet-gateway` on Windows.
+1. The specification for the binding supported by the endpoint, if it defines a fallback URL.
+
+The server SHOULD listen on a system port (one in the range 0-1023). Alternatively, if using Unix domain sockets, the endpoint SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems).
+
+As soon as the connection is established, a handshake MUST be performed for the gateway to authenticate the endpoint. The endpoint will be challenged to sign a nonce with each Relaynet PKI key it claims to have, as shown in the following sequence diagram.
+
+![](assets/rs000/pdc-handshake-sequence.png)
+
+The connection MUST be closed if the handshake fails. Once the handshake completes successfully, the connection SHOULD remain open for as long as the two nodes are running.
+
+Note that only the endpoint is authenticated because the gateway needs to make sure that it is delivering the parcel to the right endpoint, especially because it has to destroy its copy of the parcel upon delivery. The gateway can be trusted because it is set by the end-user or systems administrator, and TLS (or equivalent) has to be used anyway if the gateway is on a different computer.
+
+The gateway MUST NOT start delivering parcels until the endpoint has signalled that it is ready to collect them -- The endpoint could be connecting to the gateway just to deliver one or more parcels, and it may not intend to collect any parcels.
 
 ### Cargo Relay Binding
 
@@ -220,7 +230,7 @@ Whilst Relaynet was originally conceived to operate in a [store-and-forward mode
 
 ![](assets/rs000/cut-through-mode.png)
 
-Note that bindings will remain unchanged, but the roles of client and server would be changed: The user gateway will become a PDC client to host endpoints, as well as a CRC client to its relaying gateway so it can receive cargo encapsulating new incoming parcels.
+Note that bindings will remain unchanged, but the roles of client and server would be changed: The user gateway will become a PDC client to public endpoints, as well as a CRC client to its relaying gateway so it can receive cargo encapsulating new incoming parcels.
 
 The role of the relaying gateway in this scenario would be analogous to that of [STUN](https://en.wikipedia.org/wiki/STUN) servers: To allow computers in private networks to get data from the Internet as if they were Internet hosts.
 
