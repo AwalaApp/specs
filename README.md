@@ -14,7 +14,7 @@ The main specs are:
 [_Cargo relay bindings_](rs000-core.md#cargo-relay-binding) are used to establish _cargo relay connections_ (CRCs) -- the transport medium for gateways to exchange _cargoes_ through a _relayer_. The following bindings are available:
 
 - [RS-004 (CoSocket)](rs004-cosocket.md): Cargo relay over TCP/Unix Sockets. This is a purpose-built Layer 7 protocol, and the most efficient binding for CRCs.
-- [RS-015 (CoWebSocket)](rs006-cohttp.md): Cargo relay over WebSockets. An alternative to CoSocket, to lower the barrier to adopt Relaynet.
+- [RS-015 (CoWebSocket)](rs015-cowebsocket.md): Cargo relay over WebSockets. An alternative to CoSocket, to lower the barrier to adopt Relaynet.
 
 [_Parcel delivery bindings_](rs000-core.md#parcel-delivery-binding) are used to establish _parcel delivery connections_ (PDCs) -- The transport medium for an endpoint and a gateway to exchange _parcels_. The following bindings are available:
 
