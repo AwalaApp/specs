@@ -188,10 +188,9 @@ A PDC is _internal_ if the gateway is a user gateway. Typically, both nodes will
 
 The endpoint MUST initiate the connection with the gateway. To find which binding to use and the address for the gateway, the endpoint MUST get the _Gateway Connection URL_. For example, the Gateway Connection URL `ws://127.0.0.1/path` specifies [PoWebSocket](rs016-powebsocket.md) as the binding and `127.0.0.1:80/path` as the WebSocket address of the gateway. The endpoint MUST get the connection URL from one of the following places, sorted by precedence:
 
-1. Its application, if the end-user set the URL.
+1. Its application. For example, the end-user might have set the URL.
 1. The environment variable `RELAYNET_GATEWAY_URL`.
 1. The file `/etc/relaynet-gateway` on Unix-like systems or `C:\Windows\System32\Drivers\etc\relaynet-gateway` on Windows.
-1. The specification for the binding supported by the endpoint, if it defines a fallback URL.
 
 The server SHOULD listen on a system port (one in the range 0-1023). Alternatively, if using Unix domain sockets, the endpoint SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems).
 
@@ -241,3 +240,4 @@ To keep latency low, the user gateway can operate in [cut-through mode](https://
 - Which errors should be propagate to the message sender? And how?
   - Errors include: Message expired, invalid sender certificate, unauthorized sender, malformed message, unavailable target.
   - We need to distinguish channel-level errors (i.e., [_invalid message channel_ in EIP](https://www.enterpriseintegrationpatterns.com/patterns/messaging/InvalidMessageChannel.html)) from transport-level errors (i.e., [_dead letter channel_ in EIP](https://www.enterpriseintegrationpatterns.com/patterns/messaging/DeadLetterChannel.html)).
+- How should the Gateway Connection URL be discovered on Android and iOS? A clean solution could be having a fixed binding (e.g., PoWebSocket) and URL (e.g., `ws://localhost:1234`).
