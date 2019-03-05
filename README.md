@@ -19,6 +19,7 @@ On the other hand, [RS-012 (Service Integration Scale)](rs012-service-integratio
 
 The following documents are placeholders for future extensions:
 
+- [RS-017 (Adaptive Relay)](rs017-adaptive-relay.md) will keep latencies low when the underlying network (e.g., the Internet) is available.
 - [RS-010](rs010-pdc-browser.md) will define a JavaScript interface that browsers or browser extensions can expose to make it easier and safer for client-side apps to send and receive parcels.
 - [RS-011 (AsyncRPC)](rs011-asyncrpc.md) will define a service that encapsulates RPCs in Relaynet messages. Only meant as a steppingstone until the actual service supports Relaynet.
 - [RS-013 (Message Broadcast)](rs013-pubsub.md) will add support for the [Publish-Subscribe pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).

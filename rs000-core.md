@@ -223,18 +223,6 @@ A user gateway MAY require the relayer to provide a CCA from the relaying gatewa
 
 In a CRC between a gateway and a relayer, the relayer SHOULD deliver the cargo and wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
 
-### Adaptive Switching
-
-Whilst Relaynet was originally conceived to operate in a [store-and-forward mode](https://en.wikipedia.org/wiki/Store_and_forward) due to the absence of an Internet connection, it may also be used when the Internet is available. In that scenario, the _relay_ layer would disappear and nodes would communicate over the Internet as shown in the diagram below.
-
-![](assets/rs000/cut-through-mode.png)
-
-Note that bindings will remain unchanged, but the roles of client and server would be changed: The user gateway will become a PDC client to public endpoints, as well as a CRC client to its relaying gateway so it can receive cargo encapsulating new incoming parcels.
-
-The role of the relaying gateway in this scenario would be analogous to that of [STUN](https://en.wikipedia.org/wiki/STUN) servers: To allow computers in private networks to get data from the Internet as if they were Internet hosts.
-
-To keep latency low, the user gateway can operate in [cut-through mode](https://en.wikipedia.org/wiki/Cut-through_switching) when it can reach the target endpoint. Otherwise, it would remain in store-and-forward mode, delivering the parcel to the target endpoint when it can eventually reach the endpoint. This technique can be seen as a form of [adaptive switching](https://en.wikipedia.org/wiki/Adaptive_switching).
-
 ## Open Questions
 
 - Which errors should be propagate to the message sender? And how?
