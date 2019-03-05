@@ -142,5 +142,5 @@ Both the client and the server SHOULD send each other _ping_ messages and they M
 ## Open Questions
 
 - Should this spec be future-proof with regards to HTTP/2 support in WebSockets?
-- Should [close codes](https://www.iana.org/assignments/websocket/websocket.xml#close-code-number) other than `1000` (Normal Closure) be used? Note that there is a question to errors in general in Relaynet Core.
+- Should [close codes](https://www.iana.org/assignments/websocket/websocket.xml#close-code-number) other than `1000` (Normal Closure) be used? Note that [there is a question on errors in general in Relaynet Core](rs000-core.md#open-questions).
 - Should there be a required or recommended frequency for ping messages?
