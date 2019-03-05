@@ -30,9 +30,38 @@ The packets in this protocol use the following primitives:
 
 ## Packets
 
-Each packet starts with a header serialized as one octet.
+Each packet starts with a tag that identifies the type of packet. The tag itself is serialized as a 16-bit unsigned integer (2 octets).
 
-### Cargo Collection Request
+### Handshake Packets
+
+Per Relaynet Core, the handshake involves three steps:
+
+1. The relayer _challenges_ the gateway to sign a nonce with its key(s).
+1. The gateway signs the nonce with each of its keys and sends the signatures to the relayer.
+1. The relayer verifies the signatures and confirms the end of the handshake.
+
+#### Handshake Challenge
+
+This packet contains the nonce that the gateway has to sign. The packet comprises the following sequence:
+
+- Tag: `0xf0`.
+- The nonce, as a random sequence of exactly 32 octets.
+
+#### Handshake Response
+
+This packet contains the signatures for the nonce and comprises the following sequence:
+
+- Tag: `0xf1`.
+- The total _payload length_ for all the signatures and their length prefixes included in the packet.
+- The payload with the sequence of signatures, where each is prefixed with its payload length.
+
+#### Handshake Complete
+
+This packet is sent by the relayer when the signatures were successfully verified. This packet is empty -- It only contains its tag (`0xf2`).
+
+### Operation Packets
+
+#### Cargo Collection Request
 
 This packet encapsulates a [Cargo Collection Authorization (CCA)](rs000-core.md#cargo-collection-authorization-cca) and represents a request to collect cargo for a specific gateway.
 
@@ -40,55 +69,56 @@ A relayer MUST send this packet to a gateway to indicate it is ready to receive 
 
 The packet comprises the following sequence:
 
-1. Header: `0x00`.
+1. Tag: `0x00`.
 1. The _payload length_ for the CCA.
 1. The CCA.
 
-### Cargo Delivery
+#### Cargo Delivery
 
 This packet encapsulates a cargo and has the following sequence:
 
-1. Header: `0x01`.
+1. Tag: `0x01`.
 1. A string that uniquely identifies this cargo delivery, serialized as a varchar. This MAY be different from the cargo id, so it could be a [UUID4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)) value, for example.
-1. The _payload length_ for the cargo.
+1. The payload length for the cargo.
 1. The cargo.
 
-### Cargo Delivery (File Descriptor Version)
+#### Cargo Delivery (File Descriptor Version)
 
 This is an alternative to [Cargo Delivery](#cargo-delivery) using file descriptors, so this is only available on Unix sockets. The sequence is as follows:
 
-1. Header: `0x02`.
+1. Tag: `0x02`.
 1. The string that uniquely identifies this cargo delivery, serialized as a varchar.
 1. (TODO: Define how the file descriptor is actually passed)
 
-### Cargo Collection
+#### Cargo Collection
 
 This packet represents an acknowledgement that a cargo delivery was successfully received and has the following sequence:
 
-1. Header: `0x03`.
+1. Tag: `0x03`.
 1. The cargo delivery id, serialized as varchar.
 
-### Cargo Delivery Completion
+#### Cargo Delivery Completion
 
 Used to signal that there are no further cargoes for the specified gateway. It has the following sequence:
 
-1. Header: `0x04`.
+1. Tag: `0x04`.
 1. The address of the gateway for which there are no further cargoes, serialized as varchar.
 
 The sender of this packet MUST also quit if its peer has already confirmed that it will not send any further cargoes.
 
-### Quit
+#### Quit
 
 Used by a peer to indicate that it is about to close the connection. The sender MUST close the connection immediately after sending this packet.
 
 The packet has the following sequence:
 
-1. Header: `0xff`.
+1. Tag: `0xff`.
 1. Reason: A 16-bit unsigned integer representing the reason why the connection was terminated:
    - `0x00`: Operation completed without errors.
    - `0x01`: Invalid packet.
-   - `0x02`: Quota reached.
-   - `0x03`: Internal error.
+   - `0x02`: Handshake error.
+   - `0x03`: Quota reached.
+   - `0x04`: Internal error.
 
 ## Persistent Connections
 
