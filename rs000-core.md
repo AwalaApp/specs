@@ -214,14 +214,20 @@ Completing one relay MAY involve hops with different bindings. For example, the 
 
 The node sending a cargo MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the cargo is safely stored -- Consequently, if the cargo is being saved to disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync).
 
-A gateway MAY send a CCA to a relayer so that the relayer can collect cargo for the current gateway in the next hop.
+A gateway MAY provide the relayer with a CCA so that the relayer can collect cargo from its peer gateway.
 
 A user gateway MAY require the relayer to provide a CCA from the relaying gateway, but a relaying gateway MUST require at least one CCA because:
 
 - The relaying gateway needs the user gateway's certificate to identify the parcels that belong to the user gateway (user gateway's certificate is part of the PDA).
 - The relaying gateway could not delete a cargo after delivering it if it does not have some guarantee that the cargo could reach its destination.
 
-In a CRC between a gateway and a relayer, the relayer SHOULD deliver the cargo and wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
+The relayer SHOULD deliver the cargo and then wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
+
+When the connection spans different computers, the relayer MUST initiate a handshake with the gateway by having it sign a nonce with each Relaynet PKI key it claims to have, as shown in the following sequence diagram. (The CRC could be local to a computer if, for example, the cargo is being directly saved to and retrieved from a storage media.)
+
+![](assets/rs000/crc-handshake-sequence.png)
+
+Note that relayers are not assigned Relaynet PKI certificates, but per the requirements above for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. In such cases, the relayer MUST provide a valid client- or server-side certificate when it acts as client or server, respectively, and the gateway MUST enforce any authentication-related constraints placed by its peer gateway in the CCA (e.g., the only Certificate Authority that should be regarded valid).
 
 ## Open Questions
 
