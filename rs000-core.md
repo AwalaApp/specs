@@ -206,9 +206,9 @@ The gateway MUST NOT start delivering parcels until the endpoint has signalled t
 
 ### Cargo Relay Binding
 
-This is a protocol that establishes a _Cargo Relay Connection_ (CRC) between an a gateway and a relayer, or between two gateways, with the primary purpose of exchanging cargo bidirectionally.
+This is a protocol that establishes a _Cargo Relay Connection_ (CRC) between a gateway and a relayer with the primary purpose of exchanging cargo bidirectionally.
 
-The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There is only one hop in a relay if the two gateways exchange the cargo directly, or multiple hops if relayers act as intermediaries. A relaying gateway MAY also be an intermediary, in which case it MUST _forward_ the cargo to its target gateway.
+The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are usually two hops in a relay: One from the origin gateway to the relayer, and another from the relayer to the target gateway. A relaying gateway receiving cargo for another gateway MAY _forward_ it to its target gateway, which would involve an extra hop.
 
 Completing one relay MAY involve hops with different bindings. For example, the CRC between a user gateway and a relayer could use [CoSocket](rs004-cosocket.md), whilst the CRC between the relayer and the relaying gateway could use [CogRPC](rs008-cogrpc.md).
 
@@ -225,7 +225,7 @@ In a CRC between a gateway and a relayer, the relayer SHOULD deliver the cargo a
 
 ## Open Questions
 
-- Which errors should be propagate to the message sender? And how?
+- Which errors (if any) should be propagate to the message sender? And how?
   - Errors include: Message expired, invalid sender certificate, unauthorized sender, malformed message, unavailable target.
   - We need to distinguish channel-level errors (i.e., [_invalid message channel_ in EIP](https://www.enterpriseintegrationpatterns.com/patterns/messaging/InvalidMessageChannel.html)) from transport-level errors (i.e., [_dead letter channel_ in EIP](https://www.enterpriseintegrationpatterns.com/patterns/messaging/DeadLetterChannel.html)).
 - How should the Gateway Connection URL be discovered on Android and iOS? A clean solution could be having a fixed binding (e.g., PoWebSocket) and URL (e.g., `ws://localhost:1234`).
