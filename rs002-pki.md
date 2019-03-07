@@ -62,18 +62,16 @@ A gateway's certificate MUST be either self-signed or issued by its peer gateway
 
 A certificate issued by another gateway MUST NOT be used to issue additional gateway certificates.
 
-## Certificate Extensions
-
-### Certificate Type Extension
+## Certificate Type Extension
 
 Every certificate in this PKI MUST use the critical extension _PDA Certificate Type_ to specify its type. The value MUST correspond to the [ASN.1](https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One) enumeration below:
 
 ```asn1
 PDACertType ::= ENUMERATED {
-    senderSignOnly        (0),   -- A sender's signature-only certificate
-    sender                (1),   -- A sender's certificate
-    recipientSignOnly     (2),   -- A recipient's signature-only certificate
-    recipient             (3),   -- A recipient's certificate
+    senderSignOnly        (0),   -- A sender endpoint's signature-only certificate
+    sender                (1),   -- A sender endpoint's certificate
+    recipientSignOnly     (2),   -- A recipient endpoint's signature-only certificate
+    recipient             (3),   -- A recipient endpoint's certificate
     gatewaySignOnly       (4),   -- A gateway's signature-only certificate
     gateway               (5),   -- A gateway's certificate
     peerGatewaySignOnly   (6),   -- A peer gateway's signature-only certificate
@@ -82,18 +80,18 @@ PDACertType ::= ENUMERATED {
 
 ## Certificate and Key Rotation
 
-Endpoints and gateways MAY support multiple certificates, with the same or different asymmetric keys (and potentially different addresses), at any point in time, in order to facilitate certificate or key rotation. 
+Endpoints and gateways MAY use multiple certificates, with the same or different asymmetric keys (and potentially different addresses), at any point in time, in order to facilitate certificate or key rotation. 
 
 An endpoint or gateway initiating a certificate rotation MUST share the new certificate using a _Certificate Rotation Message_ (CRM) through the appropriate [messaging channels](rs000-core.md#messaging-protocols). Such a message MUST:
 
 - Be serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the octet `0x10` as its _concrete message format signature_.
 - Be signed with a certificate that the target endpoint/gateway already trusts.
 - Have their payload encrypted as specified in the [Core](rs000-core.md) and [RAMF](rs001-ramf.md) specifications.
-- Have their payload plaintext contain only the new certificate.
+- Have its payload plaintext contain only the new certificate.
 
 CRMs MUST be top-level messages in the [endpoint channel](rs000-core.md#endpoint-messaging-protocol), but they MUST be encapsulated in cargo in the [gateway channel](rs000-core.md#gateway-messaging-protocol) (along with parcels) to prevent malicious relayers from identifying and dropping such messages.
 
-All [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652) values in Relaynet MUST include the appropriate metadata to identify the correct certificate.
+Since a recipient could have multiple keys at any point in time, endpoints and gateways MUST include the appropriate metadata to identify the correct certificate in any [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652) enveloped-data values that they generate.
 
 ## Certificate Revocation
 
@@ -116,13 +114,13 @@ An endpoint MUST use the [message transport binding](rs000-core.md#message-trans
 - (Optional) Serial numbers of the PDAs to revoke. It may be absent to revoke all the PDAs issued by the endpoint.
 - (Required) Expiry date of the deauthorization. If revoking all PDAs from the endpoint, this MUST be the expiry date of the endpoint certificate. If revoking a specific PDA, this MUST be the expiry date of the PDA.
 
-Gateway MUST include all their active PDDs in their [_Cargo Collection Authorizations_](rs000-core.md#cargo-collection-authorization-cca), and they MUST enforce PDDs for as long as they are active.
+Gateways MUST include all their active PDDs in their [_Cargo Collection Authorizations_](rs000-core.md#cargo-collection-authorization-cca), and they MUST enforce PDDs for as long as they are active.
  
 Relaying gateways MAY cache PDDs until they expire in order to refuse future parcels whose PDA has been revoked.
 
 ### Gateway Certificate Revocation (GCR)
 
-A gateway can revoke its own certificate by issuing a GCR message to its peer gateway(s). These messages MUST be serialized with RAMF, using the octet `0x11` as its _concrete message format signature_, and have an empty payload (i.e., one of length zero).
+A gateway MAY revoke its own certificate by issuing a GCR message to its peer gateway(s). These messages MUST be serialized with RAMF, using the octet `0x11` as its _concrete message format signature_, and have an empty payload (i.e., one of length zero).
 
 GCRs MUST be sent in the payload plaintext of a cargo, along with parcels, in order to prevent a malicious relayer from identifying and dropping such messages.
 

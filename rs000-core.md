@@ -10,13 +10,13 @@ This document describes the core elements of the Relaynet protocol suite, whose 
 
 ## Introduction
 
-Distributed systems are typically integrated using some form of [Remote Procedure Call (RPC)](https://en.wikipedia.org/wiki/Remote_procedure_call), a seemingly simple and familiar pattern that resembles local function calls in programming. Services running on HTTP, such as RESTful or gRPC APIs, employ this pattern.
+Distributed systems are typically integrated using some form of [Remote Procedure Call (RPC)](https://en.wikipedia.org/wiki/Remote_procedure_call), a seemingly simple and familiar pattern that resembles local function calls in programming. Systems communicating over HTTP, such as REST or gRPC APIs, employ this pattern.
 
-RPCs work well in a reliable network -- One with a low [round-trip time (RTT)](https://en.wikipedia.org/wiki/Round-trip_delay_time) and an adequate [throughput](https://en.wikipedia.org/wiki/Throughput). The higher the RRT or the lower throughput can be, the more complicated an RPC implementation becomes. And with an extremely high RRT and/or an extremely low throughput, RPCs do not work at all.
+RPCs work well in a reliable network -- One with a low [round-trip time (RTT)](https://en.wikipedia.org/wiki/Round-trip_delay_time) and an adequate [throughput](https://en.wikipedia.org/wiki/Throughput). But the component making the call becomes more complicated with the need to implement retries, timeouts and [circuit breakers](https://martinfowler.com/bliki/CircuitBreaker.html) in order to cope with an unusually high RTT or an unusually low throughput. And with an extremely high RRT and/or an extremely low throughput, RPCs do not work at all.
 
 In contrast to RPCs, distributed systems using asynchronous messaging are implemented without any assumption that the data will reach its destination immediately or that a response will be returned. Instead, they communicate through [_brokers_](https://en.wikipedia.org/wiki/Message_broker) that receive, route and deliver the data.
 
-Decoupling the two nodes in the connection makes it possible to transport the data using alternative methods when the network unavailable. For example, in places where [sneakernets](https://en.wikipedia.org/wiki/Sneakernet) are used to consume foreign content, people could also use the sneakernet to connect their applications to the Internet.
+Decoupling the two nodes in the connection makes it possible to transport the data using alternative methods when the network unavailable. For example, in places where [sneakernets](https://en.wikipedia.org/wiki/Sneakernet) are used to consume foreign content, people could also use it to connect their applications to the Internet.
 
 Relaynet makes it easy to build distributed systems using asynchronous messaging in such a way that data can be securely transported on alternative media (e.g., sneakernets) when a conventional computer network is unavailable. The result is a [delay-tolerant](https://en.wikipedia.org/wiki/Delay-tolerant_networking), [overlay](https://en.wikipedia.org/wiki/Overlay_network) network with [onion routing](https://en.wikipedia.org/wiki/Onion_routing).
 
@@ -35,11 +35,11 @@ The following diagram illustrates the various components of the network and how 
 - A **(service) message** is serialized in the format determined by the service and does not have to be encrypted or signed.
 - An **endpoint** receives a message from its application and converts it into a _parcel_ for the target application's endpoint, and because they still can't communicate directly, they each use a _gateway_ as a broker. When an endpoint receives a parcel from the gateway, it has to decrypt the message and pass it to its application.
 - A **parcel** encapsulates exactly one service message, which is encrypted with the target endpoint's certificate and signed with the origin endpoint's key.
-- A **gateway** receives parcels from endpoints and puts them into cargo for another gateway, using a _relayer_ as a broker. When a gateway receives cargo from a relayer, it decrypts the parcels and delivers them to their corresponding target endpoints.
-- A **cargo** encapsulates one or more parcels, encrypted with the target gateway's certificate and signed with the origin gateway's key.
+- A **gateway** receives parcels from endpoints and puts them into cargo for another gateway, using a _relayer_ as a broker. When a gateway receives cargo from a relayer, it decrypts the cargo and delivers the encapsulated parcels to their corresponding target endpoints.
+- A **cargo** encapsulates one or more parcels, and it is encrypted with the target gateway's certificate and signed with the origin gateway's key.
 - A **relayer** _relays_ cargo from one gateway to one or more gateways.
 
-For example, if Twitter supported Relaynet, Twitter would be the _service_, the Twitter mobile apps would be _applications_, the Twitter API would also be an _application_. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the _endpoint_ in the Twitter API could be a new API endpoint (e.g., `https://api.twitter.com/relaynet`).
+For example, if Twitter supported Relaynet, Twitter would be the _service_, the Twitter mobile apps would be _applications_ and the Twitter API would be another _application_. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the _endpoint_ in the Twitter API could be a new API endpoint (e.g., `https://api.twitter.com/relaynet`).
 
 Relaynet can also be described in terms of the [OSI model](https://en.wikipedia.org/wiki/OSI_model) as shown in the diagram below -- With [same-layer and adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) defined by [_messaging protocols_](#messaging-protocols) and [_message transport bindings_](#message-transport-bindings), respectively.
 
@@ -85,8 +85,6 @@ A parcel encapsulates a service message and is serialized with the [Relaynet Abs
 
 The sender certificate MUST be a valid certificate per [Relaynet PKI](rs002-pki.md).
 
-Gateways MUST override any previously queued parcel with the same id. Endpoints can use this to replace stale messages in the same relay.
-
 The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`), using either the target endpoint's certificate (`KeyTransRecipientInfo`) or the [Relaynet Key Agreement protocol](rs003-key-agreement.md) parameters (`KeyAgreeRecipientInfo`). Extensions to this document MAY support additional CMS structures.
 
 The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the service message and its media type, and is serialized with the following binary sequence (little-endian):
@@ -124,7 +122,7 @@ The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encod
 Its payload plaintext MUST contain the following information:
 
 - Any [_Parcel Delivery Deauthorizations_ (PDD)](rs002-pki.md#parcel-delivery-deauthorization-pdd) issued by Gateway A's endpoints or Gateway A itself to revoke [PDAs](rs002-pki.md#parcel-delivery-authorization-pda).
-- Binding-level constraints to authenticate the relayer, like expecting a specific _Distinguished Name_ in its client-side TLS certificate.
+- Binding-level constraints to authenticate the relayer, like expecting a specific _Certificate Authority_ in its TLS certificate chain (or equivalent). Gateway B MUST close the connection if these constraints are not met.
 
 The payload plaintext MUST be serialized with [Protocol Buffers v3](https://developers.google.com/protocol-buffers/docs/proto3) using the `CargoCollectionAuthorization` message as defined below:
 
@@ -153,7 +151,7 @@ message ParcelDeliveryDeauthorization {
 
 ## Message Transport Bindings
 
-A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) in Relaynet. [Parcel delivery bindings](#parcel-delivery-binding) define the communication between endpoints and gateways, and [cargo relay bindings](#cargo-relay-binding) define the communication between gateways and relayers, or between two gateways. This document describes the requirements applicable to all bindings, but does not define any concrete binding.
+A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) in Relaynet. [Parcel delivery bindings](#parcel-delivery-binding) define the communication between endpoints and gateways, and [cargo relay bindings](#cargo-relay-binding) define the communication between gateways and relayers. This document describes the requirements applicable to all bindings, but does not define any concrete binding.
 
 Bindings will typically leverage [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols, such as HTTP or purpose-built ones, but they can also use an Inter-Process Communication (IPC) mechanism provided by the host system.
 
@@ -168,6 +166,8 @@ Bindings MAY extend this specification, but they MUST NOT override it.
 This is a protocol that establishes a _Parcel Delivery Connection_ (PDC) between an endpoint and a gateway, with the primary purpose of exchanging parcels bidirectionally.
 
 The node delivering a parcel MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the parcel is safely stored -- Consequently, if the parcel is being saved to disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync).
+
+Gateways MUST override any previously queued parcel with the same id. Endpoints can use this to replace stale messages in the same relay -- For example, an application sending a message to replace the user's email address could use this to discard any previous message to replace this value.
 
 Each binding MUST support _internal_ or _external_ PDCs, or both.
 
