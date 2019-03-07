@@ -28,7 +28,7 @@ Asynchronous messaging also happens to be a better integration style, for reason
 
 The following diagram illustrates the various components of the network and how they interact with each other:
 
-![](assets/rs000/protocol-layers.png)
+![](assets/rs000/protocol-layers.svg)
 
 - A **service** is a collection of _applications_ that communicate amongst themselves. A service can be centralized (client-server) or decentralized (peer-to-peer).
 - **Applications** exchange _messages_ amongst themselves, and because they can't communicate directly, they each use an _endpoint_ as a broker.
