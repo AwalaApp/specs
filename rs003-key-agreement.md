@@ -97,7 +97,7 @@ Alice and Bob MUST follow the following algorithm to exchange subsequent message
 1. Calculate the shared key _SK<sub>p</sub> = KDF(DH(EK<sub>X,1</sub><sup>public</sup>, LK<sub>Y</sub><sup>private</sup>))_.
 1. Decrypt the message.
 
-### Expiry Ephemeral Keys
+### Expiry of Ephemeral Keys
 
 The sender MUST NOT use ephemeral keys for encryption after their expiry date. However, expired ephemeral keys MUST continue to be used for decryption during a grace period determined by the channel in order to make the sessions delay-tolerant.
 
