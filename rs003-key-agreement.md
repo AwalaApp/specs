@@ -1,7 +1,7 @@
 # Relaynet Channel Session Protocol
 
 - Id: RS-003.
-- Status: Placeholder.
+- Status: Working draft.
 - Type: Implementation.
 
 ## Abstract
