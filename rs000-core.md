@@ -16,7 +16,7 @@ RPCs work well in a reliable network -- One with a low [round-trip time (RTT)](h
 
 In contrast to RPCs, distributed systems using asynchronous messaging are implemented without any assumption that the data will reach its destination immediately or that a response will be returned. Instead, they communicate through [_brokers_](https://en.wikipedia.org/wiki/Message_broker) that receive, route and deliver the data.
 
-Decoupling the two nodes in the connection makes it possible to transport the data using alternative methods when the network unavailable. For example, in places where [sneakernets](https://en.wikipedia.org/wiki/Sneakernet) are used to consume foreign content, people could also use it to connect their applications to the Internet.
+Decoupling the two nodes in the connection makes it possible to transport the data using alternative methods when the network unavailable. For example, in places where [sneakernets](https://en.wikipedia.org/wiki/Sneakernet) are used to consume foreign content, people could also use it to connect their applications to the Internet if those applications were tolerant to large RTTs.
 
 Relaynet makes it easy to build distributed systems using asynchronous messaging in such a way that data can be securely transported on alternative media (e.g., sneakernets) when a conventional computer network is unavailable. The result is a [delay-tolerant](https://en.wikipedia.org/wiki/Delay-tolerant_networking), [overlay](https://en.wikipedia.org/wiki/Overlay_network) network with [onion routing](https://en.wikipedia.org/wiki/Onion_routing).
 
@@ -36,6 +36,8 @@ The following diagram illustrates the various components of the network and how 
 - An **endpoint** receives a message from its application and converts it into a _parcel_ for the target application's endpoint, and because they still can't communicate directly, they each use a _gateway_ as a broker. When an endpoint receives a parcel from the gateway, it has to decrypt the message and pass it to its application.
 - A **parcel** encapsulates exactly one service message, which is encrypted with the target endpoint's certificate and signed with the origin endpoint's key.
 - A **gateway** receives parcels from endpoints and puts them into cargo for another gateway, using a _relayer_ as a broker. When a gateway receives cargo from a relayer, it decrypts the cargo and delivers the encapsulated parcels to their corresponding target endpoints.
+  - A **user gateway** is a specific type of gateway that runs on a end-user device and serves the endpoints on that device.
+  - A **relaying gateway** is a specific type of gateway that allows the endpoints behind its user gateways to reach another network (typically the Internet).
 - A **cargo** encapsulates one or more parcels, and it is encrypted with the target gateway's certificate and signed with the origin gateway's key.
 - A **relayer** _relays_ cargo from one gateway to one or more gateways.
 
