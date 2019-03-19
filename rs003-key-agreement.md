@@ -101,7 +101,7 @@ Alice and Bob MUST follow the following algorithm to exchange subsequent message
 
 The sender MUST NOT use ephemeral keys for encryption after their expiry date. However, expired ephemeral keys MUST continue to be used for decryption during a grace period determined by the channel in order to make the sessions delay-tolerant.
 
-As a consequence, the send MUST generate new ephemeral keys before any active ephemeral keys expire.
+As a consequence, the sender MUST generate new ephemeral keys before any active ephemeral keys expire.
 
 The sender MUST securely ephemeral keys as soon as the grace period lapses, to guarantee perfect forward secrecy.
 
