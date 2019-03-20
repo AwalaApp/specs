@@ -62,12 +62,11 @@ Per Relaynet Core, the node initiating the communication always has the certific
 Alice MUST follow the following process when sending an initial message to Bob:
 
 1. Generate the ephemeral asymmetric key EK<sub>A,1</sub>.
-1. Calculate the shared key _SK<sub>1</sub> = KDF(KM)_, where KM = DH(LK<sub>B</sub><sup>public</sup>, EK<sub>A,1</sub><sup>private</sup>)).
-1. Store SK<sub>1</sub> so it can be used to decrypt messages from Bob.
-1. Encrypt each message to Bob with SK<sub>1</sub>, and attach the following data:
-   - Alice' internal id for SK<sub>1</sub> (for example, a UUID4 value).
+1. Calculate the shared key _SK<sub>1</sub> = KDF(KM)_, where KM = DH(LK<sub>B</sub><sup>public</sup>, EK<sub>A,1</sub><sup>private</sup>).
+1. Store EK<sub>A,1</sub><sup>private</sup> along with a random id (e.g., a UUID4 value), so it can be used to decrypt future messages from Bob.
+1. Encrypt the plaintext with SK<sub>1</sub>, and attach the following data:
    - EK<sub>A,1</sub><sup>public</sup>.
-   - The expiry date of EK<sub>A,1</sub>.
+   - The id assigned to EK<sub>A,1</sub>.
 
 Alice MUST continue to use SK<sub>1</sub> to encrypt future messages until the first ephemeral key from Bob (EK<sub>B,1</sub><sup>public</sup>) is received. Once that happens, any subsequent message from Alice to Bob MUST use the [algorithm to send subsequent message](#sending-subsequent-messages).
 
@@ -75,9 +74,12 @@ Alice MUST continue to use SK<sub>1</sub> to encrypt future messages until the f
 
 Bob MUST follow the following process when receiving an initial message from Alice:
 
-1. Store EK<sub>A,1</sub><sup>public</sup> in order to send messages to Alice in the future, unless there is a previous ephemeral key from Alice that expires at a later date.
+1. Check that the required input is present, or else abort:
+   - EK<sub>A,1</sub><sup>public</sup>.
+   - The id that Alice assigned to EK<sub>A,1</sub>.
 1. Calculate the shared key _SK<sub>1</sub> = KDF(DH(EK<sub>A,1</sub><sup>public</sup>, LK<sub>B</sub><sup>private</sup>))_.
-1. Decrypt the message.
+1. Decrypt the ciphertext with SK<sub>1</sub>, or abort if it fails to be decrypted.
+1. Store EK<sub>A,1</sub><sup>public</sup> along with its id in order to send messages to Alice in the future.
 
 ## Key Management Protocol
 
@@ -85,27 +87,31 @@ Alice and Bob MUST follow the following algorithm to exchange subsequent message
 
 ### Sending Subsequent Messages
 
-1. Generate the ephemeral asymmetric key EK<sub>X,m</sub> and store it, or retrieve it if a pre-existing one can be used.
-1. Retrieve the peer' last ephemeral key EK<sub>Y,n</sub><sup>public</sup>.
+The sender X MUST follow the following process when sending a subsequent message to Y:
+
+1. Compute EK<sub>X,m</sub>:
+   - Use the last ephemeral key EK<sub>X,m-1</sub> if no incoming message from Y has used it; this could mean that Y has not received EK<sub>X,m-1</sub> yet.
+   - Otherwise, generate a new ephemeral key and store EK<sub>X,m</sub><sup>private</sup> along with a random id (e.g., a UUID4 value) to decrypt future messages from Y.
+1. Retrieve Y's last ephemeral key EK<sub>Y,n</sub><sup>public</sup> along with its id.
 1. Calculate the shared key _SK<sub>p</sub> = KDF(KM)_, where KM = DH(EK<sub>Y,n</sub><sup>public</sup>, EK<sub>X,m</sub><sup>private</sup>)).
-1. Encrypt each message with SK<sub>p</sub>, and attach the following data:
-   - The internal id for SK<sub>p</sub>.
+1. Encrypt the plaintext with SK<sub>p</sub>, and attach the following data:
    - EK<sub>X,m</sub><sup>public</sup>.
-   - The expiry date of EK<sub>X,m</sub>.
+   - The id that X assigned to EK<sub>X,m</sub>.
+   - The id that Y assigned to EK<sub>Y,n</sub>.
 
 ### Receiving Subsequent Messages
 
-1. Store EK<sub>X,1</sub><sup>public</sup> in order to send messages to their peer in the future, unless there is a previous ephemeral key from the peer that expires at a later date.
-1. Calculate the shared key _SK<sub>p</sub> = KDF(DH(EK<sub>X,1</sub><sup>public</sup>, LK<sub>Y</sub><sup>private</sup>))_.
-1. Decrypt the message.
+The recipient Y MUST follow the following process when receiving a subsequent message from X:
 
-### Expiry of Ephemeral Keys
-
-The sender MUST NOT use ephemeral keys for encryption after their expiry date. However, expired ephemeral keys MUST continue to be used for decryption during a grace period determined by the channel in order to make the sessions delay-tolerant.
-
-As a consequence, the send MUST generate new ephemeral keys before any active ephemeral keys expire.
-
-The sender MUST securely ephemeral keys as soon as the grace period lapses, to guarantee perfect forward secrecy.
+1. Check that the required input is present, or else abort:
+   - EK<sub>X,m</sub><sup>public</sup>.
+   - The id that X assigned to EK<sub>X,m</sub>.
+   - The id that Y assigned to EK<sub>Y,n</sub>.
+1. Retrieve EK<sub>Y,n</sub><sup>private</sup> by its id, or abort if it cannot be found.
+1. Calculate the shared key _SK<sub>p</sub> = KDF(DH(EK<sub>X,m</sub><sup>public</sup>, EK<sub>Y,n</sub><sup>private</sup>))_.
+1. Decrypt the ciphertext with SK<sub>p</sub>, or abort if it fails to be decrypted.
+1. Store EK<sub>X,m</sub><sup>public</sup> along with its id in order to send messages to X in the future, unless a different key was already used in a newer message; keep in mind that messages may arrive out of order.
+1. If EK<sub>Y,n</sub> was the last key generated by Y, then delete any rotated key EK<sub>Y,n-1</sub> in order to achieve forward secrecy and future secrecy. This deletion MAY be deferred until the next incoming [relay](rs000-core.md#cargo-relay-binding) so that any in-transit messages using the rotated key can be decrypted.
 
 ## Notes
 
