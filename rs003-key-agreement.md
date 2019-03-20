@@ -111,4 +111,4 @@ Note that unlike the X3DH protocol, long-term keys (known as identity keys in X3
 
 ## Limitations
 
-This protocol will not work with unidirectional communication as might be the case between two endpoints (if one of the endpoints is private and does not issue Parcel Delivery Authorizations to its peer). Consequently, a Relaynet service with one-way communication would not get perfect forward secrecy or future secrecy, unless they enable two-way communication as a workaround until there is an equivalent protocol for unidirectional communication.
+This protocol will not work with unidirectional communication as might be the case between two endpoints (if one of the endpoints is private and does not issue Parcel Delivery Authorizations to its peer). Consequently, a Relaynet service with one-way communication would not get perfect forward secrecy or future secrecy, unless it enables two-way communication as a workaround until there is an equivalent protocol for unidirectional communication.
