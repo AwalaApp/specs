@@ -15,8 +15,10 @@ Relaynet Core defines messaging channels that use end-to-end encryption using pu
 This protocol extends Relaynet to add perfect forward secrecy, future secrecy and replay attack mitigation. It is heavily based on the [Extended Triple Diffie-Hellman protocol](https://signal.org/docs/specifications/x3dh/) and the [double ratchet algorithm](https://signal.org/docs/specifications/doubleratchet/) from the Signal project, with some notable differences:
 
 - There is no central server that can provide certificates or public keys for any node in Relaynet, but that is not necessary because peers always have each other's certificates.
-- There must be multiple ephemeral keys that are valid at any point in time and ephemeral keys can be reused, so it can work in a disruption-tolerant network where messages can arrive late or out of order, or they may be lost. 
+- This protocol must be [tolerant to disruptions](https://en.wikipedia.org/wiki/Delay-tolerant_networking): Messages are most likely to arrive late, in batches and out of order, or they may be lost.
 - Elliptic Curve Cryptography is not required. RSA is also allowed to lower the barrier to adoption.
+
+The end result is a key agreement and management protocol where ephemeral keys are rotated as the recipient acknowledges the receipt of the previous ephemeral key.
 
 ## Roles
 
@@ -55,9 +57,9 @@ For example, a Relaynet service may configure its endpoints to use RSA with 4096
 
 Per Relaynet Core, the node initiating the communication always has the certificate of its peer, so Alice will always have Bob's certificate. The distribution method is outside the scope of this document.
 
-### Sending the Initial Message(s)
+### Sending Initial Message(s)
 
-Alice MUST follow the following process when sending the first message(s) to Bob:
+Alice MUST follow the following process when sending an initial message to Bob:
 
 1. Generate the ephemeral asymmetric key EK<sub>A,1</sub>.
 1. Calculate the shared key _SK<sub>1</sub> = KDF(KM)_, where KM = DH(LK<sub>B</sub><sup>public</sup>, EK<sub>A,1</sub><sup>private</sup>)).
@@ -67,9 +69,9 @@ Alice MUST follow the following process when sending the first message(s) to Bob
    - EK<sub>A,1</sub><sup>public</sup>.
    - The expiry date of EK<sub>A,1</sub>.
 
-SK<sub>1</sub> MUST continue to be used until an ephemeral key from Bob is received. Until then, any message from Alice to Bob will be regarded an initial message.
+Alice MUST continue to use SK<sub>1</sub> to encrypt future messages until the first ephemeral key from Bob (EK<sub>B,1</sub><sup>public</sup>) is received. Once that happens, any subsequent message from Alice to Bob MUST use the [algorithm to send subsequent message](#sending-subsequent-messages).
 
-### Receiving the Initial Message(s)
+### Receiving Initial Message(s)
 
 Bob MUST follow the following process when receiving an initial message from Alice:
 
