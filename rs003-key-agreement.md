@@ -85,7 +85,7 @@ Alice and Bob MUST follow the following algorithm to exchange subsequent message
 
 1. Generate the ephemeral asymmetric key EK<sub>X,m</sub> and store it, or retrieve it if a pre-existing one can be used.
 1. Retrieve the peer' last ephemeral key EK<sub>Y,n</sub><sup>public</sup>.
-1. Calculate the shared key _SK<sub>p</sub> = KDF(KM)_, where KM = DH(LK<sub>Y,n</sub><sup>public</sup>, EK<sub>X,m</sub><sup>private</sup>)).
+1. Calculate the shared key _SK<sub>p</sub> = KDF(KM)_, where KM = DH(EK<sub>Y,n</sub><sup>public</sup>, EK<sub>X,m</sub><sup>private</sup>)).
 1. Encrypt each message with SK<sub>p</sub>, and attach the following data:
    - The internal id for SK<sub>p</sub>.
    - EK<sub>X,m</sub><sup>public</sup>.
