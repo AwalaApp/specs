@@ -115,9 +115,7 @@ The recipient Y MUST follow the following process when receiving a subsequent me
 
 ## Object Identifier (OID)
 
-The [OID](https://en.wikipedia.org/wiki/Object_identifier) for this algorithm is `2.25.334996391340098037232342464294822053250`. In other words, the algorithm is identified by the UUID4 `fc05f548-4b0c-11e9-9e28-3c4a92df8582` under the parent [OID 2.25](https://www.itu.int/en/ITU-T/asn1/Pages/UUID/uuids.aspx).
-
-Consequently, its ASN.1 representation is:
+The [OID](https://en.wikipedia.org/wiki/Object_identifier) for this algorithm is `2.25.334996391340098037232342464294822053250.1`. Consequently, its ASN.1 representation is:
 
 ```asn1
 relaynetBiChannelSession OBJECT IDENTIFIER ::= {
