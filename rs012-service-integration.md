@@ -10,13 +10,10 @@ This document categorizes the degrees to which Relaynet can be integrated in a c
 
 ## Categorization
 
-### RPC Encapsulation vs Messaging
+There are two orthogonal dimensions to consider when classifying the Relaynet integration in a service:
 
-RPC encapsulation using a Relaynet service like [RS-011 (AsyncRPC)](rs011-asyncrpc.md).
-
-### Third Party vs First Party Endpoints
-
-If the server-side endpoint is run by a third party, end-to-end encryption cannot be achieved because the message's plaintext will be exposed to the third-party endpoint.
+- **Messaging vs RPC encapsulation**. A service is doing RCP encapsulation when its applications continue use the RPC pattern on top of Relaynet. For example, there are still REST API calls, perhaps using [RS-011 (AsyncRPC)](rs011-asyncrpc.md) or something similar. Embracing asynchronous messaging is the recommended way to use Relaynet, but in some cases it may be desirable to start adopting Relaynet by encapsulating existing RPCs.
+- **First party vs third party integration**. A service has first party integration when the service provider itself operates the endpoints. A third party may operate endpoints for a service that otherwise would be incompatible, with the caveat that the end-to-end encryption will end with the third-party integrator unless the main service encrypts its messages as well.
 
 ## Levels
 
