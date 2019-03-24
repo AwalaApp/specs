@@ -2,11 +2,11 @@
 
 # Relaynet Protocol Suite Specifications
 
-This repository contains all the specifications part of [Relaynet](https://relaynet.link/).
+This repository contains all the specifications part of [Relaynet](https://relaynet.link/). If you're new to Relaynet, you may want to start by watching the [demo of the proof of concept with Twitter](https://www.youtube.com/watch?v=fi_RKwmrXIY).
 
 The following specifications provide the foundation of the network and are therefore the top priority of the project. At this point, the best way to contribute to the project is by providing feedback on these specs.
 
-- [RS-000 (Relaynet Core)](rs000-core.md) defines the foundation of the protocol suite. If you are new to Relaynet, this is the place to start.
+- [RS-000 (Relaynet Core)](rs000-core.md) defines the foundation of the protocol suite.
 - [RS-001 (RAMF)](rs001-ramf.md) defines the _Relaynet Abstract Message Format_, an efficient binary format used to serialize messages.
 - [RS-002 (Relaynet PKI)](rs002-pki.md) defines how to use the certificates for endpoints and gateways.
 - [RS-003 (Key Agreement)](rs003-key-agreement.md) defines the key agreement protocol to establish and protect sessions.
