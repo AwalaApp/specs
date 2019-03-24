@@ -63,4 +63,4 @@ The following diagram illustrates this scenario with Twitter:
 
 ![](assets/rs012/level0-offline.png)
 
-A service may eventually reach this level because it may be too expensive to support both Relaynet and the original RPC interface. Note that [Relaynet can still be used when the Internet is available](rs000-core.md#adaptive-switching).
+A service may eventually reach this level because it may be too expensive to support both Relaynet and the original RPC interface. Note that [Relaynet can still be used when the Internet is available](rs017-adaptive-relay.md).
