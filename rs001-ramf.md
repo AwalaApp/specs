@@ -21,7 +21,7 @@ A message is serialized using the following byte sequence ([little-endian](https
    - Prefix (8 octets): "Relaynet" in ASCII (hex: "52 65 6c 61 79 6e 65 74").
    - Concrete message format signature (1 octet).
    - Format version (1 octet). An 8-bit unsigned integer.
-1. Signature hashing algorithm, defined early to allow the recipient to start calculating the message digest as the message is being streamed. This is an ASCII with a fixed length of 8 octets, padded with `0x00` octets at the end if fewer octets are needed.
+1. Signature hashing algorithm identifier. Defined early to allow the recipient to start calculating the message digest as the message is being streamed. This is an 8-bit unsigned integer (1 octet). See [Signature Hashing Algorithms](#signature-hashing-algorithms).
 1. Recipient address. UTF-8 encoded, and length-prefixed with a 16-bit unsigned integer (2 octets). Consequently, the address can be as long as 255 characters.
 1. Sender certificate (chain).
    - DER encoded.
@@ -38,6 +38,15 @@ A message is serialized using the following byte sequence ([little-endian](https
    - The cleartext to the signature should be the entire message, from the format signature to the payload.
    - This is at the bottom to make it easy to generate and consume messages with a single pass.
    - The ciphertext is length-prefixed with a 12-bit unsigned integer (2 octets), so the maximum length is 4kib.
+
+### Signature Hashing Algorithms
+
+RAMF messages MUST be signed using one of the following hashing algorithms. The sender MAY only support one of those algorithms, but any implementation that processes RAMF messages MUST support all the algorithms below.
+
+| Algorithm | 8-Bit Identifier in RAMF | OID in CMS |
+| --- | --- | --- |
+| SHA-256 | `0x00` | [2.16.840.1.101.3.4.2.1](http://www.oid-info.com/get/2.16.840.1.101.3.4.2.1) |
+| SHA-512 | `0x01` | [2.16.840.1.101.3.4.2.3](http://www.oid-info.com/get/2.16.840.1.101.3.4.2.3) |
 
 ## Post-Deserialization Validation
 
