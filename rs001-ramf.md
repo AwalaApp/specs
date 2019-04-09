@@ -32,9 +32,7 @@ A message is serialized using the following byte sequence ([little-endian](https
    - Prefix (8 octets): "Relaynet" in ASCII (hex: "52 65 6c 61 79 6e 65 74").
    - Concrete message format signature (1 octet).
    - Format version (1 octet). An 8-bit unsigned integer.
-1. Signature hashing algorithm identifier. Defined early to allow the recipient to start calculating the message digest as the message is being streamed.
-   - DER-encoded as an ASN.1 Object Identifier. For example, SHA-256 (OID `2.16.840.1.101.3.4.2.1`) would be encoded as `06 09 60 86 48 01 65 03 04 02 01`.
-   - Fixed length of 16 octets, right padded with `0x00`.
+1. Signature hashing algorithm identifier. Defined early to allow the recipient to start calculating the message digest as the message is being streamed. This is an 8-bit unsigned integer (1 octet). See [Signature Hashing Algorithms](#signature-hashing-algorithms).
 1. Recipient address. UTF-8 encoded, and length-prefixed with a 16-bit unsigned integer (2 octets). Consequently, the address can be as long as 255 characters.
 1. Sender certificate (chain).
    - DER encoded.
@@ -46,10 +44,29 @@ A message is serialized using the following byte sequence ([little-endian](https
    - Zero means the message does not expire.
    - 24-bit, unsigned integer (3 octets). So maximum is over 6 months.
 1. Payload. Contains the [service data unit](https://en.wikipedia.org/wiki/Service_data_unit) encoded with the [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652). The [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be length-prefixed with a 32-bit unsigned integer (4 octets), so the maximum length is ~3.73GiB.
-1. Signature. This is at the bottom to make it easy to generate and consume messages with a single pass.
-   - The plaintext MUST be the entire RAMF message before the signature.
-   - The ciphertext MUST be encapsulated as a [CMS signed data](https://tools.ietf.org/html/rfc5652#section-5) value with exactly one signer and zero embedded certificates. The signer is the sender, and its certificate is available above. The hashing algorithm MUST match the hashing algorithm field of the RAMF message.
-   - The ciphertext MUST length-prefixed with a 12-bit unsigned integer (2 octets), so the maximum length is 4kib.
+1. Signature. The sender's [detached signature](https://en.wikipedia.org/wiki/Detached_signature) for all the preceding octets in the message, from the format signature to the payload. This is at the bottom to make it easy to generate and process messages with a single pass.
+   - Serialized as a [CMS signed data](https://tools.ietf.org/html/rfc5652#section-5) value where:
+     - `digestAlgorithms`, the collection of message digest algorithm identifiers, MUST contain exactly one OID and it MUST correspond to the signature hashing algorithm specified in the message. See [Signature Hashing Algorithms](#signature-hashing-algorithms).
+     - `encapContentInfo`, the signed content, MUST NOT include the content itself, since this is a detached signature.
+     - `certificates` MUST be empty, since the sender's certificate is available above.
+     - `crls` MUST be empty, since certificate revocation is part of the [Relaynet PKI](rs002-pki.md).
+     - `signerInfos` MUST contain exactly one signer (`SignerInfo`), where:
+       - `sid`
+       - `digestAlgorithm`
+       - `signedAttrs`
+       - `signatureAlgorithm`
+       - `signature`
+       - `unsignedAttrs`
+   - The ciphertext is length-prefixed with a 12-bit unsigned integer (2 octets), so the maximum length is 4kib.
+
+### Signature Hashing Algorithms
+
+RAMF messages MUST be signed using one of the following hashing algorithms. The sender MAY only support one of those algorithms, but any implementation that processes RAMF messages MUST support all the algorithms below.
+
+| Algorithm | 8-Bit Identifier in RAMF | OID in CMS |
+| --- | --- | --- |
+| SHA-256 | `0x00` | [2.16.840.1.101.3.4.2.1](http://www.oid-info.com/get/2.16.840.1.101.3.4.2.1) |
+| SHA-512 | `0x01` | [2.16.840.1.101.3.4.2.3](http://www.oid-info.com/get/2.16.840.1.101.3.4.2.3) |
 
 ## Post-Deserialization Validation
 
@@ -79,7 +96,3 @@ The following concrete signatures have been reserved by other Relaynet specifica
 ## Open Questions
 
 - PCKS7 is much more widely supported than CMS. Should we downgrade to PCKS7? If so, then this format will have to be updated to hold the [key agreement](rs003-key-agreement.md) information (more specifically, the public component of the ephemeral key and some metadata), since PKCS7 enveloped-data does not support encryption using key agreement algorithms.
-
-## Relevant Specifications
-
-The use of cryptographic algorithms in RAMF messages MUST comply with [RS-018](rs018-algorithms.md).
