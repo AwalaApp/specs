@@ -30,11 +30,11 @@ Since this protocol applies to sessions on Relaynet channels, Alice and Bob woul
 
 A channel implementation MUST define the following parameters:
 
-- Algorithm: RSA or a curve like `Curve25519` or `Curve448`.
-- Hash: A 256- or 512-bit hash function (e.g. SHA-256 or SHA-512).
+- Algorithm: RSA-2048, RSA-3072, RSA-4096, Curve25519 or Curve448.
+- Hash: SHA-256 or SHA-512.
 - Channel id: An ASCII string identifying the channel.
 
-For example, a Relaynet service may configure its endpoints to use RSA with 4096-bit keys, SHA-512 as the hash function and `My Service` as the channel.
+For example, a Relaynet service may configure its endpoints to use RSA-2048 as the algorithm, SHA-256 as the hash function and `My Service` as the channel.
 
 ## Notation
 
