@@ -16,7 +16,7 @@ This protocol extends Relaynet to add perfect forward secrecy, future secrecy an
 
 - There is no central server that can provide certificates or public keys for any node in Relaynet, but that is not necessary because peers always have each other's certificates.
 - This protocol must be [tolerant to disruptions](https://en.wikipedia.org/wiki/Delay-tolerant_networking): Messages are most likely to arrive late, in batches and out of order, or they may be lost.
-- Elliptic Curve Cryptography is not required. RSA is also allowed to lower the barrier to adoption.
+- The Diffie-Hellman (DH) exchange can also be done with the traditional finite field approach to lower the barrier to adoption. In other words, this protocol does not require Elliptic Curve Cryptography (ECC).
 
 The end result is a key agreement and management protocol where ephemeral keys are rotated as the recipient acknowledges the receipt of the previous ephemeral key.
 
@@ -30,11 +30,11 @@ Since this protocol applies to sessions on Relaynet channels, Alice and Bob woul
 
 A channel implementation MUST define the following parameters:
 
-- Algorithm: RSA-2048, RSA-3072, RSA-4096, Curve25519 or Curve448.
+- Algorithm: DH with 2048-bit groups (_DH-2048_), DH with 3072-bit groups (_DH-3072_), DH with 4096-bit groups (_DH-4096_), ECDH with X25519 (_ECDH-X25519_) or ECDH with X448 (_ECDH-X448_).
 - Hash: SHA-256, SHA-384 or SHA-512.
 - Channel id: An ASCII string identifying the channel.
 
-For example, a Relaynet service may configure its endpoints to use RSA-2048 as the algorithm, SHA-256 as the hash function and `My Service` as the channel.
+For example, a Relaynet service may configure its endpoints to use DH-2048 as the algorithm, SHA-256 as the hash function and `My Service` as the channel id.
 
 ## Notation
 
