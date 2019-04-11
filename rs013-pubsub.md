@@ -6,24 +6,20 @@
 
 ## Abstract
 
-This specification will extend [Relaynet Core (RS-000)](rs000-core.md) to support the [Publish-Subscribe pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html) in centralized and decentralized services. This document is a just placeholder because this functionality is not a top priority as of this writing.
+This specification will extend [Relaynet Core (RS-000)](rs000-core.md) to support the [Publish-Subscribe pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html) through a [Distributed Hash Table (DHT)](https://en.wikipedia.org/wiki/Distributed_hash_table). This document is a just placeholder because this functionality is not a top priority as of this writing.
 
-## Introduction
+## Overview
 
-- Endpoints will tell their corresponding gateways which topics they want to be subscribed to.
-- Gateways will push _broadcast parcels_ to a distributed database, for other gateways in the network to consume such parcels and pass them on to their endpoints.
-- The database will be analogous to a "mutable blockchain". Obviously, blockchains are immutable by definition, so the term isn't technically correct. This would be a system with the following properties:
-  - Peer-to-peer. No central authority.
-  - Nodes will be responsible for storing valid parcels until they expire.
-  - Node operators should ideally be rewarded for hosting parcels.
-  - It may be necessary to support sharding, especially if the parcels aren't limited to just a few kilobytes.
-- Use cases
+- Endpoints will tell their corresponding gateways which senders and/or topics they want to be subscribed to.
+- Gateways will publish _broadcast parcels_ for other gateways in the network to consume such parcels and pass them on to their endpoints.
+- Parcels will be deleted from the DHT as soon as they expire.
+- Use cases:
   - A social network could use this mechanism to distribute posts, especially those that have to reach millions of users.
   - Software update notifications.
 
 ## Addressing
 
-Syntax: `rnt:serviceId[/topicId[?queryString]]`. Useful to broadcast messages. The format of the serviceId depends on whether the service is centralised or decentralised:
+Syntax: `rnt:serviceId[/topicId[?queryString]]`. The format of the `serviceId` depends on whether the service is centralised or decentralised:
 
 - Centralised: A domain name or IP address.
 - Decentralised: A random, 128-bit hex string.
