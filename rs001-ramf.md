@@ -59,15 +59,6 @@ A message is serialized using the following byte sequence ([little-endian](https
        - `unsignedAttrs`
    - The ciphertext is length-prefixed with a 12-bit unsigned integer (2 octets), so the maximum length is 4kib.
 
-### Signature Hashing Algorithms
-
-RAMF messages MUST be signed using one of the following hashing algorithms. The sender MAY only support one of those algorithms, but any implementation that processes RAMF messages MUST support all the algorithms below.
-
-| Algorithm | 8-Bit Identifier in RAMF | OID in CMS |
-| --- | --- | --- |
-| SHA-256 | `0x00` | [2.16.840.1.101.3.4.2.1](http://www.oid-info.com/get/2.16.840.1.101.3.4.2.1) |
-| SHA-512 | `0x01` | [2.16.840.1.101.3.4.2.3](http://www.oid-info.com/get/2.16.840.1.101.3.4.2.3) |
-
 ## Post-Deserialization Validation
 
 Recipients and brokers of a RAMF message MUST validate the message as soon as possible, before any further processing or relay. At a minimum, they MUST:
