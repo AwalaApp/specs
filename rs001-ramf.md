@@ -35,20 +35,19 @@ A message is serialized using the following byte sequence ([little-endian](https
    - Zero means the message does not expire.
    - 24-bit, unsigned integer (3 octets). So maximum is over 6 months.
 1. Payload. Contains the [service data unit](https://en.wikipedia.org/wiki/Service_data_unit) encoded with the [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652). The [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be length-prefixed with a 32-bit unsigned integer (4 octets), so the maximum length is ~3.73GiB.
-1. Signature.
-   - As [CMS signed data](https://tools.ietf.org/html/rfc5652#section-5) structure with exactly one signer and zero embedded certificates. The signer is the sender, and its certificate is available above.
-   - The cleartext to the signature should be the entire message, from the format signature to the payload.
-   - This is at the bottom to make it easy to generate and consume messages with a single pass.
-   - The ciphertext is length-prefixed with a 12-bit unsigned integer (2 octets), so the maximum length is 4kib.
+1. Signature. This is at the bottom to make it easy to generate and consume messages with a single pass.
+   - The plaintext MUST be the entire RAMF message before the signature.
+   - The ciphertext MUST be encapsulated as a [CMS signed data](https://tools.ietf.org/html/rfc5652#section-5) value with exactly one signer and zero embedded certificates. The signer is the sender, and its certificate is available above. The hashing algorithm MUST match the hashing algorithm field of the RAMF message.
+   - The ciphertext MUST length-prefixed with a 12-bit unsigned integer (2 octets), so the maximum length is 4kib.
 
 ## Post-Deserialization Validation
 
 Recipients and brokers of a RAMF message MUST validate the message as soon as possible, before any further processing or relay. At a minimum, they MUST:
 
-- Check the signature.
 - Check the date and TTL to make sure the message is still valid (and mitigate replay attacks).
 - Check that the sender certificate is valid per [Relaynet PKI](rs002-pki.md).
 - Check that the date is within the period of time during which the certificate was valid.
+- The signature MUST be valid according to the specified signature algorithm. The signature MUST be deemed invalid if the signature algorithm is unsupported, the hashing algorithm is unsupported or the hashing algorithm does not match that of the RAMF message.
 
 ## Security Considerations
 
@@ -69,3 +68,7 @@ The following concrete signatures have been reserved by other Relaynet specifica
 ## Open Questions
 
 - PCKS7 is much more widely supported than CMS. Should we downgrade to PCKS7? If so, then this format will have to be updated to hold the [key agreement](rs003-key-agreement.md) information (more specifically, the public component of the ephemeral key and some metadata), since PKCS7 enveloped-data does not support encryption using key agreement algorithms.
+
+## Relevant Specifications
+
+The use of cryptographic algorithms in RAMF messages MUST comply with [RS-018](rs018-algos.md).
