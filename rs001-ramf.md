@@ -71,4 +71,4 @@ The following concrete signatures have been reserved by other Relaynet specifica
 
 ## Relevant Specifications
 
-The use of cryptographic algorithms in RAMF messages MUST comply with [RS-018](rs018-algos.md).
+The use of cryptographic algorithms in RAMF messages MUST comply with [RS-018](rs018-algorithms.md).

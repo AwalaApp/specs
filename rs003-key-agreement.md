@@ -30,9 +30,9 @@ Since this protocol applies to sessions on Relaynet channels, Alice and Bob woul
 
 A channel implementation MUST define the following parameters:
 
-- Key exchange algorithm: Any key exchange algorithm allowed by [RS-018](rs018-algos.md).
-- Cipher: Any cipher allowed by [RS-018](rs018-algos.md).
-- Hash: Any hashing function allowed by [RS-018](rs018-algos.md).
+- Key exchange algorithm: Any key exchange algorithm allowed by [RS-018](rs018-algorithms.md).
+- Cipher: Any cipher allowed by [RS-018](rs018-algorithms.md).
+- Hash: Any hashing function allowed by [RS-018](rs018-algorithms.md).
 - Channel id: An ASCII string identifying the channel.
 
 For example, a Relaynet service may configure its endpoints to use DH-2048 as the key exchange algorithm, AES-128 (KW and GCM) as the cipher, SHA-256 as the hash function and `My Service` as the channel id.
