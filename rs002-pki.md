@@ -27,7 +27,9 @@ An endpoint certificate MUST be issued by one of the following:
 
 ### Parcel Delivery Authorization (PDA)
 
-A specific type of endpoint certificate whereby Endpoint A instructs its gateway and its relaying gateway to accept parcels from Endpoint B to Endpoint A. If Endpoint A is private, the endpoint and its gateways MUST refuse parcels where the sender certificate is not a valid PDA.
+Given Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its relaying gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a certificate chain called _Parcel Delivery Authorization_ (PDA).
+
+If Endpoint A is private, the endpoint and its gateways MUST refuse parcels where the sender certificate is not a valid PDA.
 
 Each PDA is a certificate chain formed of the following sequence (from leaf to root):
 
@@ -40,16 +42,30 @@ Gateways MUST refuse PDAs whose issuing endpoint's _Common Name_ does not match 
 
 #### Rate Limiting Extension
 
-Endpoint B's certificate MAY contain the non-critical extension _PDA Rate Limiting_, so that Endpoint A can instruct its gateways to limit the volume of parcels that Endpoint B can send. The extension has the following attributes:
+Endpoint A MAY rate limit the volume of parcels that Endpoint B may send with the PDA by including the non-critical extension _PDA Rate Limiting_.
 
-- _Limit_: How many parcels can be sent.
-- _Period_: Number of seconds during which the limit applies.
+Gateways SHOULD enforce the rate limiting specified by the extension, if present. When evaluating the eligibility of a message for rate limiting purposes, relaying gateways MUST use the time when the message was received, whilst user gateways MUST use the date specified in the RAMF message.
 
-For example, Endpoint A could specify a limit of one parcel every 86400 seconds (one day).
+The target endpoint (Endpoint A) MAY enforce the rate limiting.
 
-The eligibility of a message is determined by its own date, not the date when the message was received.
+The [ASN.1](https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf) Object Identifier of this extension is defined as follows:
 
-Gateways SHOULD support this extension, whilst endpoints MAY support it.
+```asn1
+PKIPDARateLimitId OBJECT IDENTIFIER ::= {
+    joint-iso-itu-t(2) uuid(25) relaynet(334996391340098037232342464294822053250) pki(1) 1
+    }
+```
+
+The ASN.1 value of the extension is defined as follows:
+
+```asn1
+PKIPDARateLimit ::= SEQUENCE {
+    limit:  INTEGER,
+    period: INTEGER
+}
+```
+
+Where, `limit` specifies how many parcels can be sent within a given number of seconds (`period`). For example, a `limit` of `1` and a `period` of `86400` allow a maximun of one parcel a day.
 
 ### Gateway Certificate
 
@@ -64,7 +80,17 @@ A certificate issued by another gateway MUST NOT be used to issue additional gat
 
 ## Certificate Type Extension
 
-Every certificate in this PKI MUST use the critical extension _PDA Certificate Type_ to specify its type. The value MUST correspond to the [ASN.1](https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One) enumeration below:
+Every certificate in this PKI MUST use the critical extension _PDA Certificate Type_ to specify its type.
+
+The ASN.1 Object Identifier of this extension is defined as follows:
+
+```asn1
+PDACertTypeId OBJECT IDENTIFIER ::= {
+    joint-iso-itu-t(2) uuid(25) relaynet(334996391340098037232342464294822053250) pki(1) 2
+    }
+```
+
+Whilst its value is defined as follows:
 
 ```asn1
 PDACertType ::= ENUMERATED {
@@ -75,7 +101,8 @@ PDACertType ::= ENUMERATED {
     gatewaySignOnly       (4),   -- A gateway's signature-only certificate
     gateway               (5),   -- A gateway's certificate
     peerGatewaySignOnly   (6),   -- A peer gateway's signature-only certificate
-    peerGateway           (7) }  -- A peer gateway's certificate
+    peerGateway           (7)    -- A peer gateway's certificate
+    }
 ```
 
 ## Certificate and Key Rotation
