@@ -6,25 +6,25 @@
 
 ## Abstract
 
-This document describes an asynchronous key agreement and management protocol to establish and maintain secure sessions in bidirectional [messaging channels](rs000-core.md#messaging-protocols). Its purpose is to add perfect forward secrecy, [future secrecy](https://signal.org/blog/advanced-ratcheting/) and replay attack mitigation to Relaynet.
+This document describes an asynchronous key agreement and management protocol to establish and maintain secure sessions in bidirectional [messaging channels](rs000-core.md#messaging-protocols). Its purpose is to add perfect forward secrecy, [future secrecy](https://signal.org/blog/advanced-ratcheting/) and replay attack mitigation to [endpoint](rs000-core.md#endpoint-messaging-protocol) and [gateway channels](rs000-core.md#gateway-messaging-protocol).
 
 ## Introduction
 
-Relaynet Core defines messaging channels that use end-to-end encryption using public key cryptography to guarantee confidentiality, integrity and non-repudiation. But since messages are always encrypted using the same keys, compromising the keys will compromise past and future messages -- In other words, Relaynet Core does not offer perfect forward secrecy.
+Relaynet Core defines messaging channels that use end-to-end encryption to guarantee confidentiality. But since messages are always encrypted using the same keys, compromising the keys will compromise past and future messages -- In other words, Relaynet Core does not offer perfect forward secrecy.
 
 This protocol extends Relaynet to add perfect forward secrecy, future secrecy and replay attack mitigation. It is heavily based on the [Extended Triple Diffie-Hellman protocol](https://signal.org/docs/specifications/x3dh/) and the [double ratchet algorithm](https://signal.org/docs/specifications/doubleratchet/) from the Signal project, with some notable differences:
 
 - There is no central server that can provide certificates or public keys for any node in Relaynet, but that is not necessary because peers always have each other's certificates.
 - This protocol must be [tolerant to disruptions](https://en.wikipedia.org/wiki/Delay-tolerant_networking): Messages are most likely to arrive late, in batches and out of order, or they may be lost.
-- The Diffie-Hellman (DH) exchange can also be done with the traditional finite field approach to lower the barrier to adoption. In other words, this protocol does not require Elliptic Curve Cryptography (ECC).
+- The Diffie-Hellman (DH) exchange can also be done with the traditional finite field approach to lower the barrier to adoption. In other words, this protocol still supports Elliptic Curve Diffie-Hellman (ECDH), but it does not require it.
 
 The end result is a key agreement and management protocol where ephemeral keys are rotated as the recipient acknowledges the receipt of the previous ephemeral key.
 
 ## Roles
 
-This document refers to the two nodes in the sessions as _Alice_ and _Bob_. It assumes that Alice wants to initiate a session with Bob, and that she already has has Bob's public key.
+This document refers to the two nodes in the session as _Alice_ and _Bob_, and assumes that Alice wants to initiate a session with Bob.
 
-Since this protocol applies to sessions on Relaynet channels, Alice and Bob would either be endpoints or gateways, but not a combination of the two -- That is, this protocol does not apply to [bindings](rs000-core.md#message-transport-bindings).
+Since this protocol applies to sessions on Relaynet channels, Alice and Bob MUST be either endpoints or gateways, but not a combination of the two -- That is, this protocol does not apply to [bindings](rs000-core.md#message-transport-bindings).
 
 ## Parameters
 
@@ -32,55 +32,62 @@ A channel implementation MUST define the following parameters:
 
 - Key exchange algorithm: Any key exchange algorithm allowed by [RS-018](rs018-algorithms.md).
 - Cipher: Any cipher allowed by [RS-018](rs018-algorithms.md).
-- Hash: Any hashing function allowed by [RS-018](rs018-algorithms.md).
+- Cryptographic hashing function: Any function allowed by [RS-018](rs018-algorithms.md).
 - Channel id: An ASCII string identifying the channel.
 
-For example, a Relaynet service may configure its endpoints to use DH-2048 as the key exchange algorithm, AES-128 (KW and GCM) as the cipher, SHA-256 as the hash function and `My Service` as the channel id.
+For example, a Relaynet service may configure its endpoints to use DH-2048 as the key exchange algorithm, AES-128 (KW and GCM) as the cipher, SHA-256 as the hashing function and `My Service` as the channel id.
 
 ## Notation
 
 - _X || Y_ denotes the concatenation of byte sequences X and Y.
-- _LK<sub>A</sub>_ and _LK<sub>B</sub>_ denote the long-term key pairs for Alice and Bob, respectively. These are the keys used in their corresponding Relaynet PKI certificates.
-- _LK<sub>A</sub><sup>private</sup>_ and _LK<sub>B</sub><sup>private</sup>_ denote the private keys in LK<sub>A</sub> and LK<sub>B</sub>, respectively.
-- _LK<sub>A</sub><sup>public</sup>_ and _LK<sub>B</sub><sup>public</sup>_ denote the public keys in LK<sub>A</sub> and LK<sub>B</sub>, respectively.
-- _EK<sub>A,n</sub>_ and _EK<sub>B,m</sub>_ denote ephemeral key pairs generated by Alice and Bob, respectively.
-- _EK<sub>A,n</sub><sup>private</sup>_ and _EK<sub>B,m</sub><sup>private</sup>_ denote the private keys in EK<sub>A,1</sub> and EK<sub>B</sub>, respectively.
-- _EK<sub>A,n</sub><sup>public</sup>_ and _EK<sub>B,m</sub><sup>public</sup>_ denote the public keys in EK<sub>A,1</sub> and EK<sub>B</sub>, respectively.
+- _K<sub>a,n</sub>_ denotes the n-th DH key pair generated by Alice. _K<sub>a,n</sub><sup>private</sup>_ and _K<sub>a,n</sub><sup>public</sup>_ denote its private and public keys, respectively, and _K<sub>a,n</sub><sup>id</sup>_ denotes the identifier of the key pair.
+- _K<sub>b,n</sub>_ denotes the n-th DH key pair generated by Bob. _K<sub>b,n</sub><sup>private</sup>_ and _K<sub>b,n</sub><sup>public</sup>_ denote its private and public keys, respectively, and _K<sub>b,n</sub><sup>id</sup>_ denotes the identifier of the key pair.
 - _DH(K<sub>1</sub><sup>public</sup>, K<sub>2</sub><sup>private</sup>)_ represents the shared key resulting from doing a Diffie-Hellman exchange with keys K<sub>1</sub> and K<sub>2</sub>.
 - _KDF(KM)_ represents 32 bytes of output from the [HKDF algorithm](https://en.wikipedia.org/wiki/HKDF) with inputs:
-  - HKDF input key material: _F || KM_, where KM is an input byte sequence containing secret key material, and F is a byte sequence filled 0xFF bytes whose length matches that of KM.
+  - HKDF input key material: _F || KM_, where KM is an input byte sequence containing secret key material, and F is a byte sequence filled with `0xFF` bytes whose length matches that of KM.
   - HKDF salt: A zero-filled byte sequence with length equal to the hash output length.
   - HKDF info: The channel id.
 
 ## Key Agreement Protocol
 
-### Publishing Node Certificates
+This protocol describes the initial interaction between Alice and Bob, which is used to establish a secure channel between the two.
 
-Per Relaynet Core, the node initiating the communication always has the certificate of its peer, so Alice will always have Bob's certificate. The distribution method is outside the scope of this document.
+### Generating and Distributing Initial DH Keys
+
+Alice MUST have Bob's initial DH key K<sub>b,1</sub><sup>public</sup> and its id K<sub>b,1</sub><sup>id</sup> before running this protocol; see [X.509 certificate](#x509-certificate-for-initial-dh-key).
+
+The initial DH key K<sub>b,1</sub> SHOULD be ephemeral and used by a single node. When this is not possible, the initial DH key MAY be static and used by multiple nodes. Static keys MUST be valid for no more than 60 days, and they SHOULD NOT be valid for more than 30 days.
+
+For example, static keys are likely to be necessary in a centralized service where client applications have to be distributed with the same initial DH key, whilst ephemeral keys could be used in a decentralized service where Bob is able to generate an initial key just for Alice.
+
+The initial key MUST be valid in the chosen key exchange algorithm. For example, the initial DH key must be 2048-bit if the session uses DH with a 2048-bit group; similarly, the initial DH key must be X25519 if the session uses ECDH with X25519.
 
 ### Sending Initial Message(s)
 
-Alice MUST follow the following process when sending an initial message to Bob:
+Alice MUST follow the following process when sending an initial message to Bob using his initial DH key (K<sub>b,1</sub><sup>public</sup>):
 
-1. Generate the ephemeral asymmetric key EK<sub>A,1</sub>.
-1. Calculate the shared key _SK<sub>1</sub> = KDF(KM)_, where KM = DH(LK<sub>B</sub><sup>public</sup>, EK<sub>A,1</sub><sup>private</sup>).
-1. Store EK<sub>A,1</sub><sup>private</sup> along with a random id (e.g., a UUID4 value), so it can be used to decrypt future messages from Bob.
-1. Encrypt the plaintext with SK<sub>1</sub>, and attach the following data:
-   - EK<sub>A,1</sub><sup>public</sup>.
-   - The id assigned to EK<sub>A,1</sub>.
+1. Generate the ephemeral asymmetric key K<sub>a,1</sub>.
+1. Generate the id K<sub>a,1</sub><sup>id</sup> randomly.
+1. Store K<sub>a,1</sub><sup>private</sup> and K<sub>a,1</sub><sup>id</sup> so that they can be used to decrypt future messages from Bob.
+1. Calculate the shared key _SK<sub>1</sub> = KDF(KM)_, where KM = DH(K<sub>b,1</sub><sup>public</sup>, K<sub>a,1</sub><sup>private</sup>).
+1. Encrypt the plaintext with SK<sub>1</sub>.
+1. Attach K<sub>a,1</sub><sup>public</sup>, K<sub>a,1</sub><sup>id</sup> and K<sub>b,1</sub><sup>id</sup> to the resulting ciphertext as metadata.
 
-Alice MUST continue to use SK<sub>1</sub> to encrypt future messages until the first ephemeral key from Bob (EK<sub>B,1</sub><sup>public</sup>) is received. Once that happens, any subsequent message from Alice to Bob MUST use the [algorithm to send subsequent message](#sending-subsequent-messages).
+Alice MUST continue to use SK<sub>1</sub> to encrypt future messages until the first ephemeral key from Bob (K<sub>b,2</sub><sup>public</sup>) is received. Once that happens, any subsequent message from Alice to Bob MUST use the [algorithm to send subsequent message](#sending-subsequent-messages).
 
 ### Receiving Initial Message(s)
 
 Bob MUST follow the following process when receiving an initial message from Alice:
 
 1. Check that the required input is present, or else abort:
-   - EK<sub>A,1</sub><sup>public</sup>.
-   - The id that Alice assigned to EK<sub>A,1</sub>.
-1. Calculate the shared key _SK<sub>1</sub> = KDF(DH(EK<sub>A,1</sub><sup>public</sup>, LK<sub>B</sub><sup>private</sup>))_.
+   - The ciphertext.
+   - K<sub>a,1</sub><sup>public</sup>.
+   - K<sub>a,1</sub><sup>id</sup>.
+   - K<sub>b,1</sub><sup>id</sup>.
+1. Retrieve K<sub>b,1</sub> by its id K<sub>b,1</sub><sup>id</sup>, or abort if it cannot be found.
+1. Calculate the shared key _SK<sub>1</sub> = KDF(DH(K<sub>a,1</sub><sup>public</sup>, K<sub>b,1</sub><sup>private</sup>))_.
 1. Decrypt the ciphertext with SK<sub>1</sub>, or abort if it fails to be decrypted.
-1. Store EK<sub>A,1</sub><sup>public</sup> along with its id in order to send messages to Alice in the future.
+1. Store K<sub>a,1</sub><sup>public</sup> along with K<sub>a,1</sub><sup>id</sup> in order to send messages to Alice in the future.
 
 ## Key Management Protocol
 
@@ -88,49 +95,77 @@ Alice and Bob MUST follow the following algorithm to exchange subsequent message
 
 ### Sending Subsequent Messages
 
-The sender X MUST follow the following process when sending a subsequent message to Y:
+The sender _X_ MUST follow the following process when sending a subsequent message to _Y_:
 
-1. Compute EK<sub>X,m</sub>:
-   - Use the last ephemeral key EK<sub>X,m-1</sub> if no incoming message from Y has used it; this could mean that Y has not received EK<sub>X,m-1</sub> yet.
-   - Otherwise, generate a new ephemeral key and store EK<sub>X,m</sub><sup>private</sup> along with a random id (e.g., a UUID4 value) to decrypt future messages from Y.
-1. Retrieve Y's last ephemeral key EK<sub>Y,n</sub><sup>public</sup> along with its id.
-1. Calculate the shared key _SK<sub>p</sub> = KDF(KM)_, where KM = DH(EK<sub>Y,n</sub><sup>public</sup>, EK<sub>X,m</sub><sup>private</sup>)).
-1. Encrypt the plaintext with SK<sub>p</sub>, and attach the following data:
-   - EK<sub>X,m</sub><sup>public</sup>.
-   - The id that X assigned to EK<sub>X,m</sub>.
-   - The id that Y assigned to EK<sub>Y,n</sub>.
+1. Compute K<sub>x,m</sub>:
+   - Retrieve the last ephemeral key K<sub>x,m-1</sub> if no incoming message from Y has used it; this could mean that Y has not received K<sub>x,m-1</sub> yet.
+   - If an incoming message from Y has already used K<sub>x,m-1</sub>, then:
+     1. Generate a new ephemeral key K<sub>x,m</sub>.
+     1. Generate the id K<sub>x,m</sub><sup>id</sup> randomly.
+     1. Store K<sub>x,m</sub><sup>private</sup> and K<sub>x,m</sub><sup>id</sup> so that they can be used to decrypt future messages from Y.
+1. Retrieve Y's last ephemeral key K<sub>y,n</sub><sup>public</sup> along with its id K<sub>y,n</sub><sup>id</sup>.
+1. Calculate the shared key _SK<sub>p</sub> = KDF(KM)_, where KM = DH(K<sub>y,n</sub><sup>public</sup>, K<sub>x,m</sub><sup>private</sup>).
+1. Encrypt the plaintext with SK<sub>p</sub>.
+1. Attach K<sub>x,m</sub><sup>public</sup>, K<sub>x,m</sub><sup>id</sup> and K<sub>y,n</sub><sup>id</sup> to the resulting ciphertext as metadata.
 
 ### Receiving Subsequent Messages
 
 The recipient Y MUST follow the following process when receiving a subsequent message from X:
 
 1. Check that the required input is present, or else abort:
-   - EK<sub>X,m</sub><sup>public</sup>.
-   - The id that X assigned to EK<sub>X,m</sub>.
-   - The id that Y assigned to EK<sub>Y,n</sub>.
-1. Retrieve EK<sub>Y,n</sub><sup>private</sup> by its id, or abort if it cannot be found.
-1. Calculate the shared key _SK<sub>p</sub> = KDF(DH(EK<sub>X,m</sub><sup>public</sup>, EK<sub>Y,n</sub><sup>private</sup>))_.
+   - The ciphertext.
+   - K<sub>x,m</sub><sup>public</sup>.
+   - K<sub>x,m</sub><sup>id</sup>.
+   - K<sub>y,n</sub><sup>id</sup>.
+1. Retrieve K<sub>y,n</sub> by its id K<sub>y,n</sub><sup>id</sup>, or abort if it cannot be found.
+1. Calculate the shared key _SK<sub>p</sub> = KDF(DH(K<sub>x,m</sub><sup>public</sup>, K<sub>y,n</sub><sup>private</sup>))_.
 1. Decrypt the ciphertext with SK<sub>p</sub>, or abort if it fails to be decrypted.
-1. Store EK<sub>X,m</sub><sup>public</sup> along with its id in order to send messages to X in the future, unless a different key was already used in a newer message; keep in mind that messages may arrive out of order.
-1. If EK<sub>Y,n</sub> was the last key generated by Y, then delete any rotated key EK<sub>Y,n-1</sub> in order to achieve forward secrecy and future secrecy. This deletion MAY be deferred until the next incoming [relay](rs000-core.md#cargo-relay-binding) so that any in-transit messages using the rotated key can be decrypted.
+1. Store K<sub>x,m</sub><sup>public</sup> along with K<sub>x,m</sub><sup>id</sup> in order to send messages to X in the future, unless a different key was already used in a newer message; keep in mind that messages may arrive out of order.
+1. If K<sub>y,n</sub> was the last key generated by Y, then delete any rotated key K<sub>y,n-1</sub> in order to achieve forward secrecy and future secrecy. This deletion MAY be deferred until the next incoming [relay](rs000-core.md#cargo-relay-binding) so that any in-transit messages using the rotated key can be decrypted.
 
-## Use in RAMF Messages
+## X.509 Certificate for Initial DH Key
 
-When using [RAMF](rs001-ramf.md) to encapsulate ciphertext encrypted with these DH keys, a [CMS enveloped-data](https://tools.ietf.org/html/rfc5652#section-6) value MUST be used as follows:
+The recipient of the initial message MUST distribute its initial DH key K<sub>b,1</sub><sup>public</sup> as an X.509 certificate where:
 
-- The ciphertext (contained in `encryptedContentInfo`) MUST be generated with the chosen cipher in a mode that is suitable for encrypting payloads (e.g., AES-GCM).
-- [`RecipientInfo`](https://tools.ietf.org/html/rfc5652#section-6.2) MUST use the [`KeyAgreeRecipientInfo`](https://tools.ietf.org/html/rfc5652#section-6.2.2) choice with the following attributes:
-  - `originator`: A `subjectKeyIdentifier` set to the id that the sender assigned to the ephemeral key EK<sub>A,1</sub> or EK<sub>X,m</sub>.
-  - `ukm`: EK<sub>A,1</sub><sup>public</sup> or EK<sub>X,m</sub><sup>public</sup>.
-  - `keyEncryptionAlgorithm`: The chosen cipher in a mode that is suitable for encapsulating cryptographic key material (e.g., AES-KW).
-  - `recipientEncryptedKeys`: A single-item sequence where `KeyAgreeRecipientIdentifier` will depending on the type of message:
-    - Initial messages will use the `issuerAndSerialNumber` choice to identify the recipient's long-term key (LK<sub>B</sub>).
-    - Subsequent messages will use the `rKeyId` choice to identify the recipient's ephemeral key (EK<sub>Y,n</sub>) as previously specified by the recipient in the `originator` attribute.
+- `serialNumber` is set to K<sub>b,1</sub><sup>id</sup>.
+- `subjectPublicKeyInfo`:
+   - `algorithm` is set to a valid key exchange algorithm per [RS-018](rs018-algorithms.md). If the algorithm is DH (OID `1.2.840.113549.1.3.1`), then `algorithmParameters` MUST be set to `PKIKeyAgreementDHParams` as defined below:
+     ```asn1
+     PKIKeyAgreementDHParams ::= SEQUENCE {
+       modpGroup  PKIKeyAgreementDHGroup
+     }
+     
+     PKIKeyAgreementDHGroup ::= INTEGER {
+       modp2048 (14),
+       modp3072 (15),
+       modp4096 (16),
+       modp6144 (17),
+       modp8192 (18)
+     }
+     ```
+   - `subjectPublicKey` is set to K<sub>b,1</sub><sup>public</sup>.
 
-## Notes
+Note that the expiry date of the certificate MUST reflect that initial DH keys cannot last more than 60 days.
 
-Note that unlike the X3DH protocol, long-term keys (known as identity keys in X3DH) are not input to the shared secret algorithm. In Signal, identity keys must be included to ensure mutual authentication, but in this case, the ciphertext itself will be part of the plaintext of a digital signature using the long-term keys (per [RAMF](rs001-ramf.md)).
+## CMS Enveloped-Data Representation
+
+When using a [CMS enveloped-data](https://tools.ietf.org/html/rfc5652#section-6) value to encapsulate ciphertext encrypted with these DH keys, its [`RecipientInfo`](https://tools.ietf.org/html/rfc5652#section-6.2) MUST use the [`KeyAgreeRecipientInfo`](https://tools.ietf.org/html/rfc5652#section-6.2.2) choice with the following attributes:
+
+- `originator`: A `subjectKeyIdentifier` set to K<sub>a,1</sub><sup>id</sup> or K<sub>x,m</sub><sup>id</sup>.
+- `ukm`: K<sub>a,1</sub><sup>public</sup> or K<sub>x,m</sub><sup>public</sup>.
+- `keyEncryptionAlgorithm`: The chosen cipher in a mode that is suitable for encapsulating cryptographic key material per [RS-018](rs018-algorithms.md) (e.g., AES-128-KW).
+- `recipientEncryptedKeys`: A single-item sequence where `KeyAgreeRecipientIdentifier` will depending on the type of message:
+  - Initial messages will use the `issuerAndSerialNumber` choice to identify the recipient's initial key (K<sub>b,1</sub>). These values MUST match those of the [X.509 certificate](#x509-certificate-for-initial-dh-key).
+  - Subsequent messages will use the `rKeyId` choice to identify the recipient's ephemeral key (K<sub>y,n</sub>) as previously specified by the recipient in the `originator` attribute.
+
+Note that per [RS-018](rs018-algorithms.md), the ciphertext MUST be generated with the chosen cipher in a mode that is suitable for encrypting payloads (e.g., AES-128-GCM).
+
+The constraints above apply to the payload of RAMF messages, since they use CMS Enveloped-Data.
 
 ## Limitations
 
 This protocol will not work with unidirectional communication as might be the case between two endpoints (if one of the endpoints is private and does not issue Parcel Delivery Authorizations to its peer). Consequently, a Relaynet service with one-way communication would not get perfect forward secrecy or future secrecy, unless it enables two-way communication as a workaround until there is an equivalent protocol for unidirectional communication.
+
+## Relevant Specifications
+
+[RS-018 (Cryptographic Algorithms)](rs018-algorithms.md) defines the requirements and recommendations for the use of cryptographic algorithms in Relaynet.
