@@ -239,3 +239,4 @@ Note that relayers are not assigned Relaynet PKI certificates, but per the requi
   - Errors include: Message expired, invalid sender certificate, unauthorized sender, malformed message, unavailable target.
   - We need to distinguish channel-level errors (i.e., [_invalid message channel_ in EIP](https://www.enterpriseintegrationpatterns.com/patterns/messaging/InvalidMessageChannel.html)) from transport-level errors (i.e., [_dead letter channel_ in EIP](https://www.enterpriseintegrationpatterns.com/patterns/messaging/DeadLetterChannel.html)).
 - How should the Gateway Connection URL be discovered on Android and iOS? A clean solution could be having a fixed binding (e.g., PoWebSocket) and URL (e.g., `ws://localhost:1234`).
+- Should the CCA be encoded with DER instead of Protocol Buffers since ASN.1/DER serialization is already necessary for the Relaynet PKI?
