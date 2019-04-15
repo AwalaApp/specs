@@ -87,7 +87,7 @@ A parcel encapsulates a service message and is serialized with the [Relaynet Abs
 
 The sender certificate MUST be a valid certificate per [Relaynet PKI](rs002-pki.md).
 
-The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`), using either the target endpoint's certificate (`KeyTransRecipientInfo`) or the [Relaynet Key Agreement protocol](rs003-key-agreement.md) parameters (`KeyAgreeRecipientInfo`). Extensions to this document MAY support additional CMS structures.
+The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`), using either the target endpoint's certificate (`KeyTransRecipientInfo`) or the [Relaynet Channel Session Protocol](rs003-key-agreement.md) parameters (`KeyAgreeRecipientInfo`). Extensions to this document MAY support additional CMS structures.
 
 The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the service message and its media type, and is serialized with the following binary sequence (little-endian):
 
@@ -108,7 +108,7 @@ When using the [Relaynet Key Agreement protocol](rs003-key-agreement.md), the tw
 
 Its primary purpose is to encapsulate one or more messages from the [endpoint channel](#endpoint-messaging-protocol) (e.g., parcels). Cargoes are serialized as RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message format signature. Relayers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
 
-The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`), using either the target gateway's certificate (`KeyTransRecipientInfo`) or the [Relaynet Key Agreement protocol](rs003-key-agreement.md) parameters (`KeyAgreeRecipientInfo`). Extensions to this document MAY support additional CMS structures.
+The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) using the [Relaynet Channel Session Protocol](rs003-key-agreement.md) (`KeyAgreeRecipientInfo`). Extensions to this document MAY support additional CMS structures.
 
 The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains one or more parcels, and is serialized with the following binary sequence (in little-endian), which is repeated for each parcel:
 
