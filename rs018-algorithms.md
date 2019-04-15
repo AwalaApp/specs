@@ -28,9 +28,9 @@ Implementations MUST support SHA-256 (OID `2.16.840.1.101.3.4.2.1`) and they SHO
 
 ### Key Exchange Algorithms
 
-Implementations MUST support Diffie-Hellman (DH) with the [2048-bit MODP Group](https://tools.ietf.org/html/rfc3526#section-3), and they SHOULD also support DH with the [3072-bit](https://tools.ietf.org/html/rfc3526#section-4) and the [4096-bit MODP Group](https://tools.ietf.org/html/rfc3526#section-5). [6144-bit](https://tools.ietf.org/html/rfc3526#section-6) and [8192-bit MODP groups](https://tools.ietf.org/html/rfc3526#section-7) MAY be supported. DH groups under 2048 bits MUST NOT be supported.
+Implementations MUST support Diffie-Hellman (DH; OID `1.2.840.113549.1.3.1`) with the [2048-bit MODP Group](https://tools.ietf.org/html/rfc3526#section-3), and they SHOULD also support DH with the [3072-bit](https://tools.ietf.org/html/rfc3526#section-4) and the [4096-bit MODP Group](https://tools.ietf.org/html/rfc3526#section-5). [6144-bit](https://tools.ietf.org/html/rfc3526#section-6) and [8192-bit MODP groups](https://tools.ietf.org/html/rfc3526#section-7) MAY be supported. DH groups under 2048 bits MUST NOT be supported.
 
-Implementations SHOULD also support Elliptic Curve Diffie-Hellman (ECDH) with X25519, and they MAY support ECDH with X448.
+Implementations SHOULD also support Elliptic Curve Diffie-Hellman (ECDH) with X25519 (OID `1.3.101.110`), and they MAY support ECDH with X448 (OID `1.3.101.111`).
 
 ### Symmetric Ciphers
 
