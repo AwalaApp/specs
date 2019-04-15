@@ -60,8 +60,8 @@ The ASN.1 value of the extension is defined as follows:
 
 ```asn1
 PKIPDARateLimit ::= SEQUENCE {
-    limit:  INTEGER,
-    period: INTEGER
+    limit  INTEGER,
+    period INTEGER
 }
 ```
 
