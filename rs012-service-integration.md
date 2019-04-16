@@ -5,8 +5,15 @@
 - Type: Informational.
 
 ## Abstract
+{: .no_toc }
 
 This document categorizes the degrees to which Relaynet can be integrated in a centralised or decentralised service.
+
+## Table of contents
+{: .no_toc }
+
+1. TOC
+{:toc}
 
 ## Categorization
 

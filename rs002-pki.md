@@ -5,8 +5,15 @@
 - Type: Implementation.
 
 ## Abstract
+{: .no_toc }
 
 This document describes how to issue, distribute, store, revoke and interpret X.509 v3 certificates in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this PKI profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280).
+
+## Table of contents
+{: .no_toc }
+
+1. TOC
+{:toc}
 
 ## Basic Attributes and Constraints
 

@@ -5,8 +5,15 @@
 - Type: Implementation.
 
 ## Abstract
+{: .no_toc }
 
 This specification extends [Relaynet Core (RS-000)](rs000-core.md) to keep latencies low when the underlying network (e.g., the Internet) is available.
+
+## Table of contents
+{: .no_toc }
+
+1. TOC
+{:toc}
 
 ## Introduction
 

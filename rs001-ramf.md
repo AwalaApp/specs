@@ -6,8 +6,15 @@
 - Proof of concept: https://github.com/relaynet/poc/blob/master/core/serialization.js
 
 ## Abstract
+{: .no_toc }
 
 This document defines version 1 of the Relaynet Abstract Message Format (RAMF), a binary format used to serialize messages in the endpoint and gateway messaging protocols of Relaynet. It also defines some basic requirements for any recipient of the message.
+
+## Table of contents
+{: .no_toc }
+
+1. TOC
+{:toc}
 
 ## Introduction
 

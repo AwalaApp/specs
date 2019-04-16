@@ -5,8 +5,15 @@
 - Type: Implementation.
 
 ## Abstract
+{: .no_toc }
 
 This document specifies the requirements and recommendations for the support and selection of cryptographic algorithms in Relaynet. Every implementation of the Relaynet protocol suite is required to comply with this specification.
+
+## Table of contents
+{: .no_toc }
+
+1. TOC
+{:toc}
 
 ## Introduction
 

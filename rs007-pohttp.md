@@ -5,8 +5,15 @@
 - Type: Implementation.
 
 ## Abstract
+{: .no_toc }
 
 This document describes PoHTTP, a [parcel delivery binding](rs000-core.md#parcel-delivery-binding) for external Parcel Delivery Connections (PDC) based on HTTP.
+
+## Table of contents
+{: .no_toc }
+
+1. TOC
+{:toc}
 
 ## Introduction
 

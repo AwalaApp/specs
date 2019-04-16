@@ -5,8 +5,15 @@
 - Type: Implementation.
 
 ## Abstract
+{: .no_toc }
 
 This document describes the core elements of the Relaynet protocol suite, whose purpose is to make distributed systems tolerant to potentially large network latencies through the use of [asynchronous messaging](https://www.techopedia.com/definition/26454/asynchronous-messaging).
+
+## Table of contents
+{: .no_toc }
+
+1. TOC
+{:toc}
 
 ## Introduction
 

@@ -5,8 +5,15 @@
 - Type: Implementation.
 
 ## Abstract
+{: .no_toc }
 
 _AsyncRPC_ is a Relaynet service whose messages are [Application Layer](https://en.wikipedia.org/wiki/Application_layer) packets such as HTTP requests, HTTP responses, SMTP messages, amongst others. Its purpose is to facilitate the integration of Relaynet in pre-existing, centralised services by keeping the server-side unchanged with the use of a server-side adapter.
+
+## Table of contents
+{: .no_toc }
+
+1. TOC
+{:toc}
 
 ## Introduction
 

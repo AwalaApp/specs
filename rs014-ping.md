@@ -5,8 +5,15 @@
 - Type: Implementation.
 
 ## Abstract
+{: .no_toc }
 
 This document describes _Ping_, a trivial service used to test the underlying implementation and deployment of Relaynet, thus mitigating integration issues.
+
+## Table of contents
+{: .no_toc }
+
+1. TOC
+{:toc}
 
 ## Introduction
 

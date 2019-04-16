@@ -6,8 +6,15 @@
 - Proof of concept: https://github.com/relaynet/poc/tree/master/CoSocket
 
 ## Abstract
+{: .no_toc }
 
 This document describes CoSocket, a [cargo relay binding](rs000-core.md#cargo-relay-binding) on top of TCP or Unix sockets. As a purpose-built [Application Layer](https://en.wikipedia.org/wiki/Application_layer) protocol, this is the most efficient binding to relay cargo.
+
+## Table of contents
+{: .no_toc }
+
+1. TOC
+{:toc}
 
 ## Introduction
 
