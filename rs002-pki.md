@@ -58,7 +58,7 @@ The target endpoint (Endpoint A) MAY enforce the rate limiting.
 
 The [ASN.1](https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf) Object Identifier of this extension is defined as follows:
 
-```asn1
+```
 PKIPDARateLimitId OBJECT IDENTIFIER ::= {
     joint-iso-itu-t(2) uuid(25) relaynet(334996391340098037232342464294822053250) pki(1) 1
     }
@@ -66,7 +66,7 @@ PKIPDARateLimitId OBJECT IDENTIFIER ::= {
 
 The ASN.1 value of the extension is defined as follows:
 
-```asn1
+```
 PKIPDARateLimit ::= SEQUENCE {
     limit  INTEGER,
     period INTEGER
@@ -92,7 +92,7 @@ Every certificate in this PKI MUST use the critical extension _PDA Certificate T
 
 The ASN.1 Object Identifier of this extension is defined as follows:
 
-```asn1
+```
 PDACertTypeId OBJECT IDENTIFIER ::= {
     joint-iso-itu-t(2) uuid(25) relaynet(334996391340098037232342464294822053250) pki(1) 2
     }
@@ -100,7 +100,7 @@ PDACertTypeId OBJECT IDENTIFIER ::= {
 
 Whilst its value is defined as follows:
 
-```asn1
+```
 PDACertType ::= ENUMERATED {
     senderSignOnly        (0),   -- A sender endpoint's signature-only certificate
     sender                (1),   -- A sender endpoint's certificate
