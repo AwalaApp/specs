@@ -1,3 +1,6 @@
+---
+nav_exclude: true
+---
 # Relaynet Core
 {: .no_toc }
 
