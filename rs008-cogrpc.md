@@ -1,3 +1,6 @@
+---
+nav_exclude: true
+---
 # CogRPC: Cargo Relay over gRPC
 
 - Id: RS-008.

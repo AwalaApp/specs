@@ -1,3 +1,7 @@
+---
+nav_exclude: true
+---
+
 # CoWebSocket: Cargo Relay over WebSocket
 
 - Id: RS-015.

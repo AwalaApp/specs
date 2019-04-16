@@ -1,3 +1,6 @@
+---
+nav_exclude: true
+---
 # PogRPC: Parcel Delivery over gRPC
 
 - Id: RS-009.

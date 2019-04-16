@@ -1,3 +1,6 @@
+---
+nav_exclude: true
+---
 # PoSocket: Parcel Delivery over TPC/Unix Sockets
 
 - Id: RS-005.
