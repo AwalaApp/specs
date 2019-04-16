@@ -1,3 +1,6 @@
+---
+nav_exclude: true
+---
 # Web Browser Interface for Parcel Delivery Connections
 
 - Id: RS-010.

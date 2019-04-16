@@ -1,3 +1,6 @@
+---
+nav_exclude: true
+---
 # AsyncRPC: RPC Encapsulation in Relaynet
 {: .no_toc }
 

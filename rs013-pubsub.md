@@ -1,3 +1,6 @@
+---
+nav_exclude: true
+---
 # Service Message Broadcast
 {: .no_toc }
 

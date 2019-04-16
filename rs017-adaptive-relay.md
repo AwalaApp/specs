@@ -1,3 +1,6 @@
+---
+nav_exclude: true
+---
 # Adaptive Relay
 {: .no_toc }
 
