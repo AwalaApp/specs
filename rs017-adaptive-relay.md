@@ -32,7 +32,7 @@ When a gateway operates in cut-through mode, it will not use a [Cargo Relay Bind
 
 The following diagram shows how parcels would be delivered in a centralized service (one with clients and servers) using cut-through mode:
 
-![](assets/rs017/cut-through-mode.svg)
+![](diagrams/rs017/cut-through-mode.svg)
 
 Note that bindings will remain unchanged, but the roles of client and server would change: The user gateway will become an [external PDC](rs000-core.md#external-pdc) client to public endpoints and an internal PDC client to the relaying gateway. Similarly, this will be transparent to applications and endpoints, and only gateways need to be changed to support this specification.
 

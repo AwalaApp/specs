@@ -39,7 +39,7 @@ Asynchronous messaging also happens to be a better integration style, for reason
 
 The following diagram illustrates the various components of the network and how they interact with each other:
 
-![](assets/rs000/protocol-layers.svg)
+![](diagrams/rs000/protocol-layers.svg)
 
 - A **service** is a collection of _applications_ that communicate amongst themselves. A service can be centralized (client-server) or decentralized (peer-to-peer).
 - **Applications** exchange _messages_ amongst themselves, and because they can't communicate directly, they each use an _endpoint_ as a broker.
@@ -56,7 +56,7 @@ For example, if Twitter supported Relaynet, Twitter would be the _service_, the 
 
 Relaynet can also be described in terms of the [OSI model](https://en.wikipedia.org/wiki/OSI_model) as shown in the diagram below -- With [same-layer and adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) defined by [_messaging protocols_](#messaging-protocols) and [_message transport bindings_](#message-transport-bindings), respectively.
 
-![](assets/rs000/osi-layers-mapping.png)
+![](diagrams/rs000/osi-layers-mapping.png)
 
 Note that defining same-layer interactions at the application and relay layers is outside the scope of the protocol suite. Relaynet only prescribes the interactions with their adjacent layers. Each service has full control over its applications (see [_service messaging protocol_](#service-messaging-protocol)), and each relayer has full control over its relay layer.
 
@@ -211,7 +211,7 @@ The server SHOULD listen on a system port (one in the range 0-1023). Alternative
 
 As soon as the connection is established, a handshake MUST be performed for the gateway to authenticate the endpoint. The endpoint will be challenged to sign a nonce with each Relaynet PKI key it claims to have, as shown in the following sequence diagram.
 
-![](assets/rs000/pdc-handshake-sequence.png)
+![](diagrams/rs000/pdc-handshake-sequence.png)
 
 The connection MUST be closed if the handshake fails. Once the handshake completes successfully, the connection SHOULD remain open for as long as the two nodes are running.
 
@@ -240,7 +240,7 @@ The relayer SHOULD deliver the cargo and then wait a few seconds before collecti
 
 When the connection spans different computers, the relayer MUST initiate a handshake with the gateway by having it sign a nonce with each Relaynet PKI key it claims to have, as shown in the following sequence diagram. (The CRC could be local to a computer if, for example, the cargo is being directly saved to and retrieved from a storage media.)
 
-![](assets/rs000/crc-handshake-sequence.png)
+![](diagrams/rs000/crc-handshake-sequence.png)
 
 Note that relayers are not assigned Relaynet PKI certificates, but per the requirements above for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. In such cases, the relayer MUST provide a valid client- or server-side certificate when it acts as client or server, respectively, and the gateway MUST enforce any authentication-related constraints placed by its peer gateway in the CCA (e.g., the only Certificate Authority that should be regarded valid).
 
