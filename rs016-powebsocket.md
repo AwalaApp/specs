@@ -1,4 +1,5 @@
 # PoWebSocket: Parcel Delivery over WebSocket
+{: .no_toc }
 
 - Id: RS-016.
 - Status: Working draft.

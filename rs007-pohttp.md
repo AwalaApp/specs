@@ -1,4 +1,5 @@
 # PoHTTP: Parcel Delivery over HTTP
+{: .no_toc }
 
 - Id: RS-007.
 - Status: Working draft.

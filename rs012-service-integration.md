@@ -1,4 +1,5 @@
 # Service Integration Scale
+{: .no_toc }
 
 - Id: RS-012.
 - Status: Working draft.

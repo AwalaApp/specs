@@ -1,4 +1,5 @@
 # Ping Service
+{: .no_toc }
 
 - Id: RS-014.
 - Status: Working draft.

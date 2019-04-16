@@ -1,4 +1,5 @@
 # Service Message Broadcast
+{: .no_toc }
 
 - Id: RS-013.
 - Status: Placeholder.

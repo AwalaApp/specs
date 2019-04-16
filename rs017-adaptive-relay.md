@@ -1,4 +1,5 @@
 # Adaptive Relay
+{: .no_toc }
 
 - Id: RS-017.
 - Status: Working draft.

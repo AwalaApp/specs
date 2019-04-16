@@ -1,4 +1,5 @@
 # Relaynet Abstract Message Format, Version 1
+{: .no_toc }
 
 - Id: RS-001.
 - Status: Working draft.

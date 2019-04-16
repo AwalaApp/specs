@@ -1,4 +1,5 @@
 # Relaynet Cryptographic Algorithms, Version 1
+{: .no_toc }
 
 - Id: RS-018.
 - Status: Working draft.

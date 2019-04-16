@@ -1,4 +1,5 @@
 # Cargo Relay over TCP/Unix Sockets (CoSocket)
+{: .no_toc }
 
 - Id: RS-004.
 - Status: Working draft.

@@ -1,4 +1,5 @@
 # AsyncRPC: RPC Encapsulation in Relaynet
+{: .no_toc }
 
 - Id: RS-011.
 - Status: Working draft.

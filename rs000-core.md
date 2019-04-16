@@ -1,4 +1,5 @@
 # Relaynet Core
+{: .no_toc }
 
 - Id: RS-000.
 - Status: Working draft.

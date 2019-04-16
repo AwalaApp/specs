@@ -1,4 +1,5 @@
 # Relaynet Public Key Infrastructure and Revocation Profile
+{: .no_toc }
 
 - Id: RS-002.
 - Status: Working draft.

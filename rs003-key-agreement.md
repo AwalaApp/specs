@@ -1,4 +1,5 @@
 # Relaynet Channel Session Protocol
+{: .no_toc }
 
 - Id: RS-003.
 - Status: Working draft.
