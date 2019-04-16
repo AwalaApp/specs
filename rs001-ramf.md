@@ -1,3 +1,6 @@
+---
+permalink: /RS-001
+---
 # Relaynet Abstract Message Format, Version 1
 {: .no_toc }
 

@@ -1,3 +1,6 @@
+---
+permalink: /RS-014
+---
 # Ping Service
 {: .no_toc }
 

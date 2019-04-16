@@ -1,3 +1,6 @@
+---
+permalink: /RS-003
+---
 # Relaynet Channel Session Protocol
 {: .no_toc }
 

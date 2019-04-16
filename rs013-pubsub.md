@@ -1,5 +1,6 @@
 ---
 nav_exclude: true
+permalink: /RS-013
 ---
 # Service Message Broadcast
 {: .no_toc }

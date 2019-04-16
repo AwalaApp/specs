@@ -1,5 +1,6 @@
 ---
 nav_exclude: true
+permalink: /RS-017
 ---
 # Adaptive Relay
 {: .no_toc }

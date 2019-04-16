@@ -1,3 +1,6 @@
+---
+permalink: /RS-018
+---
 # Relaynet Cryptographic Algorithms, Version 1
 {: .no_toc }
 

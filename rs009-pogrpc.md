@@ -1,5 +1,6 @@
 ---
 nav_exclude: true
+permalink: /RS-009
 ---
 # PogRPC: Parcel Delivery over gRPC
 

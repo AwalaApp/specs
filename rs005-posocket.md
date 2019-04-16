@@ -1,5 +1,6 @@
 ---
 nav_exclude: true
+permalink: /RS-005
 ---
 # PoSocket: Parcel Delivery over TPC/Unix Sockets
 

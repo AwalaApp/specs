@@ -1,5 +1,6 @@
 ---
 nav_exclude: true
+permalink: /RS-006
 ---
 # CoHTTP: Cargo Relay over HTTP
 

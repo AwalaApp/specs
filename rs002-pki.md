@@ -1,3 +1,6 @@
+---
+permalink: /RS-002
+---
 # Relaynet Public Key Infrastructure and Revocation Profile
 {: .no_toc }
 

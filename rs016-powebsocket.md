@@ -1,3 +1,6 @@
+---
+permalink: /RS-016
+---
 # PoWebSocket: Parcel Delivery over WebSocket
 {: .no_toc }
 

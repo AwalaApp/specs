@@ -1,3 +1,6 @@
+---
+permalink: /RS-000
+---
 # Relaynet Core
 {: .no_toc }
 

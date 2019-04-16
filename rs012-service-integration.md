@@ -1,3 +1,6 @@
+---
+permalink: /RS-012
+---
 # Service Integration Scale
 {: .no_toc }
 

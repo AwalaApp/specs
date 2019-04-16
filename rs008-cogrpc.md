@@ -1,5 +1,6 @@
 ---
 nav_exclude: true
+permalink: /RS-008
 ---
 # CogRPC: Cargo Relay over gRPC
 

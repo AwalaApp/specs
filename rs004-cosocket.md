@@ -1,3 +1,6 @@
+---
+permalink: /RS-004
+---
 # Cargo Relay over TCP/Unix Sockets (CoSocket)
 {: .no_toc }
 

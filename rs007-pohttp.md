@@ -1,3 +1,6 @@
+---
+permalink: /RS-007
+---
 # PoHTTP: Parcel Delivery over HTTP
 {: .no_toc }
 

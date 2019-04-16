@@ -1,5 +1,6 @@
 ---
 nav_exclude: true
+permalink: /RS-011
 ---
 # AsyncRPC: RPC Encapsulation in Relaynet
 {: .no_toc }
