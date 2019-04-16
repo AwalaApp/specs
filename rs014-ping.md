@@ -23,7 +23,7 @@ This document describes _Ping_, a trivial service used to test the underlying im
 
 Relaynet consists of endpoints, gateways and relayers, which may run on different operating systems, on different hardware and in different physical environments. These components support different messaging protocols and message transport bindings, and may be built and run by different organizations.
 
-This service mitigates the integration issues that could arise from the implementation and deployment of Relaynet by offering a very simple service that can be used to test that applications can exchange messages.
+This specification mitigates the integration issues that could arise from the implementation and deployment of Relaynet by offering a very simple service that can be used to test that applications can exchange messages.
 
 Ping is a trivial service: Given applications A and B, application A sends a _ping message_ to application B, to which application B has to respond with a _pong message_.
 
