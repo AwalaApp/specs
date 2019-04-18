@@ -3,7 +3,9 @@ nav_exclude: true
 ---
 # Relaynet Protocol Suite Specifications
 
-This repository contains all the specifications part of [Relaynet](https://relaynet.link/). If you're new to Relaynet, you may want to start by watching the [demo of the proof of concept with Twitter](https://www.youtube.com/watch?v=fi_RKwmrXIY).
+This website hosts the official [Relaynet](https://relaynet.link/) specifications. If you're new to Relaynet, you may want to start by watching a [high-level explanation of how it works](https://youtu.be/_4zP0CfcTj4) and the [demo of the proof of concept with Twitter](https://www.youtube.com/watch?v=fi_RKwmrXIY).
+
+## Main Specifications
 
 The following specifications provide the foundation of the network and are therefore the top priority of the project. At this point, the best way to contribute to the project is by providing feedback on these specs.
 
@@ -18,6 +20,8 @@ The following specifications provide the foundation of the network and are there
 - [RS-014 (Ping)](rs014-ping.md) defines a trivial service to test end-to-end the implementation and integration of Relaynet components.
 
 On the other hand, [RS-012 (Service Integration Scale)](rs012-service-integration.md) categorizes the degrees to which Relaynet can be integrated in a service. This can be useful to understand the vision of the project and how future applications could be built on top of Relaynet.
+
+## Future Extensions
 
 The following documents are placeholders for future extensions:
 
