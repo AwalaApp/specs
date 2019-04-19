@@ -6,7 +6,7 @@ permalink: /RS-017
 {: .no_toc }
 
 - Id: RS-017.
-- Status: Working draft.
+- Status: Placeholder.
 - Type: Implementation.
 
 ## Abstract
