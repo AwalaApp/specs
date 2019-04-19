@@ -50,7 +50,8 @@ The following diagram illustrates the various components of the network and how 
   - A **user gateway** is a specific type of gateway that runs on a end-user device and serves the endpoints on that device.
   - A **relaying gateway** is a specific type of gateway that allows the endpoints behind its user gateways to reach another network (typically the Internet).
 - A **cargo** encapsulates one or more parcels, and it is encrypted with the target gateway's certificate and signed with the origin gateway's key.
-- A **relayer** _relays_ cargo from one gateway to one or more gateways.
+- The **relay layer** represents the underlying network that transports the cargo between gateways. It could be the Internet, a sneakernet or a [scatternet](https://en.wikipedia.org/wiki/Scatternet), for example. 
+- A **relayer** is the individual or organization that operates the relay layer. For example, in a sneakernet, it is the individual or group that transports the cargo between user gateways and a relaying gateway.
 
 For example, if Twitter supported Relaynet, Twitter would be the _service_, the Twitter mobile apps would be _applications_ and the Twitter API would be another _application_. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the _endpoint_ in the Twitter API could be a new API endpoint (e.g., `https://api.twitter.com/relaynet`).
 
