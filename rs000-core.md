@@ -91,7 +91,7 @@ Applications MAY provision [_Parcel Delivery Authorizations_ (PDAs)](rs002-pki.m
 
 This protocol establishes the channel between two endpoints. The only type of message that this specification defines at this level is the [_parcel_](#parcel).
 
-Endpoint addresses MUST use the scheme `rne`. For example, `rne://example.com` or `rne+grpc://example.com` (if using the [gRPC binding](rs009-pogrpc.md)) are valid public endpoint addresses, and `rne:0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private endpoint address.
+Endpoint addresses MUST use the scheme `rne`. For example, `rne://example.com` or `rne+http://example.com` (if using the [PoHTTP binding](rs007-pohttp.md)) are valid public endpoint addresses, and `rne:0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private endpoint address.
 
 #### Parcel
 
@@ -112,7 +112,7 @@ The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the se
 
 This protocol establishes the channel between two gateways.
 
-Gateway addresses MUST use the scheme `rng`. For example, `rng://example.com` and `rng+grpc://example.com` (if using the [gRPC binding](rs008-cogrpc.md)) are valid public gateway addresses, and `rng:0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private gateway address.
+Gateway addresses MUST use the scheme `rng`. For example, `rng://example.com` and `rng+socket://example.com` (if using the [CoSocket binding](rs004-cosocket.md)) are valid public gateway addresses, and `rng:0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private gateway address.
 
 When using the [Relaynet Key Agreement protocol](rs003-key-agreement.md), the two gateways MUST maintain a single session across the different message types.
 
