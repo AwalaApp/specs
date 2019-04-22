@@ -74,9 +74,9 @@ Providers should have monitoring in place to detect ongoing DoS attacks, as well
 
 Public endpoints and gateways are inherently susceptible to DoS attacks at the [binding](rs000-core.md#message-transport-bindings) level. Such attacks could be distributed (DDoS) or could come from a single origin. [SYN](https://en.wikipedia.org/wiki/SYN_flood) and [application-layer floods](https://en.wikipedia.org/wiki/Denial_of_Service_attack#Application-layer_floods) are examples of such attacks.
 
-Providers should have the appropriate network-level protections in place, such as network- and application-level firewalls. They should also have adequate monitoring to detect the attack and an adequate plan to respond to it.
+Providers should have the appropriate network-level protections in place, such as network- and application-level firewalls. They should also have adequate monitoring to detect the attack and an adequate plan to respond to it. Where possible, relaying gateways should only accept [Cargo Relay Connections](rs000-core.md#cargo-relay-binding) from a set of whitelisted IP addresses.
 
-Where possible, relaying gateways should only accept [Cargo Relay Connections](rs000-core.md#cargo-relay-binding) from a set of whitelisted IP addresses.
+An attacker may also target the DNS records of endpoints and gateways, also causing a denial of service. Even though the sender will continue to retry the delivery of the parcel or cargo until the target server uses a valid TLS certificate, the attack may last until some messages expire, forcing the sender to drop them.
 
 ### Public Endpoint Address Exposed to Gateway {#public-endpoint-address}
 
