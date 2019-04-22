@@ -19,7 +19,12 @@ The following specifications provide the foundation of the network and are there
 - [RS-018 (Cryptographic Algorithms)](rs018-algorithms.md) defines the cryptographic algorithms that can be used in Relaynet.
 - [RS-014 (Ping)](rs014-ping.md) defines a trivial service to test end-to-end the implementation and integration of Relaynet components.
 
-On the other hand, [RS-012 (Service Integration Scale)](rs012-service-integration.md) categorizes the degrees to which Relaynet can be integrated in a service. This can be useful to understand the vision of the project and how future applications could be built on top of Relaynet.
+## Informational Specifications
+
+The following specifications are available for informational purposes only, and there are no requirements for Relaynet software vendors to comply with them.
+
+- [RS-019 (Security Threats)](rs019-threats.md) describes the general security threats that end users, service providers, relayers and software vendors should be aware of when implementing and using Relaynet.
+- [RS-012 (Service Integration Scale)](rs012-service-integration.md) categorizes the degrees to which Relaynet can be integrated in a service. This can be useful to understand the vision of the project and how future applications could be built on top of Relaynet.
 
 ## Future Extensions
 
