@@ -63,7 +63,8 @@ The [ASN.1](https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf
 
 ```
 PKIPDARateLimitId OBJECT IDENTIFIER ::= {
-    joint-iso-itu-t(2) uuid(25) relaynet(334996391340098037232342464294822053250) pki(1) 1
+    itu-t(0) identified-organization(4) etsi(0) reserved(127) etsi-identified-organization(0)
+        relaycorp(17) relaynet(0) pki(0) 0
     }
 ```
 
@@ -97,7 +98,8 @@ The ASN.1 Object Identifier of this extension is defined as follows:
 
 ```
 PDACertTypeId OBJECT IDENTIFIER ::= {
-    joint-iso-itu-t(2) uuid(25) relaynet(334996391340098037232342464294822053250) pki(1) 2
+    itu-t(0) identified-organization(4) etsi(0) reserved(127) etsi-identified-organization(0)
+        relaycorp(17) relaynet(0) pki(0) 1
     }
 ```
 
