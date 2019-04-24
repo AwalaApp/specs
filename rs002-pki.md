@@ -11,7 +11,7 @@ permalink: /RS-002
 ## Abstract
 {: .no_toc }
 
-This document describes how to issue, distribute, store, revoke and interpret X.509 v3 certificates in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this PKI profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280).
+This document describes how to issue, distribute, store, revoke and interpret [X.509 v3 certificates](https://www.itu.int/rec/T-REC-X.509/en) in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this PKI profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) as used in the TLS protocol.
 
 ## Table of contents
 {: .no_toc }
