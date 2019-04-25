@@ -56,6 +56,14 @@ More specifically, [Key Wrap mode](https://tools.ietf.org/html/rfc3394.html) MUS
 - AES-192-GCM (recommended, OID `2.16.840.1.101.3.4.1.26`).
 - AES-256-GCM (recommended, OID `2.16.840.1.101.3.4.1.46`).
 
+### Asymmetric Ciphers
+
+Implementations MUST support RSA-OAEP (OID `1.2.840.113549.1.1.7`) with 2048-bit keys. They SHOULD also support 3072-bit and 4096-bit RSA keys. RSA keys with fewer than 2048 bits MUST NOT be supported.
+
+Implementations SHOULD also support Curve25519 (OID `1.3.101.110`), and they MAY support Curve448 (OID `1.3.101.111`).
+
+Note that per [Relaynet Core](rs000-core.md) and the [Channel Session Protocol](rs003-key-agreement.md), asymmetric encryption would only be used in the endpoint channel [when the Channel Session Protocol cannot be used](rs003-key-agreement.md#limitations).
+
 ### Digital Signature Algorithms
 
 Implementations MUST support RSA-PSS (OID `1.2.840.113549.1.1.10`) with 2048-bit keys. They SHOULD also support 3072-bit and 4096-bit RSA keys. RSA keys with fewer than 2048 bits MUST NOT be supported.
