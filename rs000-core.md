@@ -99,7 +99,7 @@ A parcel encapsulates a service message and is serialized with the [Relaynet Abs
 
 The sender certificate MUST be a valid certificate per [Relaynet PKI](rs002-pki.md).
 
-The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`), using either the target endpoint's certificate (`KeyTransRecipientInfo`) or the [Relaynet Channel Session Protocol](rs003-key-agreement.md) parameters (`KeyAgreeRecipientInfo`). Extensions to this document MAY support additional CMS structures.
+The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encapsulated as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`) using the [Relaynet Channel Session Protocol](rs003-key-agreement.md); when the channel session protocol cannot be used, the payload MAY be encrypted with the public key in target endpoint's certificate (the `KeyTransRecipientInfo` choice in CMS). Extensions to this document MAY support additional CMS structures.
 
 The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the service message and its media type, and is serialized with the following binary sequence (little-endian):
 
