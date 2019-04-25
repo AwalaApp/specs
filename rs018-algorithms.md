@@ -21,11 +21,11 @@ This document specifies the requirements and recommendations for the support and
 
 ## Introduction
 
-The primary purpose of this document is to prevent the use of insecure cryptographic algorithms and to limit the set of supported algorithms for interoperability reasons. This document aims to reflect industry best practices as of 2019, and is expected to be replaced eventually to reflect future developments in the field of cryptography.
+The primary purpose of this document is to prevent the use of insecure cryptographic algorithms and to limit the set of supported algorithms for interoperability reasons. This specification only requires or recommends algorithms that have no known vulnerabilities, are well supported and are unencumbered by patents.
 
-This specification only requires or recommends algorithms that have no known vulnerabilities, are widely supported and are unencumbered by patents.
+In each category, exactly one algorithm is required to achieve interoperability. Required algorithms are [assumed to be secure until at least 2030](https://www.keylength.com/en/4/). Recommended algorithms are assumed to be secure beyond 2030, but are more expensive to run and/or not widely supported.
 
-In each category, exactly one algorithm is required to achieve interoperability. Recommended algorithms are _theoretically_ better, but are more expensive to run and may not be as well supported.
+This document aims to reflect industry best practices as of 2019, and is expected to be replaced eventually to reflect future developments. One change that can be anticipated is the exclusive use of Elliptic Curve Cryptography (ECC) for asymmetric key cryptography once support for the recommended curves is widespread.
 
 ## Required and Recommended Algorithms
 
