@@ -37,8 +37,11 @@ The two applications MAY continue to run subsequent transactions. This could be 
 
 ### Ping
 
-This is the message that initiates a transaction. It MUST be a random sequence of exactly 32 octets, and its type MUST be `application/vnd.relaynet.ping.ping`.
+This is the message that initiates a transaction. Its type MUST be `application/vnd.relaynet.ping.ping`, and its payload MUST be a binary stream with the following structure:
+
+1. The ping id: A random sequence of exactly 32 octets.
+1. The [Parcel Delivery Authorization](rs002-pki.md#parcel-delivery-authorization-pda) (PDA) to use to reply with a pong message.
 
 ### Pong
 
-This message MUST be sent by the application receiving a ping message, and its content MUST be exactly that of the ping message with the type `application/vnd.relaynet.ping.pong`. As a consequence, the message itself MUST be a sequence of exactly 32 octets.
+This message MUST be sent by the application receiving a ping message. Its type MUST be `application/vnd.relaynet.ping.pong`. The payload MUST be a sequence of 32 octets representing the ping id.
