@@ -243,7 +243,7 @@ When the connection spans different computers, the relayer MUST initiate a hands
 
 ![](diagrams/rs000/crc-handshake-sequence.png)
 
-Note that relayers are not assigned Relaynet PKI certificates, but per the requirements above for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. In such cases, the relayer MUST provide a valid client- or server-side certificate when it acts as client or server, respectively, and the gateway MUST enforce any authentication-related constraints placed by its peer gateway in the CCA (e.g., the only Certificate Authority that should be regarded valid).
+Note that relayers are not assigned Relaynet PKI certificates, but per the requirements above for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. In such cases, the relayer MUST provide a valid client- or server-side certificate when it acts as client or server, respectively, and the gateway MUST enforce any authentication-related constraints placed by its peer gateway in the CCA (e.g., which Certificate Authorities should be regarded valid).
 
 ## Open Questions
 
