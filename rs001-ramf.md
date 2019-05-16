@@ -32,7 +32,7 @@ A message is serialized using the following byte sequence ([little-endian](https
    1. Prefix (8 octets): "Relaynet" in ASCII (hex: "52 65 6c 61 79 6e 65 74").
    1. Concrete message format signature (1 octet).
    1. Format version (1 octet). An 8-bit unsigned integer.
-1. Signature hashing algorithm identifier. Defined early to allow the recipient to start calculating the message digest as the message is being streamed. The algorithm MUST be valid per [RS-018](rs018-algos.md). This value MUST be DER-encoded as an ASN.1 Object Identifier; for example, SHA-256 (OID `2.16.840.1.101.3.4.2.1`) would be encoded as `06 09 60 86 48 01 65 03 04 02 01`. It MUST also have a fixed length of 16 octets, right padded with `0x00`.
+1. Signature hashing algorithm identifier. Defined early to allow the recipient to start calculating the message digest as the message is being streamed. The algorithm MUST be valid per [RS-018](rs018-algorithms.md). This value MUST be DER-encoded as an ASN.1 Object Identifier; for example, SHA-256 (OID `2.16.840.1.101.3.4.2.1`) would be encoded as `06 09 60 86 48 01 65 03 04 02 01`. It MUST also have a fixed length of 16 octets, right padded with `0x00`.
 1. Recipient address. UTF-8 encoded, and length-prefixed with a 16-bit unsigned integer (2 octets). Consequently, the address can be as long as 255 characters.
 1. Sender certificate (chain). It MUST be DER-encoded and length-prefixed with 13-bit unsigned integer (2 octets), so the maximum length is ~8kib. It MUST also comply with the [Relaynet PKI](rs002-pki.md).
 1. Message id. Unique to the sender. This is an opaque value, so it has no structure or semantics. This field is ASCII encoded and length-prefixed with 16-bit unsigned integer (2 octets).
@@ -46,7 +46,7 @@ A message is serialized using the following byte sequence ([little-endian](https
      - `encapContentInfo`, the signed content, MUST NOT include the content itself, since this is a detached signature.
      - `certificates` MUST be empty, since the sender's certificate is available above.
      - `crls` MUST be empty, since certificate revocation is part of the [Relaynet PKI](rs002-pki.md).
-     - `signerInfos` MUST contain exactly one signer (`SignerInfo`), where `digestAlgorithm` MUST match that of the RAMF message and `signatureAlgorithm` MUST be valid per [RS-018](rs018-algos.md).
+     - `signerInfos` MUST contain exactly one signer (`SignerInfo`), where `digestAlgorithm` MUST match that of the RAMF message and `signatureAlgorithm` MUST be valid per [RS-018](rs018-algorithms.md).
    - The CMS value MUST be length-prefixed with a 12-bit unsigned integer (2 octets), so the maximum length is 4kib.
 
 ## Post-Deserialization Validation
@@ -67,7 +67,7 @@ To avoid replay attacks, the message id SHOULD be persisted until the TTL expire
 
 Nodes can further protect from replay attacks, amongst other attack vectors, by establishing a secure session with the [Relaynet Key Agreement Protocol](rs003-key-agreement.md).
 
-Note that all cryptographic algorithms MUST comply with [RS-018](rs018-algos.md).
+Note that all cryptographic algorithms MUST comply with [RS-018](rs018-algorithms.md).
 
 ## Reserved Concrete Message Format Signatures
 
