@@ -82,3 +82,4 @@ The following concrete signatures have been reserved by other Relaynet specifica
 ## Open Questions
 
 - PKCS7 is much more widely supported than CMS. Should we downgrade to PKCS7? If so, then this format will have to be updated to hold the [key agreement](rs003-key-agreement.md) information (more specifically, the public component of the ephemeral key and some metadata), since PKCS7 enveloped-data does not support encryption using key agreement algorithms.
+- Should the payload ciphertext be detached from the CMS EnvelopedData? That'd make it easier to encrypt/decrypt as a stream.
