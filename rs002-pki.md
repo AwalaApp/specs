@@ -77,7 +77,7 @@ PKIPDARateLimit ::= SEQUENCE {
 }
 ```
 
-Where, `limit` specifies how many parcels can be sent within a given number of seconds (`period`). For example, a `limit` of `1` and a `period` of `86400` allow a maximun of one parcel a day.
+Where, `limit` specifies how many parcels can be sent within a given number of seconds (`period`). For example, a `limit` of `1` and a `period` of `86400` allow a maximum of one parcel a day.
 
 ### Gateway Certificate
 
