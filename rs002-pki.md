@@ -11,7 +11,7 @@ permalink: /RS-002
 ## Abstract
 {: .no_toc }
 
-This document describes how to issue, distribute, store, revoke and interpret [X.509 v3 certificates](https://www.itu.int/rec/T-REC-X.509/en) in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this PKI profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) as used in the TLS protocol.
+This document describes how to issue, distribute, store, revoke and interpret X.509 in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this PKI profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) as used in the TLS protocol.
 
 ## Table of contents
 {: .no_toc }
@@ -19,13 +19,13 @@ This document describes how to issue, distribute, store, revoke and interpret [X
 1. TOC
 {:toc}
 
-## Basic Attributes and Constraints
+## Basic Constraints and Attributes
+
+Certificates in this PKI profile MUST be represented as [X.509 v3 certificates](https://www.itu.int/rec/T-REC-X.509/en). They MUST also be encoded with the Distinguished Encoding Rules (DER).
 
 The _Distinguished Name_ MUST only contain the _Common Name_ (CN), which MUST be set to the node's address (including its schema; e.g., `CN=rne://example.com`, `CN=rng:0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c`).
 
 A certificate MUST NOT be valid before its issuer is valid or after its issuer expires.
-
-Certificates in this PKI profile MUST always be encoded with the [Distinguished Encoding Rules (DER)](https://en.wikipedia.org/wiki/X.690#DER_encoding).
 
 ## Certificate Types
 
