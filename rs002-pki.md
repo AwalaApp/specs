@@ -33,7 +33,7 @@ A certificate MUST NOT be valid before its issuer is valid or after its issuer e
 
 An endpoint certificate MUST be issued by one of the following:
 
-- Itself (a self-signed certificate).
+- Itself (a self-issued certificate).
 - A peer endpoint when the certificate is a [_parcel delivery authorization_](#parcel-delivery-authorization-pda).
 
 ### Parcel Delivery Authorization (PDA)
@@ -81,7 +81,7 @@ Where, `limit` specifies how many parcels can be sent within a given number of s
 
 ### Gateway Certificate
 
-A gateway's certificate MUST be either self-signed or issued by its peer gateway, forming the chain below (from leaf to root):
+A gateway's certificate MUST be either self-issued or issued by its peer gateway, forming the chain below (from leaf to root):
 
 1. (Optional) The gateway's _signature-only certificate_. A certificate that MUST only be used to issue [endpoint certificates](#endpoint-certificate).
 1. The gateway's certificate.
@@ -148,7 +148,7 @@ The endpoint MUST:
 
 A Parcel Delivery Deauthorization (PDD) revokes one or more [PDAs](#parcel-delivery-authorization-pda). It may be requested by the endpoint or its gateway.
 
-An endpoint MUST use the [message transport binding](rs000-core.md#message-transport-bindings) to instruct its gateway to revoke its self-signed certificate or a specific PDA. Such a request MUST include the following data, serialized in the format determined by the binding:
+An endpoint MUST use the [message transport binding](rs000-core.md#message-transport-bindings) to instruct its gateway to revoke its self-issued certificate or a specific PDA. Such a request MUST include the following data, serialized in the format determined by the binding:
 
 - (Required) The endpoint address affected by the deauthorization. This is needed in case the endpoint has multiple active certificates as a result of a key rotation.
 - (Optional) Serial numbers of the PDAs to revoke. It may be absent to revoke all the PDAs issued by the endpoint.
