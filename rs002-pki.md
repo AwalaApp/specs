@@ -23,7 +23,7 @@ This document describes how to issue, distribute, store, revoke and interpret X.
 
 Certificates in this PKI profile MUST be represented as [X.509 v3 certificates](https://www.itu.int/rec/T-REC-X.509/en).
 
-The _Distinguished Name_ MUST only contain the _Common Name_ (CN), which MUST be set to the node's address (including its schema; e.g., `CN=rne://example.com`, `CN=rng:0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c`).
+The _Distinguished Name_ MUST only contain the _Common Name_ (CN), and it MUST be set to the node's private address (e.g., `CN=0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c`).
 
 A certificate MUST NOT be valid before its issuer is valid or after its issuer expires.
 
