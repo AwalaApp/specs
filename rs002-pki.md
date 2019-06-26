@@ -38,11 +38,11 @@ An endpoint certificate MUST be issued by one of the following:
 
 ### Parcel Delivery Authorization (PDA)
 
-Given Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its relaying gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a certificate chain called _Parcel Delivery Authorization_ (PDA).
+Given Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its relaying gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a certificate called _Parcel Delivery Authorization_ (PDA).
 
 If Endpoint A is private, the endpoint and its gateways MUST refuse parcels where the sender certificate is not a valid PDA.
 
-Each PDA is a certificate chain formed of the following sequence (from leaf to root):
+The chain of a PDA is formed of the following sequence (from leaf to root):
 
 1. (Optional) Endpoint B's _signature-only certificate_. A certificate that MUST only be used to sign messages in the [endpoint channel](rs000-core.md#endpoint-messaging-protocol) (e.g., parcels) on behalf of Endpoint B.
 1. Endpoint B's certificate.
