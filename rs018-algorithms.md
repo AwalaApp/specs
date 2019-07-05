@@ -27,6 +27,10 @@ In each category, exactly one algorithm is required to achieve interoperability.
 
 This document aims to reflect industry best practices as of 2019, and is expected to be replaced eventually to reflect future developments. One change that can be anticipated is the exclusive use of Elliptic Curve Cryptography (ECC) for asymmetric key cryptography once support for the recommended curves is widespread.
 
+## RSA Key Constraints
+
+Implementations MUST support 2048-bit RSA keys. They SHOULD also support 3072-bit and 4096-bit RSA keys. RSA keys with fewer than 2048 bits MUST NOT be supported.
+
 ## Required and Recommended Algorithms
 
 Each supported algorithm is accompanied with its corresponding Object ID (OID) when available, as required by the [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652), which is extensively used in Relaynet.
@@ -58,17 +62,13 @@ More specifically, [Key Wrap mode](https://tools.ietf.org/html/rfc3394.html) MUS
 
 ### Asymmetric Ciphers
 
-Implementations MUST support RSA-OAEP (OID `1.2.840.113549.1.1.7`) with 2048-bit keys. They SHOULD also support 3072-bit and 4096-bit RSA keys. RSA keys with fewer than 2048 bits MUST NOT be supported.
-
-Implementations SHOULD also support Curve25519 (OID `1.3.101.110`), and they MAY support Curve448 (OID `1.3.101.111`).
+Implementations MUST support RSA-OAEP (OID `1.2.840.113549.1.1.7`). They SHOULD also support Curve25519 (OID `1.3.101.110`), and they MAY support Curve448 (OID `1.3.101.111`).
 
 Note that per [Relaynet Core](rs000-core.md) and the [Channel Session Protocol](rs003-key-agreement.md), asymmetric encryption would only be used in the endpoint channel [when the Channel Session Protocol cannot be used](rs003-key-agreement.md#limitations).
 
 ### Digital Signature Algorithms
 
-Implementations MUST support RSA-PSS (OID `1.2.840.113549.1.1.10`) with 2048-bit keys. They SHOULD also support 3072-bit and 4096-bit RSA keys. RSA keys with fewer than 2048 bits MUST NOT be supported.
-
-Implementations SHOULD also support Ed25519 EdDSA keys (OID `1.3.101.112`), and they MAY support Ed448 EdDSA keys (OID `1.3.101.113`).
+Implementations MUST support RSA-PSS (OID `1.2.840.113549.1.1.10`). They SHOULD also support Ed25519 EdDSA keys (OID `1.3.101.112`), and they MAY support Ed448 EdDSA keys (OID `1.3.101.113`).
 
 ## Algorithm Selection
 
