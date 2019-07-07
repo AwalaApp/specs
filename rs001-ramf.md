@@ -81,4 +81,4 @@ The following concrete signatures have been reserved by other Relaynet specifica
 
 ## Open Questions
 
-- Should the payload ciphertext be detached from the CMS EnvelopedData? That'd make it easier to encrypt/decrypt as a stream.
+- Should the payload ciphertext be detached from the CMS EnvelopedData? That'd make it easier to encrypt/decrypt as a stream. See [issue #14](https://github.com/relaynet/specs/issues/14).
