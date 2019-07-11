@@ -22,17 +22,18 @@ This document defines version 1 of the Relaynet Abstract Message Format (RAMF), 
 
 ## Introduction
 
-RAMF messages are optimized to be processed on the fly with a single pass, without having to hold the entire message in memory. To achieve this, fields are framed with [length prefixes instead of delimiters](https://blog.stephencleary.com/2009/04/message-framing.html), and those fields that are used for routing, authentication and authorization are available near the start of the message.
+RAMF messages transport payloads along with relevant metadata to be used for routing, authentication and authorization purposes.
+
+Endpoint and gateway channels communicate amongst themselves using messages whose formats are based on RAMF.
 
 ## Format
 
-A message is serialized using the following byte sequence ([little-endian](https://en.wikipedia.org/wiki/Endianness)):
+A message is serialized using the following byte sequence ([little-endian](https://en.wikipedia.org/wiki/Endianness)), and its fields are framed with [length prefixes instead of delimiters](https://blog.stephencleary.com/2009/04/message-framing.html).
 
 1. [File format signature](https://en.wikipedia.org/wiki/List_of_file_signatures) (10 octets):
    1. Prefix (8 octets): "Relaynet" in ASCII (hex: "52 65 6c 61 79 6e 65 74").
    1. Concrete message format signature (1 octet).
    1. Format version (1 octet). An 8-bit unsigned integer.
-1. Signature hashing algorithm identifier. Defined early to allow the recipient to start calculating the message digest as the message is being streamed. The algorithm MUST be valid per [RS-018](rs018-algorithms.md). This value MUST be DER-encoded as an ASN.1 Object Identifier; for example, SHA-256 (OID `2.16.840.1.101.3.4.2.1`) would be encoded as `06 09 60 86 48 01 65 03 04 02 01`. It MUST also have a fixed length of 16 octets, right padded with `0x00`.
 1. Recipient address. UTF-8 encoded, and length-prefixed with a 16-bit unsigned integer (2 octets). Consequently, the address can be as long as 255 characters.
 1. Sender certificate. It MUST be DER-encoded and length-prefixed with 12-bit unsigned integer (2 octets), so the maximum length is ~4kib. It MUST also comply with the [Relaynet PKI](rs002-pki.md).
 1. Message id. Unique to the sender. This is an opaque value, so it has no structure or semantics. This field is ASCII encoded and length-prefixed with 16-bit unsigned integer (2 octets).
@@ -46,7 +47,7 @@ A message is serialized using the following byte sequence ([little-endian](https
      - `encapContentInfo`, the signed content, MUST NOT include the content itself, since this is a detached signature.
      - `certificates` SHOULD contain the chain of the sender certificate, if applicable. The sender certificate itself SHOULD NOT be included.
      - `crls` MUST be empty, since certificate revocation is part of the [Relaynet PKI](rs002-pki.md).
-     - `signerInfos` MUST contain exactly one signer (`SignerInfo`), where `digestAlgorithm` MUST match that of the RAMF message and `signatureAlgorithm` MUST be valid per [RS-018](rs018-algorithms.md).
+     - `signerInfos` MUST contain exactly one signer (`SignerInfo`), and whose `signatureAlgorithm` MUST be valid per [RS-018](rs018-algorithms.md).
    - The CMS value MUST be length-prefixed with a 13-bit unsigned integer (2 octets), so the maximum length is 8kib.
 
 ## Post-Deserialization Validation
@@ -57,7 +58,7 @@ Recipients and brokers of a RAMF message MUST validate the message as soon as it
 - The message date MUST NOT be more than 5 minutes in the future.
 - The message TTL MUST NOT be more than 5 minutes in the future.
 - The message date MUST be within the period of time during which the sender certificate was valid.
-- The signature MUST be valid according to the [CMS verification process](https://tools.ietf.org/html/rfc5652#section-5.6) and the specified signature algorithm. Additionally, the signature MUST be deemed invalid if the signature algorithm is unsupported, the hashing algorithm is unsupported or the hashing algorithm does not match that of the RAMF message.
+- The signature MUST be valid according to the [CMS verification process](https://tools.ietf.org/html/rfc5652#section-5.6) and the specified signature algorithm. Additionally, the signature MUST be deemed invalid if the signature algorithm is unsupported or the hashing algorithm is unsupported.
 
 The purpose of the grace period in the date and TTL fields is to account for a potential clock drift.
 
@@ -79,6 +80,6 @@ The following concrete signatures have been reserved by other Relaynet specifica
 - `0x44` for [cargo collection authorizations](rs000-core.md#cargo-collection-authorization-cca).
 - `0x50` ("P" in ASCII) for [parcels](rs000-core.md#parcel).
 
-## Open Questions
+## Open Issues
 
-- Should the payload ciphertext be detached from the CMS EnvelopedData? That'd make it easier to encrypt/decrypt as a stream. See [issue #14](https://github.com/relaynet/specs/issues/14).
+- [Support processing of very large payloads](https://github.com/relaynet/specs/issues/14).
