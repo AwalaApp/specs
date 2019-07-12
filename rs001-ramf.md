@@ -34,9 +34,9 @@ A message is serialized using the following byte sequence ([little-endian](https
    1. Prefix (8 octets): "Relaynet" in ASCII (hex: "52 65 6c 61 79 6e 65 74").
    1. Concrete message format signature (1 octet).
    1. Format version (1 octet). An 8-bit unsigned integer.
-1. Recipient address. UTF-8 encoded, and length-prefixed with a 16-bit unsigned integer (2 octets). Consequently, the address can be as long as 255 characters.
-1. Sender certificate. It MUST be DER-encoded and length-prefixed with 12-bit unsigned integer (2 octets), so the maximum length is ~4kib. It MUST also comply with the [Relaynet PKI](rs002-pki.md).
-1. Message id. Unique to the sender. This is an opaque value, so it has no structure or semantics. This field is ASCII encoded and length-prefixed with 16-bit unsigned integer (2 octets).
+1. Recipient address. UTF-8 encoded, and length-prefixed with a 10-bit unsigned integer (2 octets). Consequently, the address can be as long as 1024 octets.
+1. Sender certificate. It MUST be DER-encoded and length-prefixed with 12-bit unsigned integer (2 octets), so the maximum length is 4096 bytes. It MUST also comply with the [Relaynet PKI](rs002-pki.md).
+1. Message id. Unique to the sender. This is an opaque value, so it has no structure or semantics. This field is ASCII encoded and length-prefixed with 8-bit integer (1 octets).
 1. Date. Creation date of the message (in UTC), represented as the number of seconds since Unix epoch. This is serialized as a 32-bit unsigned integer (4 octets), so it is not susceptible to the [Year 2038 Problem](https://en.wikipedia.org/wiki/Year_2038_problem).
 1. Time to live (TTL). Number of seconds during which the message is valid, starting from the date in the Date field. Zero (`0`) means the message does not expire. The value MUST be encoded as a 24-bit, unsigned integer (3 octets), so maximum TTL is just over 6 months.
 1. Payload. Contains the [service data unit](https://en.wikipedia.org/wiki/Service_data_unit) encoded with the [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652). The [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be length-prefixed with a 32-bit unsigned integer (4 octets), so the maximum length is ~3.73GiB.
