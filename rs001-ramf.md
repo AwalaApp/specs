@@ -38,7 +38,7 @@ A message is serialized using the following byte sequence ([little-endian](https
 1. Message id. Unique to the sender. This is an opaque value, so it has no structure or semantics. This field is ASCII encoded and length-prefixed with 8-bit integer (1 octets).
 1. Date. Creation date of the message (in UTC), represented as the number of seconds since Unix epoch. This is serialized as a 32-bit unsigned integer (4 octets), so it is not susceptible to the [Year 2038 Problem](https://en.wikipedia.org/wiki/Year_2038_problem).
 1. Time to live (TTL). Number of seconds during which the message is valid, starting from the date in the Date field. Zero (`0`) means the message does not expire. The value MUST be encoded as a 24-bit, unsigned integer (3 octets), so maximum TTL is just over 6 months.
-1. Payload. Contains the [service data unit](https://en.wikipedia.org/wiki/Service_data_unit) encoded with the [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652). The [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be length-prefixed with a 32-bit unsigned integer (4 octets), so the maximum length is ~3.73GiB.
+1. Payload. Contains the [service data unit](https://en.wikipedia.org/wiki/Service_data_unit) encoded with the [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652). The [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be length-prefixed with a 32-bit unsigned integer (4 octets), so the maximum length is 4 GiB.
 1. Signature. The sender's [detached signature](https://en.wikipedia.org/wiki/Detached_signature) to validate the integrity and authenticity of the message. This is at the bottom to make it easy to generate and process messages with a single pass.
    - The plaintext MUST be the entire RAMF message before the signature.
    - The ciphertext MUST be encapsulated as a valid [CMS signed data](https://tools.ietf.org/html/rfc5652#section-5) value where:
@@ -47,7 +47,7 @@ A message is serialized using the following byte sequence ([little-endian](https
      - `certificates` MUST contain the sender's certificate and it SHOULD also include the rest of the certificates in the chain. All certificates MUST comply with the [Relaynet PKI](rs002-pki.md).
      - `crls` MUST be empty, since certificate revocation is part of the [Relaynet PKI](rs002-pki.md).
      - `signerInfos` MUST contain exactly one signer (`SignerInfo`), and whose `signatureAlgorithm` MUST be valid per [RS-018](rs018-algorithms.md).
-   - The CMS value MUST be length-prefixed with a 14-bit unsigned integer (2 octets), so the maximum length is 16kib.
+   - The CMS value MUST be length-prefixed with a 14-bit unsigned integer (2 octets), so the maximum length is 16 kib.
 
 ## Post-Deserialization Validation
 
