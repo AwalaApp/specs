@@ -47,7 +47,7 @@ A message is serialized using the following byte sequence ([little-endian](https
      - `certificates` MUST contain the sender's certificate and it SHOULD also include the rest of the certificates in the chain. All certificates MUST comply with the [Relaynet PKI](rs002-pki.md).
      - `crls` MUST be empty, since certificate revocation is part of the [Relaynet PKI](rs002-pki.md).
      - `signerInfos` MUST contain exactly one signer (`SignerInfo`), and whose `signatureAlgorithm` MUST be valid per [RS-018](rs018-algorithms.md).
-   - The CMS value MUST be length-prefixed with a 13-bit unsigned integer (2 octets), so the maximum length is 8kib.
+   - The CMS value MUST be length-prefixed with a 14-bit unsigned integer (2 octets), so the maximum length is 16kib.
 
 ## Post-Deserialization Validation
 
