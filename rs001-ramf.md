@@ -42,7 +42,7 @@ A message is serialized using the following byte sequence ([little-endian](https
 1. Signature. The sender's [detached signature](https://en.wikipedia.org/wiki/Detached_signature) to validate the integrity and authenticity of the message. This is at the bottom to make it easy to generate and process messages with a single pass.
    - The plaintext MUST be the entire RAMF message before the signature.
    - The ciphertext MUST be encapsulated as a valid [CMS signed data](https://tools.ietf.org/html/rfc5652#section-5) value where:
-     - `digestAlgorithms`, the collection of message digest algorithm identifiers, MUST contain exactly one OID and it MUST correspond to the signature hashing algorithm specified in the message.
+     - `digestAlgorithms`, the collection of message digest algorithm identifiers, MUST contain exactly one OID and it MUST correspond to a valid algorithm per [RS-018](rs018-algorithms.md).
      - `encapContentInfo`, the signed content, MUST NOT include the content itself, since this is a detached signature.
      - `certificates` MUST contain the sender's certificate and it SHOULD also include the rest of the certificates in the chain. All certificates MUST comply with the [Relaynet PKI](rs002-pki.md).
      - `crls` MUST be empty, since certificate revocation is part of the [Relaynet PKI](rs002-pki.md).
