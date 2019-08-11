@@ -88,7 +88,7 @@ Applications MAY provision [_Parcel Delivery Authorizations_ (PDAs)](rs002-pki.m
 
 ### Endpoint Messaging Protocol
 
-This protocol establishes the channel between two endpoints. The only type of message that this specification defines at this level is the [_parcel_](#parcel).
+This protocol establishes the bidirectional channel between two endpoints. The only type of message that this specification defines at this level is the [_parcel_](#parcel).
 
 Public endpoint addresses MUST use the scheme `rne`. For example, `rne://example.com` or `rne+http://example.com` (if using the [PoHTTP binding](rs007-pohttp.md)) are valid public endpoint addresses.
 
@@ -96,9 +96,7 @@ Public endpoint addresses MUST use the scheme `rne`. For example, `rne://example
 
 A parcel encapsulates a service message and is serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the octet `0x50` ("P" in ASCII) as its _concrete message format signature_. Gateways and the target endpoint MUST enforce the post-deserialization validation listed in the RAMF specification.
 
-The sender certificate MUST be a valid certificate per [Relaynet PKI](rs002-pki.md).
-
-The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encapsulated as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`) using the [Relaynet Channel Session Protocol](rs003-key-agreement.md); when the channel session protocol cannot be used, the payload MAY be encrypted with the public key in target endpoint's certificate (the `KeyTransRecipientInfo` choice in CMS). Extensions to this document MAY support additional CMS structures.
+The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be serialized as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`). The encryption key SHOULD be generated with the [Relaynet Channel Session Protocol](rs003-key-agreement.md) -- Alternatively, the key MAY be that of the target endpoint's certificate, in which case the CMS value MUST be serialized with the `KeyTransRecipientInfo` choice. Extensions to this document MAY support alternative CMS structures.
 
 The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the service message and its media type, and is serialized with the following binary sequence (little-endian):
 
@@ -109,30 +107,28 @@ The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the se
 
 ### Gateway Messaging Protocol
 
-This protocol establishes the channel between two gateways.
+This protocol establishes the channel between two gateways, and its primary purpose is to enable the exchange of cargo in both directions.
+
+The two gateways MUST maintain a single session using the [Channel Session Protocol](rs003-key-agreement.md), and all keys used to encrypt payloads in this channel MUST be derived from that session.
+
+Extensions to this document MAY define additional message types and their payloads MAY be unencrypted.
 
 Public gateway addresses MUST use the scheme `rng`. For example, `rng://example.com` and `rng+socket://example.com` (if using the [CoSocket binding](rs004-cosocket.md)) are valid public gateway addresses.
 
-When using the [Relaynet Key Agreement protocol](rs003-key-agreement.md), the two gateways MUST maintain a single session across the different message types.
-
 #### Cargo
 
-Its primary purpose is to encapsulate one or more messages from the [endpoint channel](#endpoint-messaging-protocol) (e.g., parcels). Cargoes are serialized as RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message format signature. Relayers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
+Its primary purpose is to encapsulate one or more messages from the [endpoint channel](#endpoint-messaging-protocol) (e.g., parcels). Cargoes are also serialized with RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message format signature. Relayers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
 
-The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) using the [Relaynet Channel Session Protocol](rs003-key-agreement.md) (`KeyAgreeRecipientInfo`). Extensions to this document MAY support additional CMS structures.
-
-The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains one or more parcels, and is serialized with the following binary sequence (in little-endian), which is repeated for each parcel:
+The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encapsulate zero or more messages (e.g., parcels), and be serialized with the following binary sequence (in little-endian) to be repeated for each message:
 
 1. A 32-bit unsigned integer (4 octets) representing the length of the parcel.
 1. The parcel serialized in the RAMF.
 
 #### Cargo Collection Authorization (CCA)
 
-A RAMF message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. Its concrete message format signature is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
+A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. Its concrete message format signature is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
 
-The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be encoded as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`), using either the target gateway's certificate (`KeyTransRecipientInfo`) or the [Relaynet Key Agreement protocol](rs003-key-agreement.md) parameters (`KeyAgreeRecipientInfo`).
-
-Its payload plaintext MUST contain the following information:
+The payload ciphertext MUST be encrypted. The corresponding plaintext MUST contain the following information:
 
 - Any [_Parcel Delivery Deauthorizations_ (PDD)](rs002-pki.md#parcel-delivery-deauthorization-pdd) issued by Gateway A's endpoints or Gateway A itself to revoke [PDAs](rs002-pki.md#parcel-delivery-authorization-pda).
 - Binding-level constraints to authenticate the relayer, like expecting a specific _Certificate Authority_ in its TLS certificate chain (or equivalent). Gateway B MUST close the connection if these constraints are not met.
