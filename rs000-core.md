@@ -65,15 +65,14 @@ Note that defining same-layer interactions at the application and relay layers i
 
 This document only defines [point-to-point](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PointToPointChannel.html) message delivery. [Service Message Broadcast (RS-013)](rs013-pubsub.md) defines a [publish-subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html) protocol.
 
-Each node in Relaynet MUST have a unique address, and the type of address is determined by how it is accessed in its message transport binding:
+Each endpoint and gateway in Relaynet MUST have a unique, opaque address known as _private address_. It MAY also have a unique internet address known as _public address_ if the node can be reached by host/port. A nodes is public if it has a public address, otherwise it is private.
 
-- A _public node_ can be reached by host/port and its address uses the syntax `scheme[+bindingHint]:domainNameOrIpAddress[:port][/extra]`, where:
-  - `scheme` is determined by the messaging protocol (see below).
-  - `bindingHint` specifies the message transport binding. If absent, [Application-Level Protocol Negotiation](https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation) MUST be done.
-  - `domainNameOrIpAddress` is the host name as a DNS record or IPv4/IPv6 address. If using a DNS record, the binding SHOULD specify the type of allowed DNS records (e.g., A, CNAME, SRV).
-  - `port` is the Layer 4 (e.g., TCP) port on which the host listens. This does not apply when using SRV records.
-  - `extra` is any additional information necessary to reach the node. For example, it could be a URL path in bindings using HTTP.
-- A _private node_ has the digest of its public key as its address (`scheme:publicKeyDigest`), and its peer in the message transport binding knows how to reach it. The digest MUST be computed as `"0" || sha256(publicKey)`, where the `0` (zero) prefix denotes the version of the address format, `publicKey` is the DER encoding of the `SubjectPublicKeyInfo` structure from [RFC 5280](https://tools.ietf.org/html/rfc5280) and `sha256()` outputs the SHA-256 digest in hexadecimal.
+The private address of a node MUST equal to the digest of its public key, computed as `"0" || sha256(publicKey)`, where the `0` (zero) prefix denotes the version of the address format defined in this document, `||` denotes the concatenation of two strings, `publicKey` is the DER encoding of the `SubjectPublicKeyInfo` structure from [RFC 5280](https://tools.ietf.org/html/rfc5280) and `sha256()` outputs the SHA-256 digest in hexadecimal. For example, `0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private address.
+
+A public address MUST be a valid [Uniform Resource Identifier (URI)](https://tools.ietf.org/html/rfc3986) that meets the following constraints:
+
+- The scheme MUST be determined by the [messaging protocol](#messaging-protocols) and MAY be followed by the [binding](#message-transport-bindings) (with a plus sign separating the two). If the binding is absent, [Application-Level Protocol Negotiation](https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation) MUST be done.
+- The address MUST NOT contain a fragment.
 
 ## Messaging Protocols
 
@@ -91,7 +90,7 @@ Applications MAY provision [_Parcel Delivery Authorizations_ (PDAs)](rs002-pki.m
 
 This protocol establishes the channel between two endpoints. The only type of message that this specification defines at this level is the [_parcel_](#parcel).
 
-Endpoint addresses MUST use the scheme `rne`. For example, `rne://example.com` or `rne+http://example.com` (if using the [PoHTTP binding](rs007-pohttp.md)) are valid public endpoint addresses, and `rne:0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private endpoint address.
+Public endpoint addresses MUST use the scheme `rne`. For example, `rne://example.com` or `rne+http://example.com` (if using the [PoHTTP binding](rs007-pohttp.md)) are valid public endpoint addresses.
 
 #### Parcel
 
@@ -112,7 +111,7 @@ The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the se
 
 This protocol establishes the channel between two gateways.
 
-Gateway addresses MUST use the scheme `rng`. For example, `rng://example.com` and `rng+socket://example.com` (if using the [CoSocket binding](rs004-cosocket.md)) are valid public gateway addresses, and `rng:0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private gateway address.
+Public gateway addresses MUST use the scheme `rng`. For example, `rng://example.com` and `rng+socket://example.com` (if using the [CoSocket binding](rs004-cosocket.md)) are valid public gateway addresses.
 
 When using the [Relaynet Key Agreement protocol](rs003-key-agreement.md), the two gateways MUST maintain a single session across the different message types.
 
