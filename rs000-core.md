@@ -186,7 +186,7 @@ A PDC is _external_ if the gateway is a relaying gateway. Typically, both nodes 
 
 - Either node MAY act as client or server.
 - The gateway and the endpoint MAY only deliver parcels to each other and they MUST NOT attempt to collect parcels from each other. In other words, the endpoint has to initiate a connection to be able to send parcels to the gateway, whilst the  gateway has to initiate a connection to be able to send parcels to the endpoint.
-- The server MUST NOT require client authentication, but they MAY still refuse requests from suspicious and/or ill-behaved clients.
+- The server MUST NOT require client authentication, but they MAY still refuse to serve suspicious and/or ill-behaved clients.
 - The gateway SHOULD include its address when it delivers parcels to the endpoint, but only if the gateway is able to collect parcels for the endpoint that sent the initial parcel.
 - The connection MUST be closed as soon as all parcels have been delivered.
 
