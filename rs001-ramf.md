@@ -22,7 +22,7 @@ This document defines version 1 of the Relaynet Abstract Message Format (RAMF), 
 
 ## Introduction
 
-RAMF messages transport payloads along with relevant metadata to be used for routing, authentication and authorization purposes.
+RAMF messages encapsulate payloads along with relevant metadata to be used for routing, authentication and authorization purposes.
 
 Endpoint and gateway channels communicate amongst themselves using messages whose formats are based on RAMF.
 
