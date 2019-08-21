@@ -147,7 +147,7 @@ The endpoint MUST:
 
 A Parcel Delivery Deauthorization (PDD) revokes one or more [PDAs](#parcel-delivery-authorization-pda). It may be requested by the endpoint or its gateway.
 
-An endpoint MUST use the [message transport binding](rs000-core.md#message-transport-bindings) to instruct its gateway to revoke its self-issued certificate or a specific PDA. Such a request MUST include the following data, serialized in the format determined by the binding:
+An endpoint MUST use the [message transport binding](rs000-core.md#message-transport-bindings) to instruct its gateway to revoke its self-issued certificate or a specific PDA. Such a request MUST include the following data, serialized in the format determined by the specific binding:
 
 - (Required) The endpoint address affected by the deauthorization. This is needed in case the endpoint has multiple active certificates as a result of a key rotation.
 - (Optional) Serial numbers of the PDAs to revoke. It may be absent to revoke all the PDAs issued by the endpoint.
