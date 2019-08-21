@@ -50,9 +50,9 @@ To protect private keys, software vendors should set appropriate file permission
 
 ### Software or Hardware Backdoor {#backdoor}
 
-A backdoor at the Operating System, firmware or hardware level could allow an attacker to take full control of the host system, including the local Relaynet node(s). Such backdoors can be difficult to identify and they could, for example, achieve following:
+A backdoor at the Operating System, firmware or hardware level could allow an attacker to take full control of the host system, including the local Relaynet node(s). Such backdoors can be difficult to identify and they could, for example, achieve the following:
 
-- [Compromise the private keys](private-keys-compromise).
+- [Compromise the private keys](#private-keys-compromise).
 - Copy the plaintext of incoming and outgoing messages.
 - Drop incoming and outgoing messages.
 
