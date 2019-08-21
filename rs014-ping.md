@@ -31,9 +31,11 @@ Ping is a trivial service: Given applications A and B, application A sends a _pi
 
 A _transaction_ is initiated with a ping message and is completed when the pong message reaches its destination.
 
-The two applications MAY continue to run subsequent transactions. This could be useful to test the stability of the channel and the underlying session provided by the [Key Agreement protocol](rs003-key-agreement.md).
+The two applications MAY continue to run subsequent transactions. This could be useful to test the stability of the channel and the underlying session provided by the [Channel Session Protocol](rs003-key-agreement.md).
 
 ## Messages
+
+This service employs the following messages.
 
 ### Ping
 
