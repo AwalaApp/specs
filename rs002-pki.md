@@ -23,18 +23,17 @@ This document describes how to issue, distribute, store, revoke and interpret X.
 
 Certificates in this PKI profile MUST be represented as [X.509 v3 certificates](https://www.itu.int/rec/T-REC-X.509/en).
 
-The _Distinguished Name_ MUST only contain the _Common Name_ (CN), and it MUST be set to the node's private address (e.g., `CN=0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c`).
+The _Distinguished Name_ MUST only contain the _Common Name_ (CN) attribute, and it MUST be set to the node's private address (e.g., `CN=0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c`).
 
 A certificate MUST NOT be valid before its issuer is valid or after its issuer expires.
 
 ## Certificate Types
 
+Endpoints and gateways can use the following types of certificates.
+
 ### Endpoint Certificate
 
-An endpoint certificate MUST be issued by one of the following:
-
-- Itself (a self-issued certificate).
-- A peer endpoint when the certificate is a [_parcel delivery authorization_](#parcel-delivery-authorization-pda).
+An endpoint certificate MUST be issued by itself (a self-issued certificate) or a peer endpoint when the certificate is a [_parcel delivery authorization_](#parcel-delivery-authorization-pda).
 
 ### Parcel Delivery Authorization (PDA)
 
@@ -49,7 +48,7 @@ The chain of a PDA is formed of the following sequence (from leaf to root):
 1. (Optional) Endpoint A's _signature-only certificate_. A certificate that MUST only be used to issue PDAs.
 1. Endpoint A's certificate, issued by its [gateway](#gateway-certificate).
 
-Gateways MUST refuse PDAs whose issuing endpoint's _Common Name_ does not match the recipient of the parcel.
+Gateways MUST refuse PDAs whose issuing endpoint's _Common Name_ does not match that of the recipient of the parcel.
 
 #### Rate Limiting Extension
 
@@ -120,7 +119,7 @@ PDACertType ::= ENUMERATED {
 
 ## Certificate and Key Rotation
 
-Endpoints and gateways MAY use multiple certificates, with the same or different asymmetric keys (and potentially different addresses), at any point in time, in order to facilitate certificate or key rotation. 
+Endpoints and gateways MAY use multiple certificates, with the same or different asymmetric keys (and therefore different addresses), at any point in time, in order to facilitate certificate or key rotation. 
 
 An endpoint or gateway initiating a certificate rotation MUST share the new certificate using a _Certificate Rotation Message_ (CRM) through the appropriate [messaging channels](rs000-core.md#messaging-protocols). Such a message MUST:
 
