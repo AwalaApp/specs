@@ -138,7 +138,6 @@ The recipient Y MUST follow the following process when receiving a subsequent me
 
 The recipient of the initial message MUST distribute its initial DH key K<sub>b,1</sub><sup>public</sup> as an X.509 certificate where:
 
-- `serialNumber` is set to K<sub>b,1</sub><sup>id</sup>.
 - `subjectPublicKeyInfo`:
    - `algorithm` is set to a valid key exchange algorithm per [RS-018](rs018-algorithms.md). If the algorithm is DH (OID `1.2.840.113549.1.3.1`), then `algorithmParameters` MUST be set to `PKIKeyAgreementDHParams` as defined below:
      ```
@@ -155,6 +154,7 @@ The recipient of the initial message MUST distribute its initial DH key K<sub>b,
      }
      ```
    - `subjectPublicKey` is set to K<sub>b,1</sub><sup>public</sup>.
+- The Subject Key Identifier extension MUST be set to K<sub>b,1</sub><sup>id</sup>.
 
 Note that the expiry date of the certificate MUST reflect that initial DH keys cannot last more than 60 days.
 
