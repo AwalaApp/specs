@@ -25,7 +25,7 @@ Relaynet Core defines messaging channels that use end-to-end encryption to guara
 
 This protocol extends Relaynet to add perfect forward secrecy, future secrecy and replay attack mitigation. It is heavily based on the [Extended Triple Diffie-Hellman protocol](https://signal.org/docs/specifications/x3dh/) and the [double ratchet algorithm](https://signal.org/docs/specifications/doubleratchet/) from the Signal project, with some notable differences:
 
-- There is no central server that can provide certificates or public keys for any node in Relaynet, but that is not necessary because peers always have each other's certificates.
+- There is no central server that can provide certificates or public keys for any node in Relaynet, but that is not necessary because peers always have each other's certificates. For example, a client-side application will be distributed with the certificate of the server-side endpoint, and similarly, user gateways could be distributed with the certificate of their relaying gateway (or provided by a trusted relayer in a cargo relay connection).
 - This protocol must be [tolerant to disruptions](https://en.wikipedia.org/wiki/Delay-tolerant_networking): Messages are most likely to arrive late, in batches and out of order, or they may be lost.
 - The Diffie-Hellman (DH) exchange can also be done with the traditional finite field approach to lower the barrier to adoption. In other words, this protocol still supports Elliptic Curve Diffie-Hellman (ECDH), but it does not require it.
 
