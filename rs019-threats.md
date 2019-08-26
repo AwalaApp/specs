@@ -68,7 +68,7 @@ Service providers and Relaynet software vendors should distribute their software
 
 Attackers may use freshly-generated, private addresses to conduct a DoS attack against public nodes, or use [compromised private keys](#private-keys-compromise) to achieve the same attack against private and public nodes. This would be an attack at the [channel](rs000-core.md#messaging-protocols) level.
 
-Providers should have monitoring in place to detect ongoing DoS attacks, as well as an appropriate response plan. They should also employ appropriate rate limiting constraints; for example, private endpoints could issue [Parcel Delivery Authorizations (PDAs)](rs002-pki.md#parcel-delivery-authorization-pda) that using the [rate limiting extension](rs002-pki.md#rate-limiting-extension). 
+Providers should have monitoring in place to detect ongoing DoS attacks, as well as an appropriate response plan. They should also employ appropriate rate limiting constraints; for example, private endpoints could issue [Parcel Delivery Authorizations (PDAs)](rs002-pki.md#parcel-delivery-authorization-pda) that employ the [rate limiting extension](rs002-pki.md#rate-limiting-extension).
 
 ### Denial of Service via Message Transport Binding {#dos-binding}
 
