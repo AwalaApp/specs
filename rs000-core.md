@@ -168,6 +168,8 @@ Communication MUST be encrypted when the two nodes are on different computers, o
 
 For performance reasons, nodes SHOULD use Unix domain sockets or any other IPC mechanism when they are on the same computer, instead of using the loopback network interface.
 
+For privacy and censorship-circumvention reasons, public addresses using DNS records MUST be resolved using [DNS over HTTPS](https://tools.ietf.org/html/rfc8484) or [DNS over TLS/DTLS](https://tools.ietf.org/html/rfc8310), using a DNS resolver trusted by the implementer. The implementer MAY allow advanced end users to override the DNS resolver.
+
 Bindings MAY extend this specification, but they MUST NOT override it.
 
 ### Parcel Delivery Binding
