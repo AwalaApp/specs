@@ -94,7 +94,7 @@ Public endpoint addresses MUST use the scheme `rne`. For example, `rne://example
 
 #### Parcel
 
-A parcel encapsulates a service message and is serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the octet `0x50` ("P" in ASCII) as its _concrete message format signature_. Gateways and the target endpoint MUST enforce the post-deserialization validation listed in the RAMF specification.
+A parcel encapsulates a service message and is serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the octet `0x50` ("P" in ASCII) as its _concrete message type_. Gateways and the target endpoint MUST enforce the post-deserialization validation listed in the RAMF specification.
 
 The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be serialized as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`). The encryption key SHOULD be generated with the [Relaynet Channel Session Protocol](rs003-key-agreement.md) -- Alternatively, the key MAY be that of the target endpoint's certificate, in which case the CMS value MUST be serialized with the `KeyTransRecipientInfo` choice. Extensions to this document MAY support alternative CMS structures.
 
@@ -117,7 +117,7 @@ Public gateway addresses MUST use the scheme `rng`. For example, `rng://example.
 
 #### Cargo
 
-Its primary purpose is to encapsulate one or more messages from the [endpoint channel](#endpoint-messaging-protocol) (e.g., parcels). Cargoes are also serialized with RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message format signature. Relayers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
+Its primary purpose is to encapsulate one or more messages from the [endpoint channel](#endpoint-messaging-protocol) (e.g., parcels). Cargoes are also serialized with RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message type. Relayers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
 
 The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encapsulate zero or more messages (e.g., parcels), and be serialized with the following binary sequence (in little-endian) to be repeated for each message:
 
@@ -126,7 +126,7 @@ The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encap
 
 #### Cargo Collection Authorization (CCA)
 
-A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. Its concrete message format signature is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
+A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. Its concrete message type is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
 
 The payload ciphertext MUST be encrypted. The corresponding plaintext MUST contain the following information:
 

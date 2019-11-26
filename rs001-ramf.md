@@ -32,7 +32,7 @@ A message is serialized using the following byte sequence ([little-endian](https
 
 1. [File format signature](https://en.wikipedia.org/wiki/List_of_file_signatures) (10 octets):
    1. Prefix (8 octets): "Relaynet" in ASCII (hex: "52 65 6c 61 79 6e 65 74").
-   1. Concrete message format signature (1 octet).
+   1. Concrete message type (1 octet).
    1. Format version (1 octet). An 8-bit unsigned integer.
 1. Recipient address. UTF-8 encoded, and length-prefixed with a 10-bit unsigned integer (2 octets). Consequently, the address can be as long as 1024 octets.
 1. Message id. Unique to the sender. This is an opaque value, so it has no structure or semantics. This field is ASCII encoded and length-prefixed with 8-bit integer (1 octets).
@@ -70,9 +70,9 @@ Nodes can further protect from replay attacks, amongst other attack vectors, by 
 
 Note that all cryptographic algorithms MUST comply with [RS-018](rs018-algorithms.md).
 
-## Reserved Concrete Message Format Signatures
+## Reserved Concrete Message Types
 
-The following concrete signatures have been reserved by other Relaynet specifications:
+The following concrete types have been reserved by other Relaynet specifications:
 
 - `0x10` for [certificate rotation](rs002-pki.md#certificate-and-key-rotation).
 - `0x11` for [gateway certificate revocation](rs002-pki.md#gateway-certificate-revocation-gcr).

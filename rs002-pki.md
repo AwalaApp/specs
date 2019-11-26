@@ -123,7 +123,7 @@ Endpoints and gateways MAY use multiple certificates, with the same or different
 
 An endpoint or gateway initiating a certificate rotation MUST share the new certificate using a _Certificate Rotation Message_ (CRM) through the appropriate [messaging channels](rs000-core.md#messaging-protocols). Such a message MUST:
 
-- Be serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the octet `0x10` as its _concrete message format signature_.
+- Be serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the octet `0x10` as its _concrete message type_.
 - Be signed with a certificate that the target endpoint/gateway already trusts.
 - Have their payload encrypted as specified in the [Core](rs000-core.md) and [RAMF](rs001-ramf.md) specifications.
 - Have its payload plaintext contain only the new certificate.
@@ -159,7 +159,7 @@ Relaying gateways MAY cache PDDs until they expire in order to refuse future par
 
 ### Gateway Certificate Revocation (GCR)
 
-A gateway MAY revoke its own certificate by issuing a GCR message to its peer gateway(s). These messages MUST be serialized with RAMF, using the octet `0x11` as its _concrete message format signature_, and have an empty payload (i.e., one of length zero).
+A gateway MAY revoke its own certificate by issuing a GCR message to its peer gateway(s). These messages MUST be serialized with RAMF, using the octet `0x11` as its _concrete message type_, and have an empty payload (i.e., one of length zero).
 
 GCRs MUST be sent in the payload plaintext of a cargo, along with parcels, in order to prevent a malicious relayer from identifying and dropping such messages.
 
