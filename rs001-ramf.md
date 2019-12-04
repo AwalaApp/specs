@@ -60,7 +60,7 @@ Recipients and brokers of a RAMF message MUST validate the message as soon as it
 - All certificates MUST be valid per [Relaynet PKI](rs002-pki.md).
 - The signature MUST be valid according to the [CMS verification process](https://tools.ietf.org/html/rfc5652#section-5.6) and the specified signature algorithm. Additionally, the signature MUST be deemed invalid if the signature algorithm is unsupported or the hashing algorithm is unsupported.
 
-The purpose of the grace period in the date and TTL fields is to account for a potential clock drift.
+The purpose of the grace period in the date and TTL fields is to account for a potential clock drift in end user devices.
 
 ## Security Considerations
 
