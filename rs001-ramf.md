@@ -53,14 +53,12 @@ A message is serialized using the following byte sequence ([little-endian](https
 
 Recipients and brokers of a RAMF message MUST validate the message as soon as it is received, before any further processing or relay. The message MUST be refused when any of the conditions below is not met:
 
-- The message date MUST NOT be more than 5 minutes in the future.
-- The message TTL MUST NOT be more than 5 minutes in the past.
+- The message date MUST NOT be in the future.
+- The message TTL MUST NOT resolve to a date be in the past.
 - The message date MUST be within the period of time during which the sender certificate was valid.
 - The sender's certificate MUST be embedded in the signature.
 - All certificates MUST be valid per [Relaynet PKI](rs002-pki.md).
 - The signature MUST be valid according to the [CMS verification process](https://tools.ietf.org/html/rfc5652#section-5.6) and the specified signature algorithm. Additionally, the signature MUST be deemed invalid if the signature algorithm is unsupported or the hashing algorithm is unsupported.
-
-The purpose of the grace period in the date and TTL fields is to account for a potential clock drift in end user devices.
 
 ## Security Considerations
 
