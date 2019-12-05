@@ -56,7 +56,6 @@ Recipients and brokers of a RAMF message MUST validate the message as soon as it
 - The message date MUST NOT be in the future.
 - The message TTL MUST NOT resolve to a date in the past.
 - The message date MUST be within the period of time during which the sender certificate was valid.
-- The sender's certificate MUST be embedded in the signature.
 - All certificates MUST be valid per [Relaynet PKI](rs002-pki.md).
 - The signature MUST be valid according to the [CMS verification process](https://tools.ietf.org/html/rfc5652#section-5.6) and the specified signature algorithm. Additionally, the signature MUST be deemed invalid if the signature algorithm is unsupported or the hashing algorithm is unsupported.
 
