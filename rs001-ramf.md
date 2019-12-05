@@ -54,7 +54,7 @@ A message is serialized using the following byte sequence ([little-endian](https
 Recipients and brokers of a RAMF message MUST validate the message as soon as it is received, before any further processing or relay. The message MUST be refused when any of the conditions below is not met:
 
 - The message date MUST NOT be in the future.
-- The message TTL MUST NOT resolve to a date be in the past.
+- The message TTL MUST NOT resolve to a date in the past.
 - The message date MUST be within the period of time during which the sender certificate was valid.
 - The sender's certificate MUST be embedded in the signature.
 - All certificates MUST be valid per [Relaynet PKI](rs002-pki.md).
