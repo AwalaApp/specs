@@ -138,7 +138,7 @@ The recipient Y MUST follow the following process when receiving a subsequent me
 
 The recipient of the initial message MUST issue and distribute its initial DH key K<sub>b,1</sub><sup>public</sup> as an X.509 v3 certificate where:
 
-- `subject` (Distinguished Name) SHOULD be that of the recipient's [PKI](rs002-pki.md) certificate as that might be useful for debugging purposes.
+- `subject` (Distinguished Name) SHOULD match that of the recipient's [PKI](rs002-pki.md) certificate.
 - `subjectPublicKeyInfo`:
    - `algorithm` MUST be a valid key exchange algorithm per [RS-018](rs018-algorithms.md). If the algorithm is DH (OID `1.2.840.113549.1.3.1`), then `algorithmParameters` MUST be set to `PKIKeyAgreementDHParams` as defined in the ASN.1 code below:
      ```
