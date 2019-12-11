@@ -78,7 +78,7 @@ The initial key MUST be valid in the chosen key exchange algorithm. For example,
 Alice MUST follow the following process when sending an initial message to Bob using his initial DH key (K<sub>b,1</sub><sup>public</sup>):
 
 1. Generate the ephemeral asymmetric key K<sub>a,1</sub>.
-1. Generate the id K<sub>a,1</sub><sup>id</sup> randomly.
+1. Generate the unique id K<sub>a,1</sub><sup>id</sup> randomly or as the cryptographic digest of K<sub>a,1</sub><sup>public</sup>.
 1. Store K<sub>a,1</sub><sup>private</sup> and K<sub>a,1</sub><sup>id</sup> so that they can be used to decrypt future messages from Bob.
 1. Calculate the shared key _SK<sub>1</sub> = KDF(KM)_, where KM = DH(K<sub>b,1</sub><sup>public</sup>, K<sub>a,1</sub><sup>private</sup>).
 1. Encrypt the plaintext with SK<sub>1</sub>.
@@ -112,7 +112,7 @@ The sender _X_ MUST follow the following process when sending a subsequent messa
    - Retrieve the last ephemeral key K<sub>x,m-1</sub> if no incoming message from Y has used it; this could mean that Y has not received K<sub>x,m-1</sub> yet.
    - If an incoming message from Y has already used K<sub>x,m-1</sub>, then:
      1. Generate a new ephemeral key K<sub>x,m</sub>.
-     1. Generate the id K<sub>x,m</sub><sup>id</sup> randomly.
+     1. Generate the unique id K<sub>x,m</sub><sup>id</sup> randomly or as the cryptographic digest of K<sub>x,m</sub><sup>public</sup>.
      1. Store K<sub>x,m</sub><sup>private</sup> and K<sub>x,m</sub><sup>id</sup> so that they can be used to decrypt future messages from Y.
 1. Retrieve Y's last ephemeral key K<sub>y,n</sub><sup>public</sup> along with its id K<sub>y,n</sub><sup>id</sup>.
 1. Calculate the shared key _SK<sub>p</sub> = KDF(KM)_, where KM = DH(K<sub>y,n</sub><sup>public</sup>, K<sub>x,m</sub><sup>private</sup>).
