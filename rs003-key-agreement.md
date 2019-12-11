@@ -67,7 +67,7 @@ This protocol describes the initial interaction between Alice and Bob, which is 
 
 Alice MUST have Bob's initial DH key K<sub>b,1</sub><sup>public</sup> and its id K<sub>b,1</sub><sup>id</sup> before running this protocol; see [X.509 certificate](#x509-certificate-for-initial-dh-key).
 
-The initial DH key K<sub>b,1</sub> SHOULD be ephemeral and used by a single node. When this is not possible, the initial DH key MAY be static and used by multiple nodes. Static keys MUST be valid for no more than 60 days, and they SHOULD NOT be valid for more than 30 days.
+The initial DH key K<sub>b,1</sub> MUST be _ephemeral_ (i.e., only usable by Alice) unless Bob is a server, in which case the key MAY be _static_ (i.e., usable by any node) as it may not be possible to distribute ephemeral keys in advance. Static keys MUST be valid for no more than 60 days, and they SHOULD NOT be valid for more than 30 days.
 
 For example, static keys are likely to be necessary in a centralized service where client applications have to be distributed with the same initial DH key, whilst ephemeral keys could be used in a decentralized service where Bob is able to generate an initial key just for Alice.
 
@@ -157,7 +157,7 @@ The recipient of the initial message MUST issue and distribute its initial DH ke
    - `subjectPublicKey` MUST be K<sub>b,1</sub><sup>public</sup>.
 - The Subject Key Identifier extension MUST be K<sub>b,1</sub><sup>id</sup>.
 
-Note that the expiry date of the certificate MUST reflect that initial DH keys cannot last more than 60 days.
+Note that the expiry date of the certificate MUST reflect any constraint imposed by this specification.
 
 ## CMS Enveloped-Data Representation
 
