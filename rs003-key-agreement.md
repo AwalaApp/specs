@@ -69,8 +69,6 @@ Alice MUST have Bob's initial DH key K<sub>b,1</sub><sup>public</sup> and its id
 
 The initial DH key K<sub>b,1</sub> MUST be _ephemeral_ (i.e., only usable by Alice) unless Bob is a server, in which case the key MAY be _static_ (i.e., usable by any node) as it may not be possible to distribute ephemeral keys in advance. Regardless of their type, keys MUST NOT be valid for more than 60 days and they SHOULD NOT be valid for more than 30 days.
 
-For example, static keys are likely to be necessary in a centralized service where client applications have to be distributed with the same initial DH key, whilst ephemeral keys could be used in a decentralized service where Bob is able to generate an initial key just for Alice.
-
 The initial key MUST be valid in the chosen key exchange algorithm. For example, the initial DH key must be 2048-bit if the session uses DH with a 2048-bit group; similarly, the initial DH key must be X25519 if the session uses ECDH with X25519.
 
 ### Sending Initial Message(s)
