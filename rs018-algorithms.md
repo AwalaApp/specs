@@ -41,14 +41,6 @@ For security and compatibility reasons, Relaynet implementations SHOULD NOT supp
 
 Implementations MUST support SHA-256 (OID `2.16.840.1.101.3.4.2.1`) and they SHOULD also support SHA-384 (OID `2.16.840.1.101.3.4.2.2`) and SHA-512 (OID `2.16.840.1.101.3.4.2.3`). They MUST NOT support MD5 or SHA-1 for security reasons.
 
-### Key Exchange Algorithms
-
-Implementations MUST support Elliptic Curve Diffie-Hellman (ECDH; OID `1.3.132.1.12`) with the NIST P-256 curve (OID `1.2.840.10045.3.1.7`). They SHOULD also support the NIST curves P-384 (OID `1.3.132.0.34`) and P-521 (OID `1.3.132.0.35`).
-
-Implementations MAY also support the curves X25519 (OID `1.3.101.110`) and X448 (OID `1.3.101.111`).
-
-Finite field Diffie-Hellman (DH; OID `1.2.840.113549.1.3.1`) MAY also be supported, in which case implementations SHOULD only support DH groups from [RFC3526](https://tools.ietf.org/html/rfc3526) with at least 2048 bits. DH groups under 2048 bits MUST NOT be supported.
-
 ### Symmetric Ciphers
 
 Implementations MUST support AES-128, and they SHOULD also support AES-192 and AES-256. They MUST NOT support DES for security reasons.
@@ -66,11 +58,17 @@ More specifically, [Key Wrap mode](https://tools.ietf.org/html/rfc3394.html) MUS
 
 Implementations MUST support RSA-OAEP (OID `1.2.840.113549.1.1.7`). They SHOULD also support Curve25519 (OID `1.3.101.110`), and they MAY support Curve448 (OID `1.3.101.111`).
 
-Note that per [Relaynet Core](rs000-core.md) and the [Channel Session Protocol](rs003-key-agreement.md), asymmetric encryption would only be used in the endpoint channel [when the Channel Session Protocol cannot be used](rs003-key-agreement.md#limitations).
-
 ### Digital Signature Algorithms
 
 Implementations MUST support RSA-PSS (OID `1.2.840.113549.1.1.10`). They SHOULD also support Ed25519 EdDSA keys (OID `1.3.101.112`), and they MAY support Ed448 EdDSA keys (OID `1.3.101.113`).
+
+### Key Exchange Algorithms
+
+Implementations MUST support Elliptic Curve Diffie-Hellman (ECDH; OID `1.3.132.1.12`) with the NIST P-256 curve (OID `1.2.840.10045.3.1.7`). They SHOULD also support the NIST curves P-384 (OID `1.3.132.0.34`) and P-521 (OID `1.3.132.0.35`).
+
+Implementations MAY also support the curves X25519 (OID `1.3.101.110`) and X448 (OID `1.3.101.111`).
+
+Finite field Diffie-Hellman (DH; OID `1.2.840.113549.1.3.1`) MAY also be supported, in which case implementations SHOULD only support DH groups from [RFC3526](https://tools.ietf.org/html/rfc3526) with at least 2048 bits. DH groups under 2048 bits MUST NOT be supported.
 
 ## Algorithm Selection
 
