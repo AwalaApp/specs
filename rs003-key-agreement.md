@@ -45,7 +45,7 @@ A channel implementation MUST specify the following parameters:
 - Key-derivation function (KDF): Any function allowed by [RS-018](rs018-algorithms.md).
 - Cipher: Any cipher allowed by [RS-018](rs018-algorithms.md).
 - Cryptographic hashing function: Any function allowed by [RS-018](rs018-algorithms.md).
-- Channel id: An ASCII string identifying the channel.
+- Channel id: An ASCII string identifying the channel. This is only needed when using HKDF as the KDF.
 
 For example, a Relaynet service may configure its endpoints to use ECDH with P-256 as the key exchange algorithm, X9.63 as the KDF, AES-128 (KW and GCM) as the cipher, SHA-256 as the hashing function and `My Service` as the channel id.
 
