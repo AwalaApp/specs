@@ -108,8 +108,8 @@ Alice and Bob MUST follow the following algorithm to exchange subsequent message
 The sender _X_ MUST follow the following process when sending a subsequent message to _Y_:
 
 1. Compute K<sub>x,m</sub>:
-   - Retrieve the last ephemeral key K<sub>x,m-1</sub> if no incoming message from Y has used it; this could mean that Y has not received K<sub>x,m-1</sub> yet.
-   - If an incoming message from Y has already used K<sub>x,m-1</sub>, then:
+   - Reuse the last ephemeral key K<sub>x,m-1</sub> if no incoming message from Y has used it; this could mean that Y has not received K<sub>x,m-1</sub> yet. This reuse is an optional performance optimization, as X would have fewer keys to manage.
+   - Otherwise:
      1. Generate a new ephemeral key K<sub>x,m</sub>.
      1. Generate the unique id K<sub>x,m</sub><sup>id</sup> randomly or as the cryptographic digest of K<sub>x,m</sub><sup>public</sup>.
      1. Store K<sub>x,m</sub><sup>private</sup> and K<sub>x,m</sub><sup>id</sup> so that they can be used to decrypt future messages from Y.
