@@ -170,7 +170,7 @@ Amongst other things, the RFCs above require the [`RecipientInfo`](https://tools
 Implementations MUST store the recipient's ephemeral key identifier as the serial number in the `issuerAndSerialNumber` choice of the `KeyAgreeRecipientIdentifier`. They MUST also store the originator's ephemeral key identifier (K<sub>a,1</sub><sup>id</sup> or K<sub>x,m</sub><sup>id</sup>) under the `unprotectedAttrs` field of the EnvelopedData value as the integer representation of the corresponding serial number and use the following OID:
 
 ```
-OriginatorEphemeralKeyId OBJECT IDENTIFIER ::= {
+OriginatorEphemeralCertificateSerialNumberId OBJECT IDENTIFIER ::= {
     itu-t(0) identified-organization(4) etsi(0) reserved(127) etsi-identified-organization(0)
         relaycorp(17) relaynet(0) channel-session(1) 0
     }
