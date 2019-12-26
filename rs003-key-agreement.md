@@ -158,12 +158,23 @@ The recipient of the initial message MUST issue and distribute its initial DH ke
 
 Note that the validity period of the certificate MUST reflect the constraints imposed by this specification.
 
-## CMS Enveloped Data Representation
+## CMS EnvelopedData Representation
 
-When using a [CMS enveloped-data](https://tools.ietf.org/html/rfc5652#section-6) value to encapsulate ciphertext encrypted with these DH keys, its [`RecipientInfo`](https://tools.ietf.org/html/rfc5652#section-6.2) MUST use the [`KeyAgreeRecipientInfo`](https://tools.ietf.org/html/rfc5652#section-6.2.2). The specifics of how to represent the EnvelopedData structure is delegated to the following RFCs depending on the specific DH algorithm used:
+When using a [CMS EnvelopedData](https://tools.ietf.org/html/rfc5652#section-6) value to encapsulate ciphertext encrypted with these DH keys, implementations MUST comply with the following RFCs depending on the specific DH algorithm used:
 
 - When using ECDH, the EnvelopedData value MUST be serialized as described in [RFC 5753](https://tools.ietf.org/html/rfc5753.html). Additionally, the implementation MUST comply with [RFC 8418](https://tools.ietf.org/html/rfc8418) when using X25519 or X448.
 - When using (finite field) DH, the implementation MUST comply with [Section 4.1.1 of RFC 3370](https://tools.ietf.org/html/rfc3370#section-4.1.1).
+
+Amongst other things, the RFCs above require the [`RecipientInfo`](https://tools.ietf.org/html/rfc5652#section-6.2) to use the [`KeyAgreeRecipientInfo`](https://tools.ietf.org/html/rfc5652#section-6.2.2) choice. They also require K<sub>a,1</sub><sup>public</sup> or K<sub>x,m</sub><sup>public</sup> to be stored as the originator's public key, as well K<sub>b,1</sub><sup>id</sup> K<sub>y,n</sub><sup>id</sup> as the recipient's ephemeral key identifier.
+
+Implementations MUST store the recipient's ephemeral key identifier as the serial number in the `issuerAndSerialNumber` choice of the `KeyAgreeRecipientIdentifier`. They MUST also store the originator's ephemeral key identifier (K<sub>a,1</sub><sup>id</sup> or K<sub>x,m</sub><sup>id</sup>) under the `unprotectedAttrs` field of the EnvelopedData value as the integer representation of the corresponding serial number and use the following OID:
+
+```
+OriginatorEphemeralKeyId OBJECT IDENTIFIER ::= {
+    itu-t(0) identified-organization(4) etsi(0) reserved(127) etsi-identified-organization(0)
+        relaycorp(17) relaynet(0) channel-session(1) 0
+    }
+```
 
 ## Limitations
 
