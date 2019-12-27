@@ -64,6 +64,8 @@ For example, a Relaynet service may configure its endpoints to use ECDH with P-2
 
 This protocol describes the initial interaction between Alice and Bob, which is used to establish a secure channel between the two.
 
+Once the session has been established, both parties MUST reject incoming messages outside the session (i.e., any message not using the Channel Session Protocol or the expected DH keys). However, they MAY agree to start a new session.
+
 ### Generating and Distributing Initial DH Keys
 
 Alice MUST have Bob's initial DH key K<sub>b,1</sub><sup>public</sup> and its id K<sub>b,1</sub><sup>id</sup> before running this protocol; see [X.509 certificate](#x509-certificate).
