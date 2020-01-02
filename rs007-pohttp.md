@@ -52,10 +52,6 @@ HTTP connections MUST be sessionless, so clients and servers MUST NOT use cookie
 
 Headers other than the ones described in this specification MAY be used, but defining how they should be handled at the other end is outside the scope of this specification.
 
-## TLS Considerations
-
-[Server Name Identification](https://en.wikipedia.org/wiki/Server_Name_Indication) MUST be supported by clients and MAY be used by servers.
-
 ## Relevant Specifications
 
 [Relaynet Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [parcel delivery bindings](rs000-core.md#parcel-delivery-binding) specifically, all of which apply to PoHTTP.

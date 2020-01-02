@@ -164,9 +164,9 @@ A message transport binding, or simply _binding_, defines the [adjacent-layer in
 
 Bindings will typically leverage [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols, such as HTTP or purpose-built ones, but they can also use an Inter-Process Communication (IPC) mechanism provided by the host system.
 
-Communication MUST be encrypted when the two nodes are on different computers, otherwise it is optional. Communication is deemed to happen on the same computer when either the loopback network interface (i.e., addresses in the range `127.0.0.0/8`) or IPC is used. When encryption is used, it MUST be provided by Transport Layer Security (TLS) version 1.2 ([RFC 5246](https://tools.ietf.org/html/rfc5246)) or newer, or an equivalent technology in non-TCP connections (e.g., [DTLS](https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security)). Note that different asymmetric keys are required because [Relaynet PKI](rs002-pki.md) certificates cannot be used as server- or client-side certificates in TLS or DTLS.
+Communication MUST be encrypted when the two nodes are on different computers, otherwise it is optional. Communication is deemed to happen on the same computer when either the loopback network interface (i.e., addresses in the range `127.0.0.0/8`) or IPC is used. When encryption is used, it MUST be provided by Transport Layer Security (TLS) version 1.2 ([RFC 5246](https://tools.ietf.org/html/rfc5246)) or newer, or an equivalent technology in non-TCP connections (e.g., [DTLS](https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security)). When using TLS, Server Name Identification per [RFC 6066](https://tools.ietf.org/html/rfc6066) MUST be supported by clients and it MAY be used by servers.
 
-For performance reasons, nodes SHOULD use Unix domain sockets or any other IPC mechanism when they are on the same computer, instead of using the loopback network interface.
+For performance reasons, nodes SHOULD use Unix domain sockets or any other IPC mechanism instead of the loopback network interface when they are on the same computer.
 
 For privacy and censorship-circumvention reasons, public addresses using DNS records SHOULD be resolved using [DNS over HTTPS](https://tools.ietf.org/html/rfc8484) or [DNS over TLS/DTLS](https://tools.ietf.org/html/rfc8310), using a DNS resolver trusted by the implementer. Advanced end users SHOULD also be allowed to override the DNS resolver or even use the one provided by the host system.
 
@@ -191,6 +191,8 @@ A PDC is _external_ if the gateway is a relaying gateway. Typically, both nodes 
 - The server MUST NOT require client authentication, but they MAY still refuse to serve suspicious and/or ill-behaved clients.
 - The gateway SHOULD include its address when it delivers parcels to the endpoint, but only if the gateway is able to collect parcels for the endpoint that sent the initial parcel.
 - The connection MUST be closed as soon as all parcels have been delivered.
+
+External PDCs MUST always use TLS or equivalent in non-TCP connections.
 
 #### Internal PDC
 
