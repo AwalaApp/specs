@@ -54,8 +54,6 @@ Headers other than the ones described in this specification MAY be used, but def
 
 ## TLS Considerations
 
-Since [message transport bindings](rs000-core.md#message-transport-bindings) MAY NOT use TLS when communication happens via the loopback network interface per [Relaynet Core](rs000-core.md), clients MUST fall back to plain HTTP without TLS in that case if the server does not support TLS. This constraint also applies to redirects.
-
 [Server Name Identification](https://en.wikipedia.org/wiki/Server_Name_Indication) MUST be supported by clients and MAY be used by servers.
 
 ## Relevant Specifications
