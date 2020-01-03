@@ -33,7 +33,7 @@ The [hint](rs000-core.md#addressing) for this binding MUST be `http`. For exampl
 
 ## Parcel Delivery
 
-To deliver each parcel, the client MUST make a `POST` request to the HTTP URL corresponding to the node address, with `application/vnd.relaynet.parcel` as the content type and the parcel as the body. If the client is a relaying gateway, it MUST provide the target endpoint with its address using the request header `X-Relaynet-Gateway`. For example, `X-Relaynet-Gateway: rng+http://gateway.humanitarian.org`.
+To deliver each parcel, the client MUST make a `POST` request to the HTTP URL corresponding to the node address, with `application/vnd.relaynet.parcel` as the content type and the parcel as the body. If the client is a relaying gateway, it MUST provide the target endpoint with its address using the request header `X-Relaynet-Gateway`. For example, `X-Relaynet-Relay: rng+http://gateway.humanitarian.org`.
 
 The server MUST respond with one of the following status codes:
 
