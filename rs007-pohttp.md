@@ -47,6 +47,8 @@ The server MUST respond with one of the following status codes:
 
 Clients and servers implementing this specification MUST support HTTP version 1.1, and they SHOULD also support HTTP version 2.
 
+HTTP requests MUST set the `Host` header accordingly.
+
 HTTP connections MUST be sessionless, so clients and servers MUST NOT use cookies.
 
 [Rate limiting](https://tools.ietf.org/html/rfc6585#section-4) SHOULD be supported by clients as servers MAY use it.
