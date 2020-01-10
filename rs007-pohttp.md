@@ -39,8 +39,9 @@ The server MUST respond with one of the following status codes:
 
 - `202` (Accepted) response as soon as it successfully [stores or forwards](https://en.wikipedia.org/wiki/Store_and_forward) the parcel.
 - `307` (Temporary Redirect) per [RFC-7231](https://tools.ietf.org/html/rfc7231#section-6.4.7) or `308` (Permanent Redirect) per [RFC-7238](https://tools.ietf.org/html/rfc7238), in which case the client MUST repeat the `POST` request against the URL specified in the `Location` response header. Clients MUST honor up to 3 consecutive redirects; additional consecutive redirects MAY be honored.
+- `400` if the client failed to make the request as required by this specification; for example, the request `Content-Type` header did not match `application/vnd.relaynet.parcel`.
+- A relaying gateway MAY return a `507` (Insufficient Storage) response when it no longer has the capacity to accept parcels for the target endpoint or its gateway. In this case, the client MAY retry to deliver the parcel at a later point.
 - Any other standard status code in the range 400-599 that the server regards applicable.
-- A relaying gateway MAY return a `507` (Insufficient Storage) response when it no longer has the capacity to accept parcels for the target endpoint or its gateway.
 
 ## HTTP Considerations
 
