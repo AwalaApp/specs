@@ -29,7 +29,7 @@ As an external PDC, the only operation supported by this binding is [parcel deli
 
 ## Binding hint
 
-The [hint](rs000-core.md#addressing) for this binding MUST be `http`. For example, `rne+http://api.example.com/relaynet` would be a valid [public endpoint](rs000-core.md#endpoint-messaging-protocol) address and it would correspond to the HTTP URL `https://api.example.com/relaynet` (note the `https` scheme).
+The [hint](rs000-core.md#addressing) for this binding MUST be `https`. For example, `rne+https://api.example.com/relaynet` would be a valid [public endpoint](rs000-core.md#endpoint-messaging-protocol) address and it would correspond to the HTTP URL `https://api.example.com/relaynet`. (Per RS-000, external PDCs are required to use TSL or equivalent.)
 
 ## Parcel Delivery
 
