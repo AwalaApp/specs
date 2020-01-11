@@ -47,6 +47,8 @@ The server MUST respond with one of the following status codes:
 - A relaying gateway MAY return a `507` (Insufficient Storage) response when it no longer has the capacity to accept parcels for the target endpoint or its gateway. In this case, the client SHOULD retry to deliver the parcel at a later point but before it expires.
 - Any other standard status code in the range 400-599 that the server regards applicable. For example, a `415 Unsupported Media Type` code could be returned if the `Content-Type` request header did not match `application/vnd.relaynet.parcel`.
 
+The response MAY contain a body, but defining how to process it is outside this specification.
+
 ## HTTP Considerations
 
 Clients and servers implementing this specification MUST support HTTP version 1.1, and they SHOULD also support HTTP version 2.
