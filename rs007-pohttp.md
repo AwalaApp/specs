@@ -36,7 +36,6 @@ The [hint](rs000-core.md#addressing) for this binding MUST be `https`. For examp
 To deliver each parcel, the client MUST make a `POST` request to the HTTP URL corresponding to the node address, with the parcel as the body and the following headers:
 
 - `Content-Type` MUST be set to `application/vnd.relaynet.parcel`.
-- `Accept-Version` MUST be set to `1.0`.
 - If the client is a relaying gateway, `X-Relaynet-Gateway` MUST provide the target endpoint with its address using the request header `X-Relaynet-Gateway`. For example, `X-Relaynet-Gateway: rng+http://gateway.humanitarian.org`.
 
 The server MUST respond with one of the following status codes:
