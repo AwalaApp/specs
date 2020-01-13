@@ -28,16 +28,12 @@ In some cases, it may also be desirable for a relaying gateway to expose an HTTP
 
 As an Internet-based PDC, the only operation supported by this binding is [parcel delivery](#parcel-delivery).
 
-## Binding hint
-
-The [hint](rs000-core.md#addressing) for this binding MUST be `https`. For example, `rne+https://api.example.com/relaynet` would be a valid [public endpoint](rs000-core.md#endpoint-messaging-protocol) address and it would correspond to the HTTP URL `https://api.example.com/relaynet`. (Per RS-000, Internet-based PDCs are required to use TSL or equivalent.)
-
 ## Parcel Delivery
 
 To deliver each parcel, the client MUST make a `POST` request to the HTTP URL corresponding to the node address, with the parcel as the body and the following headers:
 
 - `Content-Type` MUST be set to `application/vnd.relaynet.parcel`.
-- If the client is a relaying gateway, `X-Relaynet-Gateway` MUST provide the target endpoint with its address using the request header `X-Relaynet-Gateway`. For example, `X-Relaynet-Gateway: rng+http://gateway.humanitarian.org`.
+- If the client is a relaying gateway, `X-Relaynet-Gateway` MUST provide the target endpoint with its address using the request header `X-Relaynet-Gateway`. For example, `X-Relaynet-Gateway: http://gateway.humanitarian.org`.
 
 The server MUST respond with one of the following status codes:
 

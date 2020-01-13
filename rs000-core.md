@@ -70,10 +70,7 @@ Each endpoint and gateway in Relaynet MUST have a unique, opaque address known a
 
 The private address of a node MUST equal to the digest of its public key, computed as `"0" || sha256(publicKey)`, where the `0` (zero) prefix denotes the version of the address format defined in this document, `||` denotes the concatenation of two strings, `publicKey` is the DER encoding of the `SubjectPublicKeyInfo` structure from [RFC 5280](https://tools.ietf.org/html/rfc5280) and `sha256()` outputs the SHA-256 digest in hexadecimal. For example, `0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private address.
 
-A public address MUST be a valid [Uniform Resource Identifier (URI)](https://tools.ietf.org/html/rfc3986) that meets the following constraints:
-
-- The scheme MUST be determined by the [messaging protocol](#messaging-protocols) and MAY be followed by the [binding](#message-transport-bindings) (with a plus sign separating the two).
-- The address MUST NOT contain a fragment.
+A public address MUST be a valid [Uniform Resource Identifier (URI)](https://tools.ietf.org/html/rfc3986) without query or fragment components.
 
 ## Messaging Protocols
 
@@ -90,8 +87,6 @@ Applications MAY provision [_Parcel Delivery Authorizations_ (PDAs)](rs002-pki.m
 ### Endpoint Messaging Protocol
 
 This protocol establishes the bidirectional channel between two endpoints. The only type of message that this specification defines at this level is the [_parcel_](#parcel).
-
-Public endpoint addresses MUST use the scheme `rne`. For example, `rne://example.com` or `rne+http://example.com` (if using the [PoHTTP binding](rs007-pohttp.md)) are valid public endpoint addresses.
 
 #### Parcel
 
@@ -113,8 +108,6 @@ This protocol establishes the channel between two gateways, and its primary purp
 The two gateways MUST maintain a single session using the [Channel Session Protocol](rs003-key-agreement.md), and all keys used to encrypt payloads in this channel MUST be derived from that session.
 
 Extensions to this document MAY define additional message types and their payloads MAY be unencrypted.
-
-Public gateway addresses MUST use the scheme `rng`. For example, `rng://example.com` and `rng+socket://example.com` (if using the [CoSocket binding](rs004-cosocket.md)) are valid public gateway addresses.
 
 #### Cargo
 
