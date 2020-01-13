@@ -71,7 +71,7 @@ The private address of a node MUST equal to the digest of its public key, comput
 
 A public address MUST be a valid [Uniform Resource Identifier (URI)](https://tools.ietf.org/html/rfc3986) that meets the following constraints:
 
-- The scheme MUST be determined by the [messaging protocol](#messaging-protocols) and MAY be followed by the [binding](#message-transport-bindings) (with a plus sign separating the two). If the binding is absent, [Application-Level Protocol Negotiation](https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation) MUST be done.
+- The scheme MUST be determined by the [messaging protocol](#messaging-protocols) and MAY be followed by the [binding](#message-transport-bindings) (with a plus sign separating the two).
 - The address MUST NOT contain a fragment.
 
 ## Messaging Protocols
