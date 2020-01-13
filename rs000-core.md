@@ -183,7 +183,7 @@ Gateways MUST override any previously queued parcel with the same id. Endpoints 
 
 This specification defines two types of parcel delivery bindings: Local and Internet-based.
 
-#### Internet-based PDC #{internet-pdc}
+#### Internet-based PDC {#internet-pdc}
 
 An Internet-based PDC allows a client node to deliver parcels to a server node over the Internet. The client node MUST be a user gateway, a relaying gateway or a public endpoint, while the server node MUST be a relaying gateway or a public endpoint.
 
