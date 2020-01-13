@@ -7,6 +7,7 @@ permalink: /RS-002
 - Id: RS-002.
 - Status: Working draft.
 - Type: Implementation.
+- Issue tracking label: [`spec-pki`](https://github.com/relaynet/specs/labels/spec-pki).
 
 ## Abstract
 {: .no_toc }

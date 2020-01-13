@@ -7,6 +7,7 @@ permalink: /RS-000
 - Id: RS-000.
 - Status: Working draft.
 - Type: Implementation.
+- Issue tracking label: [`spec-core`](https://github.com/relaynet/specs/labels/spec-core).
 
 ## Abstract
 {: .no_toc }

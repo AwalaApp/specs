@@ -7,6 +7,7 @@ permalink: /RS-018
 - Id: RS-018.
 - Status: Working draft.
 - Type: Implementation.
+- Issue tracking label: [`spec-crypto-algorithms`](https://github.com/relaynet/specs/labels/spec-crypto-algorithms).
 
 ## Abstract
 {: .no_toc }

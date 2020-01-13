@@ -7,6 +7,7 @@ permalink: /RS-007
 - Id: RS-007.
 - Status: Working draft.
 - Type: Implementation.
+- Issue tracking label: [`spec-pohttp`](https://github.com/relaynet/specs/labels/spec-pohttp).
 
 ## Abstract
 {: .no_toc }

@@ -7,6 +7,7 @@ permalink: /RS-019
 - Id: RS-019.
 - Status: Working draft.
 - Type: Informational.
+- Issue tracking label: [`spec-threats`](https://github.com/relaynet/specs/labels/spec-threats).
 
 ## Abstract
 {: .no_toc }

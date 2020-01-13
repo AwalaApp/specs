@@ -7,6 +7,7 @@ permalink: /RS-003
 - Id: RS-003.
 - Status: Working draft.
 - Type: Implementation.
+- Issue tracking label: [`spec-channel-session`](https://github.com/relaynet/specs/labels/spec-channel-session).
 
 ## Abstract
 {: .no_toc }

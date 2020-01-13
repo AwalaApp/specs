@@ -7,7 +7,7 @@ permalink: /RS-001
 - Id: RS-001.
 - Status: Working draft.
 - Type: Implementation.
-- Proof of concept: https://github.com/relaynet/poc/blob/master/core/serialization.js
+- Issue tracking label: [`spec-ramf`](https://github.com/relaynet/specs/labels/spec-ramf).
 
 ## Abstract
 {: .no_toc }
