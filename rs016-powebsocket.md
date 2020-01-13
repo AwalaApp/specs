@@ -12,7 +12,7 @@ permalink: /RS-016
 ## Abstract
 {: .no_toc }
 
-This document describes _PoWebSocket_, a binding for [internal Parcel Delivery Connections (PDC)](rs000-core.md#internal-pdc) on top of the [WebSocket (RFC-6455)](https://tools.ietf.org/html/rfc6455) protocol.
+This document describes _PoWebSocket_, a binding for [local Parcel Delivery Connections (PDC)](rs000-core.md#internal-pdc) on top of the [WebSocket (RFC-6455)](https://tools.ietf.org/html/rfc6455) protocol.
 
 ## Table of contents
 {: .no_toc }
@@ -24,7 +24,7 @@ This document describes _PoWebSocket_, a binding for [internal Parcel Delivery C
 
 PoWebSocket allows an endpoint and its gateway to maintain a long-lived PDC over WebSockets. This binding is functionally equivalent to [PoSocket](rs005-posocket.md), but is based on a standard [Application Layer](https://en.wikipedia.org/wiki/Application_layer) protocol to make integration easier.
 
-As an internal PDC, in addition to allowing both nodes to send parcels in either direction, the endpoint can use this connection to request a certificate from its gateway in order to issue [Parcel Delivery Authorizations (PDAs)](rs002-pki.md#parcel-delivery-authorization-pda) or revoke them with [Parcel Delivery Deauthorizations (PDD)](rs002-pki.md#parcel-delivery-deauthorization-pdd).
+As a local PDC, in addition to allowing both nodes to send parcels in either direction, the endpoint can use this connection to request a certificate from its gateway in order to issue [Parcel Delivery Authorizations (PDAs)](rs002-pki.md#parcel-delivery-authorization-pda) or revoke them with [Parcel Delivery Deauthorizations (PDD)](rs002-pki.md#parcel-delivery-deauthorization-pdd).
 
 The messages sent over WebSockets are serialized with [Protocol Buffers](https://developers.google.com/protocol-buffers/).
 

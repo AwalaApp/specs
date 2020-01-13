@@ -12,7 +12,7 @@ permalink: /RS-007
 ## Abstract
 {: .no_toc }
 
-This document describes PoHTTP, a [parcel delivery binding](rs000-core.md#parcel-delivery-binding) for external Parcel Delivery Connections (PDC) based on HTTP.
+This document describes PoHTTP, a [parcel delivery binding](rs000-core.md#parcel-delivery-binding) for Internet-based Parcel Delivery Connections (PDC) based on HTTP.
 
 ## Table of contents
 {: .no_toc }
@@ -26,11 +26,11 @@ PoHTTP was specifically designed to make it easier for maintainers of existing s
 
 In some cases, it may also be desirable for a relaying gateway to expose an HTTP interface so it can receive parcels from certain endpoints. For example, a Shell script in a legacy system could use `curl` to deliver parcels.
 
-As an external PDC, the only operation supported by this binding is [parcel delivery](#parcel-delivery).
+As an Internet-based PDC, the only operation supported by this binding is [parcel delivery](#parcel-delivery).
 
 ## Binding hint
 
-The [hint](rs000-core.md#addressing) for this binding MUST be `https`. For example, `rne+https://api.example.com/relaynet` would be a valid [public endpoint](rs000-core.md#endpoint-messaging-protocol) address and it would correspond to the HTTP URL `https://api.example.com/relaynet`. (Per RS-000, external PDCs are required to use TSL or equivalent.)
+The [hint](rs000-core.md#addressing) for this binding MUST be `https`. For example, `rne+https://api.example.com/relaynet` would be a valid [public endpoint](rs000-core.md#endpoint-messaging-protocol) address and it would correspond to the HTTP URL `https://api.example.com/relaynet`. (Per RS-000, Internet-based PDCs are required to use TSL or equivalent.)
 
 ## Parcel Delivery
 

@@ -11,7 +11,7 @@ permalink: /RS-009
 
 ## Abstract
 
-This document describes PogRPC, a [parcel delivery binding](rs000-core.md#parcel-delivery-binding) for external Parcel Delivery Connections (PDC) based on [gRPC](https://grpc.io/).
+This document describes PogRPC, a [parcel delivery binding](rs000-core.md#parcel-delivery-binding) for Internet-based Parcel Delivery Connections (PDC) based on [gRPC](https://grpc.io/).
 
 ## Open Questions
 

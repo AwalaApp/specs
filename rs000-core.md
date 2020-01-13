@@ -66,7 +66,7 @@ Note that defining same-layer interactions at the application and relay layers i
 
 This document only defines [point-to-point](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PointToPointChannel.html) message delivery.
 
-Each endpoint and gateway in Relaynet MUST have a unique, opaque address known as _private address_. It MAY also have a unique internet address known as _public address_ if the node can be reached by host/port. A node is public if it has a public address, otherwise it is private.
+Each endpoint and gateway in Relaynet MUST have a unique, opaque address known as _private address_. It MAY also have a unique Internet address known as _public address_ if the node can be reached by host/port. A node is public if it has a public address, otherwise it is private.
 
 The private address of a node MUST equal to the digest of its public key, computed as `"0" || sha256(publicKey)`, where the `0` (zero) prefix denotes the version of the address format defined in this document, `||` denotes the concatenation of two strings, `publicKey` is the DER encoding of the `SubjectPublicKeyInfo` structure from [RFC 5280](https://tools.ietf.org/html/rfc5280) and `sha256()` outputs the SHA-256 digest in hexadecimal. For example, `0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private address.
 
@@ -175,29 +175,29 @@ Bindings MAY extend this specification, but they MUST NOT override it.
 
 ### Parcel Delivery Binding
 
-This is a protocol that establishes a _Parcel Delivery Connection_ (PDC) between an endpoint and a gateway, with the primary purpose of exchanging parcels bidirectionally.
+This is a protocol that establishes a _Parcel Delivery Connection_ (PDC) between an endpoint and a gateway, or between two gateways, with the primary purpose of exchanging parcels bidirectionally.
 
 The node delivering a parcel MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the parcel is safely stored -- Consequently, if the parcel is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
 
 Gateways MUST override any previously queued parcel with the same id. Endpoints can use this to replace stale messages in the same relay -- For example, an application sending a message to replace the user's email address could use this to discard any previous message to replace this value.
 
-Each binding MUST support _internal_ or _external_ PDCs, or both.
+This specification defines two types of parcel delivery bindings: Local and Internet-based.
 
-#### External PDC
+#### Internet-based PDC #{internet-pdc}
 
-A PDC is _external_ if the gateway is a relaying gateway. Typically, both nodes will be public, but in some cases the relaying gateway may be private. In these connections,
+An Internet-based PDC allows a client node to deliver parcels to a server node over the Internet. The client node MUST be a user gateway, a relaying gateway or a public endpoint, while the server node MUST be a relaying gateway or a public endpoint.
 
-- Either node MAY act as client or server.
-- The gateway and the endpoint MAY only deliver parcels to each other and they MUST NOT attempt to collect parcels from each other. In other words, the endpoint has to initiate a connection to be able to send parcels to the gateway, whilst the  gateway has to initiate a connection to be able to send parcels to the endpoint.
-- The server MUST NOT require client authentication, but they MAY still refuse to serve suspicious and/or ill-behaved clients.
-- The gateway SHOULD include its address when it delivers parcels to the endpoint, but only if the gateway is able to collect parcels for the endpoint that sent the initial parcel.
-- The connection MUST be closed as soon as all parcels have been delivered.
+The server MUST NOT require client authentication, but it MAY still refuse to serve suspicious and/or ill-behaved clients.
 
-External PDCs MUST always use TLS or equivalent in non-TCP connections.
+If the client is a user or relaying gateway, it SHOULD include the Internet address of the corresponding relaying gateway if that gateway is able to collect parcels for the endpoint that sent the parcel.
 
-#### Internal PDC
+The client MUST close the connection as soon as all parcels have been delivered.
 
-A PDC is _internal_ if the gateway is a user gateway. Typically, both nodes will be private and run on the same computer, but they might also be public and run on different computers in a private network. In addition to both nodes being able to send parcels to each other, the endpoint MAY also:
+Internet PDCs MUST always use TLS or equivalent in non-TCP connections.
+
+#### Local PDC
+
+A local PDC connects an endpoint and its user gateway. Typically, both nodes will be private and run on the same computer, but they might also be public and run on different computers in a private network or on the Internet. In addition to both nodes being able to send parcels to each other, the endpoint MAY also:
 
 - Request a certificate from the gateway, so the endpoint can issue PDAs.
 - Send PDDs to the gateway, to revoke previously issued PDAs.
