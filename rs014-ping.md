@@ -41,9 +41,9 @@ This service employs the following messages.
 
 This is the message that initiates a transaction. Its type MUST be `application/vnd.relaynet.ping-v1.ping`, and its payload MUST be a binary stream with the following structure:
 
-1. The ping id: A random sequence of exactly 32 octets.
-1. The [Parcel Delivery Authorization](rs002-pki.md#parcel-delivery-authorization-pda) (PDA) to use to reply with a pong message.
+1. The ping id: A sequence of exactly 36 octets. It SHOULD be a UUID4 value.
+1. The DER serialization of the [Parcel Delivery Authorization](rs002-pki.md#parcel-delivery-authorization-pda) (PDA) to use to reply with a pong message.
 
 ### Pong
 
-This message MUST be sent by the application receiving a ping message. Its type MUST be `application/vnd.relaynet.ping.pong`. The payload MUST be a sequence of 32 octets representing the ping id.
+This message MUST be sent by the application receiving a ping message. Its type MUST be `application/vnd.relaynet.ping-v1.pong`. The payload MUST be a sequence of 36 octets representing the ping id.
