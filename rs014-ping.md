@@ -1,7 +1,7 @@
 ---
 permalink: /RS-014
 ---
-# Ping Service
+# Ping Service, Version 1
 {: .no_toc }
 
 - Id: RS-014.
@@ -39,7 +39,7 @@ This service employs the following messages.
 
 ### Ping
 
-This is the message that initiates a transaction. Its type MUST be `application/vnd.relaynet.ping.ping`, and its payload MUST be a binary stream with the following structure:
+This is the message that initiates a transaction. Its type MUST be `application/vnd.relaynet.ping-v1.ping`, and its payload MUST be a binary stream with the following structure:
 
 1. The ping id: A random sequence of exactly 32 octets.
 1. The [Parcel Delivery Authorization](rs002-pki.md#parcel-delivery-authorization-pda) (PDA) to use to reply with a pong message.
