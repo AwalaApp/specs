@@ -39,7 +39,7 @@ This service employs the following messages.
 
 ### Ping
 
-This is the message that initiates a transaction. Its type MUST be `application/vnd.relaynet.ping-v1.ping`, and its payload MUST be a binary stream with the following structure:
+This is the message that initiates a transaction. Its type MUST be `application/vnd.relaynet.ping-v1.ping`, and its payload MUST comply with the following byte sequence ([little-endian](https://en.wikipedia.org/wiki/Endianness)):
 
 1. The ping id: A sequence of exactly 36 octets. It SHOULD be a UUID4 value.
 1. The DER serialization of the [Parcel Delivery Authorization](rs002-pki.md#parcel-delivery-authorization-pda) (PDA) to use to reply with a pong message. This value MUST be length-prefixed with a 14-bit unsigned integer (2 octets), so the maximum length of the DER-encoded PDA is 16 KiB.
