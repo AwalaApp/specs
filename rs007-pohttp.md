@@ -33,7 +33,7 @@ As an Internet-based PDC, the only operation supported by this binding is [parce
 To deliver each parcel, the client MUST make a `POST` request to the HTTP URL corresponding to the node address, with the parcel as the body and the following headers:
 
 - `Content-Type` MUST be set to `application/vnd.relaynet.parcel`.
-- If the client is a relaying gateway, `X-Relaynet-Gateway` MUST provide the target endpoint with its address using the request header `X-Relaynet-Gateway`. For example, `X-Relaynet-Gateway: http://gateway.humanitarian.org`.
+- If the client is a relaying gateway, `X-Relaynet-Gateway` MUST provide the target endpoint with its address using the request header `X-Relaynet-Gateway`. For example, `X-Relaynet-Gateway: https://gateway.humanitarian.org`.
 
 The server MUST respond with one of the following status codes:
 
