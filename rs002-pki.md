@@ -164,6 +164,16 @@ A gateway MAY revoke its own certificate by issuing a GCR message to its peer ga
 
 GCRs MUST be sent in the payload plaintext of a cargo, along with parcels, in order to prevent a malicious relayer from identifying and dropping such messages.
 
+## X.509 Extensions
+
+### Authority Key Identifier
+
+Except for self-issued certificates, all certificates MUST include the Authority Key Identifier extension as defined in the X.509 v3 specification.
+
+### Subject Key Identifier
+
+All certificates MUST include the Subject Key Identifier extension as defined in the X.509 v3 specification.
+
 ## Security and Scalability Considerations
 
 An endpoint or gateway implemented as a distributed system SHOULD use different keys (and therefore different certificates) for signing and decrypting, as supported by this specification. This might not be necessary when the endpoint/gateway is a monolith.
