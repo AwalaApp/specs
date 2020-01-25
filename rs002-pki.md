@@ -28,6 +28,8 @@ The _Distinguished Name_ MUST only contain the _Common Name_ (CN) attribute, and
 
 A certificate MUST NOT be valid before its issuer is valid or after its issuer expires.
 
+The serial number of the certificate MUST NOT be negative (in order to make it easier to convert between little endian and big endian representations).
+
 ## Certificate Types
 
 Endpoints and gateways can use the following types of certificates.
