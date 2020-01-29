@@ -140,6 +140,8 @@ The recipient Y MUST follow the following process when receiving a subsequent me
 
 The recipient of the initial message MUST sign its initial DH key K<sub>b,1</sub><sup>public</sup> as an X.509 v3 certificate compliant with [RFC 3279](https://tools.ietf.org/html/rfc3279) -- in particular, Section 2.3.3 when using DH or Section 2.3.5 when using ECDH. Additionally, implementations MUST comply with [RFC 5480](https://tools.ietf.org/html/rfc5480) when using ECDH.
 
+The resulting certificate MUST NOT be allowed to sign other certificates. Consequently, the `isCA` flag in its Basic Constraints extension MUST be disabled.
+
 The validity period of the certificate MUST reflect the constraints imposed by this specification.
 
 ## CMS EnvelopedData Representation
