@@ -20,7 +20,7 @@ This document describes how to issue, distribute, store, revoke and interpret X.
 1. TOC
 {:toc}
 
-## Basic Constraints and Attributes
+## General Constraints and Attributes
 
 Certificates in this PKI profile MUST be represented as [X.509 v3 certificates](https://www.itu.int/rec/T-REC-X.509/en).
 
@@ -36,20 +36,22 @@ Endpoints and gateways can use the following types of certificates.
 
 ### Endpoint Certificate
 
-An endpoint certificate MUST be issued by itself (a self-issued certificate) or a peer endpoint when the certificate is a [_parcel delivery authorization_](#parcel-delivery-authorization-pda).
+An endpoint certificate MUST be issued by one of the following Certificate Authorities (CAs):
+
+- Itself, if it is a public endpoint.
+- Its local gateway, if it is a private endpoint.
+- Another endpoint, resulting in a [_parcel delivery authorization_](#parcel-delivery-authorization-pda).
 
 ### Parcel Delivery Authorization (PDA)
 
-Given Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its relaying gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a certificate called _Parcel Delivery Authorization_ (PDA).
+Given private Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its relaying gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a certificate called _Parcel Delivery Authorization_ (PDA). The endpoint and its gateways MUST refuse parcels where the sender certificate is not a valid PDA.
 
-If Endpoint A is private, the endpoint and its gateways MUST refuse parcels where the sender certificate is not a valid PDA.
+The certification path of a PDA is formed of the following sequence (from end entity to root):
 
-The chain of a PDA is formed of the following sequence (from leaf to root):
-
-1. (Optional) Endpoint B's _signature-only certificate_. A certificate that MUST only be used to sign messages in the [endpoint channel](rs000-core.md#endpoint-messaging-protocol) (e.g., parcels) on behalf of Endpoint B.
-1. Endpoint B's certificate.
-1. (Optional) Endpoint A's _signature-only certificate_. A certificate that MUST only be used to issue PDAs.
+1. Endpoint B's certificate, issued by Endpoint A.
 1. Endpoint A's certificate, issued by its [gateway](#gateway-certificate).
+1. Endpoint A's relaying gateway.
+1. Endpoint A's local gateway.
 
 Gateways MUST refuse PDAs whose issuing endpoint's _Common Name_ does not match that of the recipient of the parcel.
 
@@ -83,42 +85,12 @@ Where, `limit` specifies how many parcels can be sent within a given number of s
 
 ### Gateway Certificate
 
-A gateway's certificate MUST be either self-issued or issued by its peer gateway, forming the chain below (from leaf to root):
+Given Gateway A and Gateway B, Gateway A's certificate MUST be either self-issued or issued by Gateway B, forming the certification path below (from end entity to root):
 
-1. (Optional) The gateway's _signature-only certificate_. A certificate that MUST only be used to issue [endpoint certificates](#endpoint-certificate).
-1. The gateway's certificate.
-1. (Optional) The peer gateway's _signature-only certificate_. A certificate that MUST only be used to issue gateway certificates.
-1. (Optional) The peer gateways's certificate.
+1. Gateway A's certificate, issued by Gateway B.
+1. One or more certificates representing the certificate chain for Gateway B.
 
 A certificate issued by another gateway MUST NOT be used to issue additional gateway certificates.
-
-## Certificate Type Extension
-
-Every certificate in this PKI MUST use the critical extension _PDA Certificate Type_ to specify its type.
-
-The ASN.1 Object Identifier of this extension is defined as follows:
-
-```
-PDACertTypeId OBJECT IDENTIFIER ::= {
-    itu-t(0) identified-organization(4) etsi(0) reserved(127) etsi-identified-organization(0)
-        relaycorp(17) relaynet(0) pki(0) 1
-    }
-```
-
-Whilst its value is defined as follows:
-
-```
-PDACertType ::= ENUMERATED {
-    senderSignOnly        (0),   -- A sender endpoint's signature-only certificate
-    sender                (1),   -- A sender endpoint's certificate
-    recipientSignOnly     (2),   -- A recipient endpoint's signature-only certificate
-    recipient             (3),   -- A recipient endpoint's certificate
-    gatewaySignOnly       (4),   -- A gateway's signature-only certificate
-    gateway               (5),   -- A gateway's certificate
-    peerGatewaySignOnly   (6),   -- A peer gateway's signature-only certificate
-    peerGateway           (7)    -- A peer gateway's certificate
-    }
-```
 
 ## Certificate and Key Rotation
 
@@ -168,6 +140,17 @@ GCRs MUST be sent in the payload plaintext of a cargo, along with parcels, in or
 
 ## X.509 Extensions
 
+### Basic Constraints
+
+Each certificate MUST have its Basic Constraints extension as defined in the X.509 v3. The extension MUST be marked as critical and its attributes MUST be set as follows depending on the type of certificate:
+
+| Certificate type | `cA` | `pathLenConstraint` |
+| --- | --- | --- |
+| Self-issued gateway certificate | `true` | `3` |
+| Non-self-issued gateway certificate | `true` | `2` |
+| Endpoint certificate (excluding PDAs) | `true` | `1` |
+| PDA | `false` | `0` |
+
 ### Authority Key Identifier
 
 Except for self-issued certificates, all certificates MUST include the Authority Key Identifier extension as defined in the X.509 v3 specification.
@@ -175,7 +158,3 @@ Except for self-issued certificates, all certificates MUST include the Authority
 ### Subject Key Identifier
 
 All certificates MUST include the Subject Key Identifier extension as defined in the X.509 v3 specification.
-
-## Security and Scalability Considerations
-
-An endpoint or gateway implemented as a distributed system SHOULD use different keys (and therefore different certificates) for signing and decrypting, as supported by this specification. This might not be necessary when the endpoint/gateway is a monolith.
