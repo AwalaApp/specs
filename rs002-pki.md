@@ -44,16 +44,16 @@ An endpoint certificate MUST be issued by one of the following Certificate Autho
 
 ### Parcel Delivery Authorization (PDA)
 
-Given private Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its relaying gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a certificate called _Parcel Delivery Authorization_ (PDA). The endpoint and its gateways MUST refuse parcels where the sender certificate is not a valid PDA.
+Given private Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its relaying gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a special endpoint certificate called _Parcel Delivery Authorization_ (PDA).
 
 The certification path of a PDA is formed of the following sequence (from end entity to root):
 
-1. Endpoint B's certificate, issued by Endpoint A.
-1. Endpoint A's certificate, issued by its [gateway](#gateway-certificate).
+1. Endpoint B's certificate.
+1. Endpoint A's certificate.
 1. Endpoint A's relaying gateway.
 1. Endpoint A's local gateway.
 
-Gateways MUST refuse PDAs whose issuing endpoint's _Common Name_ does not match that of the recipient of the parcel.
+When relaying parcels where the recipient is a private endpoint, gateways MUST refuse those where the certificate for the sender of the parcel was not issued by the target endpoint. In other words, the Common Name of the second certificate MUST match the recipient of the RAMF-serialized parcel.
 
 #### Rate Limiting Extension
 
