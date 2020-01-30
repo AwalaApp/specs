@@ -142,7 +142,7 @@ GCRs MUST be sent in the payload plaintext of a cargo, along with parcels, in or
 
 ### Basic Constraints
 
-Each certificate MUST have its Basic Constraints extension as defined in the X.509 v3. The extension MUST be marked as critical and its attributes MUST be set as follows depending on the type of certificate:
+Each certificate MUST have its Basic Constraints extension as defined in the X.509 v3 specification. The extension MUST be marked as critical and its attributes MUST be set as follows depending on the type of certificate:
 
 | Certificate type | `cA` | `pathLenConstraint` |
 | --- | --- | --- |
