@@ -50,8 +50,8 @@ The certification path of a PDA is formed of the following sequence (from end en
 
 1. Endpoint B's certificate.
 1. Endpoint A's certificate.
-1. Endpoint A's relaying gateway.
 1. Endpoint A's local gateway.
+1. Endpoint A's relaying gateway.
 
 When relaying parcels where the recipient is a private endpoint, gateways MUST refuse those where the certificate for the sender of the parcel was not issued by the target endpoint. In other words, the Common Name of the second certificate MUST match the recipient of the RAMF-serialized parcel.
 
