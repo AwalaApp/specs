@@ -12,7 +12,7 @@ permalink: /RS-003
 ## Abstract
 {: .no_toc }
 
-This document describes an asynchronous key agreement and management protocol to establish and maintain secure sessions in bidirectional [messaging channels](rs000-core.md#messaging-protocols). Its purpose is to add perfect forward secrecy, [future secrecy](https://signal.org/blog/advanced-ratcheting/) and replay attack mitigation to [endpoint](rs000-core.md#endpoint-messaging-protocol) and [gateway channels](rs000-core.md#gateway-messaging-protocol).
+This document describes an asynchronous key agreement and management protocol to establish and maintain secure sessions in bidirectional [messaging channels](rs000-core.md#messaging-protocols). Its purpose is to add perfect forward secrecy, [future secrecy](https://signal.org/blog/advanced-ratcheting/) and replay attack mitigation to [endpoint](rs000-core.md#endpoint-messaging-protocol) and [gateway channels](rs000-core.md#gateway-messaging-protocol). It also extends [RS-002](./rs002-pki.md) with a new certificate type.
 
 ## Table of contents
 {: .no_toc }
@@ -138,9 +138,9 @@ The recipient Y MUST follow the following process when receiving a subsequent me
 
 ## X.509 Certificate for Initial DH Key {#x509-certificate}
 
-The recipient of the initial message MUST sign its initial DH key K<sub>b,1</sub><sup>public</sup> as an X.509 v3 certificate compliant with [RFC 3279](https://tools.ietf.org/html/rfc3279) -- in particular, Section 2.3.3 when using DH or Section 2.3.5 when using ECDH. Additionally, implementations MUST comply with [RFC 5480](https://tools.ietf.org/html/rfc5480) when using ECDH.
+The recipient of the initial message MUST sign its initial DH key K<sub>b,1</sub><sup>public</sup> as an X.509 v3 certificate compliant with both [RS-002](./rs002-pki.md) and [RFC 3279](https://tools.ietf.org/html/rfc3279) (in particular, Section 2.3.3 when using DH or Section 2.3.5 when using ECDH). Additionally, implementations MUST comply with [RFC 5480](https://tools.ietf.org/html/rfc5480) when using ECDH.
 
-The resulting certificate MUST NOT be allowed to sign other certificates. Consequently, the `isCA` flag in its Basic Constraints extension MUST be disabled.
+The resulting certificate MUST NOT be able to issue other certificates. Consequently, the Basic Constraints extension MUST have the attributes `cA` set to `false` and `pathLenConstraint` set to `0`.
 
 The validity period of the certificate MUST reflect the constraints imposed by this specification.
 
