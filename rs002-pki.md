@@ -146,9 +146,9 @@ Each certificate MUST have its Basic Constraints extension as defined in the X.5
 
 | Certificate type | `cA` | `pathLenConstraint` |
 | --- | --- | --- |
-| Self-issued gateway certificate | `true` | `3` |
-| Non-self-issued gateway certificate | `true` | `2` |
-| Endpoint certificate (excluding PDAs) | `true` | `1` |
+| Self-issued gateway certificate | `true` | `2` |
+| Non-self-issued gateway certificate | `true` | `1` |
+| Endpoint certificate (excluding PDAs) | `true` | `0` |
 | PDA | `false` | `0` |
 
 ### Authority Key Identifier
