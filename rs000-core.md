@@ -229,11 +229,7 @@ A user gateway MAY require the relayer to provide a CCA from the relaying gatewa
 
 The relayer SHOULD deliver the cargo and then wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
 
-When the connection spans different computers, the relayer MUST initiate a handshake with the gateway by having it sign a nonce with each Relaynet PKI key it claims to have, as shown in the following sequence diagram. (The CRC could be local to a computer if, for example, the cargo is being directly saved to and retrieved from a storage media.)
-
-![](diagrams/rs000/crc-handshake-sequence.png)
-
-Note that relayers are not assigned Relaynet PKI certificates, but per the requirements above for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. In such cases, the relayer MUST provide a valid client- or server-side certificate when it acts as client or server, respectively, and the gateway MUST enforce any authentication-related constraints placed by its peer gateway in the CCA (e.g., which Certificate Authorities should be regarded valid).
+Note that relayers are not assigned Relaynet PKI certificates, but per the requirements above for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. In such cases, the relayer MUST provide a valid client- or server-side certificate when it acts as client or server, respectively.
 
 ## Open Questions
 
