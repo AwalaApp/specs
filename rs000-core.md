@@ -217,7 +217,7 @@ The gateway MUST NOT start delivering parcels until the endpoint has signalled t
 
 This is a protocol that establishes a _Cargo Relay Connection_ (CRC) between a gateway and a relayer with the primary purpose of exchanging cargo bidirectionally.
 
-The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are usually two hops in a relay: One from the origin gateway to the relayer, and another from the relayer to the target gateway. A relaying gateway receiving cargo for another gateway MAY _forward_ it to its target gateway, which would involve an extra hop.
+The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are at least two hops in a relay: One from the origin gateway to the relayer, and another from the relayer to the target gateway.
 
 Completing one relay MAY involve hops with different bindings. For example, the CRC between a user gateway and a relayer could use [CoSocket](rs004-cosocket.md), whilst the CRC between the relayer and the relaying gateway could use [CogRPC](rs008-cogrpc.md).
 
