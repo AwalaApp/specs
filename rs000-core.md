@@ -144,6 +144,29 @@ message ParcelDeliveryDeauthorization {
 }
 ```
 
+#### Parcel Collection Acknowledgement (PCA) {#pca}
+
+A Parcel Collection Acknowledgement (PCA) is a RAMF-serialized message used to signal to the peer gateway that the specified parcel(s) has been received and safely stored. The gateway that sent the original parcels MAY permanently delete such parcels at that point.
+
+The payload plaintext MUST be serialized with [Protocol Buffers v3](https://developers.google.com/protocol-buffers/docs/proto3) using the `ParcelCollectionAcknowledgement` message as defined below:
+
+```proto
+syntax = "proto3";
+
+package relaynet.messaging.gateway;
+
+message ParcelCollectionAcknowledgement {
+    repeated CollectedParcel parcel = 1;
+}
+
+message CollectedParcel {
+    string origin_endpoint_private_address = 1;
+    string parcel_id = 2;
+}
+```
+
+`origin_endpoint_private_address` represents the private node address of the endpoint sending the parcel and `parcel_id` represents the RAMF message id of said parcel.
+
 ## Message Transport Bindings
 
 A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) in Relaynet. [Parcel delivery bindings](#parcel-delivery-binding) define the communication between endpoints and gateways, and [cargo relay bindings](#cargo-relay-binding) define the communication between gateways and relayers. This document describes the requirements applicable to all bindings, but does not define any concrete binding.
