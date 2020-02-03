@@ -74,7 +74,7 @@ The following concrete types have been reserved by other Relaynet specifications
 - `0x10` for [certificate rotation](rs002-pki.md#certificate-and-key-rotation).
 - `0x11` for [gateway certificate revocation](rs002-pki.md#gateway-certificate-revocation-gcr).
 - `0x43` ("C" in ASCII) for [cargoes](rs000-core.md#cargo).
-- `0x44` for [cargo collection authorizations](rs000-core.md#cargo-collection-authorization-cca).
+- `0x44` for [cargo collection authorizations](rs000-core.md#cca).
 - `0x50` ("P" in ASCII) for [parcels](rs000-core.md#parcel).
 
 ## Open Issues

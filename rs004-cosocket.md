@@ -1,11 +1,12 @@
 ---
+nav_exclude: true
 permalink: /RS-004
 ---
 # Cargo Relay over TCP/Unix Sockets (CoSocket)
 {: .no_toc }
 
 - Id: RS-004.
-- Status: Working draft.
+- Status: Abandoned.
 - Type: Implementation.
 - Proof of concept: https://github.com/relaynet/poc/tree/master/CoSocket
 
