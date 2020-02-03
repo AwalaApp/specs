@@ -3,9 +3,9 @@ syntax = "proto3";
 package relaynet.cogrpc;
 
 service CargoRelay {
-    rpc DeliverCargo (stream CargoDelivery) returns (stream CargoDeliveryAck);
+    rpc CollectCargo (stream CargoDelivery) returns (stream CargoDeliveryAck);
 
-    rpc CollectCargo (stream CargoDeliveryAck) returns (stream CargoDelivery);
+    rpc DeliverCargo (stream CargoDeliveryAck) returns (stream CargoDelivery);
 }
 
 message CargoDelivery {
