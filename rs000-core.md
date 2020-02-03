@@ -221,14 +221,11 @@ The action of transmitting a cargo over a CRC is called _hop_, and the action of
 
 Completing one relay MAY involve hops with different bindings. For example, the CRC between a user gateway and a relayer could use [CoSocket](rs004-cosocket.md), whilst the CRC between the relayer and the relaying gateway could use [CogRPC](rs008-cogrpc.md).
 
-The node sending a cargo MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the cargo is safely stored -- Consequently, if the cargo is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
+The gateway sending a cargo MUST NOT remove it until the target gateway has acknowledged its receipt. The acknowledgment MAY be received via a CRC or an Internet-based PDC (once the two gateways can communicate directly over the Internet). The recipient MUST send the acknowledgement after the cargo is safely stored -- Consequently, if the cargo is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
 
 A gateway MAY provide the relayer with a CCA so that the relayer can collect cargo from its peer gateway.
 
-A user gateway MAY require the relayer to provide a CCA from the relaying gateway, but a relaying gateway MUST require at least one CCA because:
-
-- The relaying gateway needs the user gateway's certificate to identify the parcels that belong to the user gateway (user gateway's certificate is part of the PDA).
-- The relaying gateway could not delete a cargo after delivering it if it does not have some guarantee that the cargo could reach its destination.
+A user gateway MAY require the relayer to provide a CCA from the relaying gateway, but a relaying gateway MUST require at least one CCA because it needs the user gateway's certificate to identify the parcels that belong to the user gateway (the user gateway's certificate is part of the PDA certification chain).
 
 The relayer SHOULD deliver the cargo and then wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
 
