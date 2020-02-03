@@ -118,14 +118,11 @@ The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encap
 1. A 32-bit unsigned integer (4 octets) representing the length of the parcel.
 1. The parcel serialized in the RAMF.
 
-#### Cargo Collection Authorization (CCA)
+#### Cargo Collection Authorization (CCA) {#cca}
 
 A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. Its concrete message type is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
 
-The payload ciphertext MUST be encrypted. The corresponding plaintext MUST contain the following information:
-
-- Any [_Parcel Delivery Deauthorizations_ (PDD)](rs002-pki.md#parcel-delivery-deauthorization-pdd) issued by Gateway A's endpoints or Gateway A itself to revoke [PDAs](rs002-pki.md#parcel-delivery-authorization-pda).
-- Binding-level constraints to authenticate the relayer, like expecting a specific _Certificate Authority_ in its TLS certificate chain (or equivalent). Gateway B MUST close the connection if these constraints are not met.
+The payload ciphertext MUST be encrypted. The corresponding plaintext MAY contain any [_Parcel Delivery Deauthorizations_ (PDD)](rs002-pki.md#parcel-delivery-deauthorization-pdd) issued by Gateway A's endpoints or Gateway A itself to revoke [PDAs](rs002-pki.md#parcel-delivery-authorization-pda).
 
 The payload plaintext MUST be serialized with [Protocol Buffers v3](https://developers.google.com/protocol-buffers/docs/proto3) using the `CargoCollectionAuthorization` message as defined below:
 
@@ -134,15 +131,10 @@ syntax = "proto3";
 
 package relaynet.messaging.gateway;
 
-import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
 
 message CargoCollectionAuthorization {
     repeated ParcelDeliveryDeauthorization parcel_delivery_deauthorizations = 1;
-
-    // The key MUST be the name of the binding (lower case) and the value MUST
-    // be defined by the binding.
-    map<string, google.protobuf.Any> relayer_constraints = 2;
 }
 
 message ParcelDeliveryDeauthorization {
@@ -151,6 +143,29 @@ message ParcelDeliveryDeauthorization {
     google.protobuf.Timestamp expiry = 3;
 }
 ```
+
+#### Parcel Collection Acknowledgement (PCA) {#pca}
+
+A Parcel Collection Acknowledgement (PCA) is a RAMF-serialized message used to signal to the peer gateway that the specified parcel(s) has been received and safely stored; its concrete message type is the octet `0x51`. The gateway that sent the original parcels MAY permanently delete such parcels at that point.
+
+The payload plaintext MUST be serialized with [Protocol Buffers v3](https://developers.google.com/protocol-buffers/docs/proto3) using the `ParcelCollectionAcknowledgement` message as defined below:
+
+```proto
+syntax = "proto3";
+
+package relaynet.messaging.gateway;
+
+message ParcelCollectionAcknowledgement {
+    repeated CollectedParcel parcel = 1;
+}
+
+message CollectedParcel {
+    string origin_endpoint_private_address = 1;
+    string parcel_id = 2;
+}
+```
+
+`origin_endpoint_private_address` represents the private node address of the endpoint sending the parcel and `parcel_id` represents the RAMF message id of said parcel.
 
 ## Message Transport Bindings
 
@@ -217,26 +232,19 @@ The gateway MUST NOT start delivering parcels until the endpoint has signalled t
 
 This is a protocol that establishes a _Cargo Relay Connection_ (CRC) between a gateway and a relayer with the primary purpose of exchanging cargo bidirectionally.
 
-The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are usually two hops in a relay: One from the origin gateway to the relayer, and another from the relayer to the target gateway. A relaying gateway receiving cargo for another gateway MAY _forward_ it to its target gateway, which would involve an extra hop.
+The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are at least two hops in a relay: One from the origin gateway to the relayer, and another from the relayer to the target gateway.
 
 Completing one relay MAY involve hops with different bindings. For example, the CRC between a user gateway and a relayer could use [CoSocket](rs004-cosocket.md), whilst the CRC between the relayer and the relaying gateway could use [CogRPC](rs008-cogrpc.md).
 
-The node sending a cargo MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the cargo is safely stored -- Consequently, if the cargo is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
+The gateway sending a cargo MUST NOT remove it until the target gateway has acknowledged its receipt. The acknowledgment MAY be received via a CRC or an Internet-based PDC (once the two gateways can communicate directly over the Internet). The recipient MUST send the acknowledgement after the cargo is safely stored -- Consequently, if the cargo is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
 
 A gateway MAY provide the relayer with a CCA so that the relayer can collect cargo from its peer gateway.
 
-A user gateway MAY require the relayer to provide a CCA from the relaying gateway, but a relaying gateway MUST require at least one CCA because:
-
-- The relaying gateway needs the user gateway's certificate to identify the parcels that belong to the user gateway (user gateway's certificate is part of the PDA).
-- The relaying gateway could not delete a cargo after delivering it if it does not have some guarantee that the cargo could reach its destination.
+A user gateway MAY require the relayer to provide a CCA from the relaying gateway, but a relaying gateway MUST require at least one CCA because it needs the user gateway's certificate to identify the parcels that belong to the user gateway (the user gateway's certificate is part of the PDA certification chain).
 
 The relayer SHOULD deliver the cargo and then wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
 
-When the connection spans different computers, the relayer MUST initiate a handshake with the gateway by having it sign a nonce with each Relaynet PKI key it claims to have, as shown in the following sequence diagram. (The CRC could be local to a computer if, for example, the cargo is being directly saved to and retrieved from a storage media.)
-
-![](diagrams/rs000/crc-handshake-sequence.png)
-
-Note that relayers are not assigned Relaynet PKI certificates, but per the requirements above for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. In such cases, the relayer MUST provide a valid client- or server-side certificate when it acts as client or server, respectively, and the gateway MUST enforce any authentication-related constraints placed by its peer gateway in the CCA (e.g., which Certificate Authorities should be regarded valid).
+Note that relayers are not assigned Relaynet PKI certificates, but per the requirements above for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. In such cases, the relayer MUST provide a valid client- or server-side certificate when it acts as client or server, respectively.
 
 ## Open Questions
 

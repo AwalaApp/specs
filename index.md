@@ -13,7 +13,7 @@ The following specifications provide the foundation of the network and are there
 - [RS-001 (RAMF)](rs001-ramf.md) defines the _Relaynet Abstract Message Format_, an efficient binary format used to serialize messages.
 - [RS-002 (Relaynet PKI)](rs002-pki.md) defines how to use the certificates for endpoints and gateways.
 - [RS-003 (Key Agreement)](rs003-key-agreement.md) defines the key agreement protocol to establish and protect sessions.
-- [RS-004 (CoSocket)](rs004-cosocket.md) is the part of the technology that helps transport the data using alternative methods like sneakernets.
+- [RS-008 (CogRPC)](rs008-cogrpc.md) is the part of the technology that helps transport the data using alternative methods like sneakernets.
 - [RS-016 (PoWebSocket)](rs016-powebsocket.md) defines a protocol that connects applications to the Relaynet network.
 - [RS-007 (PoHTTP)](rs007-pohttp.md) defines a protocol that connects Relaynet to the Internet.
 - [RS-018 (Cryptographic Algorithms)](rs018-algorithms.md) defines the cryptographic algorithms that can be used in Relaynet.

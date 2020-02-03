@@ -1,8 +1,0 @@
-# Paste on https://sequencediagram.org/
-
-note over Relayer: Generate nonce
-Relayer->Gateway: Challenge to sign nonce
-note over Gateway: Sign nonce with each key
-Gateway->Relayer: Respond with nonce signatures
-note over Relayer: Verify each signature
-Relayer->Gateway: Completed

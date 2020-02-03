@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package relaynet.cogrpc;
+
+service CargoRelay {
+    rpc CollectCargo (stream CargoDelivery) returns (stream CargoDeliveryAck);
+
+    rpc DeliverCargo (stream CargoDeliveryAck) returns (stream CargoDelivery);
+}
+
+message CargoDelivery {
+    string id = 1;
+    bytes cargo = 2;
+}
+
+message CargoDeliveryAck {
+    string id = 1;
+}
