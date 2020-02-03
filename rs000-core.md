@@ -118,7 +118,7 @@ The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encap
 1. A 32-bit unsigned integer (4 octets) representing the length of the parcel.
 1. The parcel serialized in the RAMF.
 
-#### Cargo Collection Authorization (CCA)
+#### Cargo Collection Authorization (CCA) {#cca}
 
 A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. Its concrete message type is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
 

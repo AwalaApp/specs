@@ -70,7 +70,7 @@ This packet is sent by the relayer when the signatures were successfully verifie
 
 #### Cargo Collection Request
 
-This packet encapsulates a [Cargo Collection Authorization (CCA)](rs000-core.md#cargo-collection-authorization-cca) and represents a request to collect cargo for a specific gateway.
+This packet encapsulates a [Cargo Collection Authorization (CCA)](rs000-core.md#cca) and represents a request to collect cargo for a specific gateway.
 
 A relayer MUST send this packet to a gateway to indicate it is ready to receive cargo and to prove it is authorized to receive cargo for the gateway in the CCA.
 

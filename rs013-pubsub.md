@@ -34,5 +34,5 @@ A _relaying gateway_ could subscribe to the topics relevant to its peer gateways
 ## Messaging Protocols
 
 - Broadcast parcels could be unencrypted (CMS type "data"), or encrypted with one or more certificates (CMS type "enveloped data").
-- The [Cargo Collection Authorization](rs000-core.md#cargo-collection-authorization-cca) MUST include zero or more topic subscriptions.
+- The [Cargo Collection Authorization](rs000-core.md#cca) MUST include zero or more topic subscriptions.
 - A topic subscription is a structure that contains a topic address (potentially using glob patterns) and any conditions that the broadcast parcel must meet, such as having a specific origin endpoint (by address).
