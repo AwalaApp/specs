@@ -76,6 +76,7 @@ The following concrete types have been reserved by other Relaynet specifications
 - `0x43` ("C" in ASCII) for [cargoes](rs000-core.md#cargo).
 - `0x44` for [cargo collection authorizations](rs000-core.md#cca).
 - `0x50` ("P" in ASCII) for [parcels](rs000-core.md#parcel).
+- `0x51` for [parcel collection acknowledgments](rs000-core.md#pca).
 
 ## Open Issues
 

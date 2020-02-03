@@ -146,7 +146,7 @@ message ParcelDeliveryDeauthorization {
 
 #### Parcel Collection Acknowledgement (PCA) {#pca}
 
-A Parcel Collection Acknowledgement (PCA) is a RAMF-serialized message used to signal to the peer gateway that the specified parcel(s) has been received and safely stored. The gateway that sent the original parcels MAY permanently delete such parcels at that point.
+A Parcel Collection Acknowledgement (PCA) is a RAMF-serialized message used to signal to the peer gateway that the specified parcel(s) has been received and safely stored; its concrete message type is the octet `0x51`. The gateway that sent the original parcels MAY permanently delete such parcels at that point.
 
 The payload plaintext MUST be serialized with [Protocol Buffers v3](https://developers.google.com/protocol-buffers/docs/proto3) using the `ParcelCollectionAcknowledgement` message as defined below:
 
