@@ -122,10 +122,7 @@ The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encap
 
 A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. Its concrete message type is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
 
-The payload ciphertext MUST be encrypted. The corresponding plaintext MUST contain the following information:
-
-- Any [_Parcel Delivery Deauthorizations_ (PDD)](rs002-pki.md#parcel-delivery-deauthorization-pdd) issued by Gateway A's endpoints or Gateway A itself to revoke [PDAs](rs002-pki.md#parcel-delivery-authorization-pda).
-- Binding-level constraints to authenticate the relayer, like expecting a specific _Certificate Authority_ in its TLS certificate chain (or equivalent). Gateway B MUST close the connection if these constraints are not met.
+The payload ciphertext MUST be encrypted. The corresponding plaintext MAY contain any [_Parcel Delivery Deauthorizations_ (PDD)](rs002-pki.md#parcel-delivery-deauthorization-pdd) issued by Gateway A's endpoints or Gateway A itself to revoke [PDAs](rs002-pki.md#parcel-delivery-authorization-pda).
 
 The payload plaintext MUST be serialized with [Protocol Buffers v3](https://developers.google.com/protocol-buffers/docs/proto3) using the `CargoCollectionAuthorization` message as defined below:
 
@@ -134,15 +131,10 @@ syntax = "proto3";
 
 package relaynet.messaging.gateway;
 
-import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
 
 message CargoCollectionAuthorization {
     repeated ParcelDeliveryDeauthorization parcel_delivery_deauthorizations = 1;
-
-    // The key MUST be the name of the binding (lower case) and the value MUST
-    // be defined by the binding.
-    map<string, google.protobuf.Any> relayer_constraints = 2;
 }
 
 message ParcelDeliveryDeauthorization {
