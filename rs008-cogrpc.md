@@ -33,13 +33,13 @@ The client is responsible for initiating the delivery and collection of parcels 
 
 The messages sent to and received from the gRPC services below MUST be serialized with Protocol Buffers v3.
 
-### `CollectCargo`
+### `DeliverCargo`
 
 This bidirectional streaming RPC MUST be used to deliver cargo to the server. The client MUST send zero or more [RAMF](rs001-ramf.md)-serialized cargo messages and the server MUST acknowledge the receipt of each cargo per the requirements and recommendations in RS-000.
 
 The cargo sent to the server MAY originate in different gateways.
 
-### `DeliverCargo`
+### `CollectCargo`
 
 This bidirectional streaming RPC MUST be used to collect cargo from the server. The server MUST send zero or more [RAMF](rs001-ramf.md)-serialized cargo messages and the client MUST acknowledge the receipt of each cargo per the requirements and recommendations in RS-000.
 
