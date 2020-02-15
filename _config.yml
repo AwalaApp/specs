@@ -8,5 +8,3 @@ search_enabled: true
 aux_links:
   "Relaynet Specs on GitHub":
     - "https://github.com/relaynet/specs"
-  "Chat on Gitter":
-    - "https://gitter.im/relaynet/community"

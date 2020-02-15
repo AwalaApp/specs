@@ -1,7 +1,5 @@
 # Relaynet Protocol Suite Specifications
 
-[![Gitter chat](https://badges.gitter.im/relaynet/community.png)](https://gitter.im/relaynet/community)
-
 This is a [Jekyll](https://jekyllrb.com/) site for all the official [Relaynet](https://relaynet.link/) specifications. A live version of the site is available at [specs.relaynet.link](https://specs.relaynet.link).
 
 ## Run locally
