@@ -26,9 +26,9 @@ Relaynet was originally conceived to connect two nodes that might never be conne
 
 This approach helps ensure that data will reach its destination, but it adds latency and complexity when the two nodes can actually communicate directly -- For example, when the Internet is available.
 
-In those cases where the target endpoint of a parcel can be reached, the gateway could deliver the parcel immediately and directly, without a relayer or a relaying gateway. It may even start transmitting the parcel as soon as the first few bytes are received, since the target endpoint is one of the first few fields in a [RAMF](rs001-ramf.md) message. This approach is known as [cut-through mode](https://en.wikipedia.org/wiki/Cut-through_switching) in networking.
+In those cases where the target endpoint of a parcel can be reached, the gateway could deliver the parcel immediately and directly, without a courier or a relaying gateway. It may even start transmitting the parcel as soon as the first few bytes are received, since the target endpoint is one of the first few fields in a [RAMF](rs001-ramf.md) message. This approach is known as [cut-through mode](https://en.wikipedia.org/wiki/Cut-through_switching) in networking.
 
-When a gateway operates in cut-through mode, it will not use a [Cargo Relay Binding](rs000-core.md#cargo-relay-binding) to connect to a relayer. Instead, it will use a binding for [local Parcel Delivery Connections (PDCs)](rs000-core.md#internal-pdc) to get incoming parcels from its relaying gateway. 
+When a gateway operates in cut-through mode, it will not use a [Cargo Relay Binding](rs000-core.md#cargo-relay-binding) to connect to a courier. Instead, it will use a binding for [local Parcel Delivery Connections (PDCs)](rs000-core.md#internal-pdc) to get incoming parcels from its relaying gateway. 
 
 The following diagram shows how parcels would be delivered in a centralized service (one with clients and servers) using cut-through mode:
 

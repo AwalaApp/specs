@@ -103,7 +103,7 @@ An endpoint or gateway initiating a certificate rotation MUST share the new cert
 - Have their payload encrypted as specified in the [Core](rs000-core.md) and [RAMF](rs001-ramf.md) specifications.
 - Have its payload plaintext contain only the new certificate.
 
-CRMs MUST be top-level messages in the [endpoint channel](rs000-core.md#endpoint-messaging-protocol), but they MUST be encapsulated in cargo in the [gateway channel](rs000-core.md#gateway-messaging-protocol) (along with parcels) to prevent malicious relayers from identifying and dropping such messages.
+CRMs MUST be top-level messages in the [endpoint channel](rs000-core.md#endpoint-messaging-protocol), but they MUST be encapsulated in cargo in the [gateway channel](rs000-core.md#gateway-messaging-protocol) (along with parcels) to prevent malicious couriers from identifying and dropping such messages.
 
 Since a recipient could have multiple keys at any point in time, endpoints and gateways MUST include the appropriate metadata to identify the correct certificate in any [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652) enveloped-data values that they generate.
 
@@ -136,7 +136,7 @@ Relaying gateways MAY cache PDDs until they expire in order to refuse future par
 
 A gateway MAY revoke its own certificate by issuing a GCR message to its peer gateway(s). These messages MUST be serialized with RAMF, using the octet `0x11` as its _concrete message type_, and have an empty payload (i.e., one of length zero).
 
-GCRs MUST be sent in the payload plaintext of a cargo, along with parcels, in order to prevent a malicious relayer from identifying and dropping such messages.
+GCRs MUST be sent in the payload plaintext of a cargo, along with parcels, in order to prevent a malicious courier from identifying and dropping such messages.
 
 ## X.509 Extensions
 

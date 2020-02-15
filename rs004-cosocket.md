@@ -23,9 +23,9 @@ This document describes CoSocket, a [cargo relay binding](rs000-core.md#cargo-re
 
 ## Introduction
 
-As a cargo relay binding, CoSocket's objective is to provide the basis for a gateway to exchange cargo with a relayer or another gateway.
+As a cargo relay binding, CoSocket's objective is to provide the basis for a gateway to exchange cargo with a courier or another gateway.
 
-Gateways and relayers can act as client and servers. One of them has to be the server so that the other can connect to it via TCP or a Unix socket, but once communication has been established, they become peers and can send [packets](#packets) to each other indistinctively.
+Gateways and couriers can act as client and servers. One of them has to be the server so that the other can connect to it via TCP or a Unix socket, but once communication has been established, they become peers and can send [packets](#packets) to each other indistinctively.
 
 CoSocket is a [binary protocol](https://en.wikipedia.org/wiki/Binary_protocol) with [little-endian](https://en.wikipedia.org/wiki/Endianness#Little-endian) byte order.
 
@@ -44,9 +44,9 @@ Each packet starts with a tag that identifies the type of packet. The tag itself
 
 Per Relaynet Core, the handshake involves three steps:
 
-1. The relayer _challenges_ the gateway to sign a nonce with its key(s).
-1. The gateway signs the nonce with each of its keys and sends the signatures to the relayer.
-1. The relayer verifies the signatures and confirms the end of the handshake.
+1. The courier _challenges_ the gateway to sign a nonce with its key(s).
+1. The gateway signs the nonce with each of its keys and sends the signatures to the courier.
+1. The courier verifies the signatures and confirms the end of the handshake.
 
 #### Handshake Challenge
 
@@ -65,7 +65,7 @@ This packet contains the signatures for the nonce and comprises the following se
 
 #### Handshake Complete
 
-This packet is sent by the relayer when the signatures were successfully verified. This packet is empty -- It only contains its tag (`0xf2`).
+This packet is sent by the courier when the signatures were successfully verified. This packet is empty -- It only contains its tag (`0xf2`).
 
 ### Operation Packets
 
@@ -73,7 +73,7 @@ This packet is sent by the relayer when the signatures were successfully verifie
 
 This packet encapsulates a [Cargo Collection Authorization (CCA)](rs000-core.md#cca) and represents a request to collect cargo for a specific gateway.
 
-A relayer MUST send this packet to a gateway to indicate it is ready to receive cargo and to prove it is authorized to receive cargo for the gateway in the CCA.
+A courier MUST send this packet to a gateway to indicate it is ready to receive cargo and to prove it is authorized to receive cargo for the gateway in the CCA.
 
 The packet comprises the following sequence:
 
@@ -132,15 +132,15 @@ The packet has the following sequence:
 
 Two gateways MAY maintain a persistent connection to exchange cargo in near-real time. This could be necessary when the target gateway is not a server that can be reached by the other gateway (e.g., the target is behind a [NAT gateway](https://en.wikipedia.org/wiki/Network_address_translation)).
 
-Relayers MUST always quit the connection as soon as no further cargoes are expected in either direction.
+Couriers MUST always quit the connection as soon as no further cargoes are expected in either direction.
 
 ## Examples
 
-### Relayer as TCP Server
+### Courier as TCP Server
 
 TODO: Upload sequence diagram.
 
-### Relayer as Unix Socket Client
+### Courier as Unix Socket Client
 
 TODO: Upload sequence diagram.
 

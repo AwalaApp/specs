@@ -12,7 +12,7 @@ permalink: /RS-019
 ## Abstract
 {: .no_toc }
 
-This document describes the general security threats that end users, service providers, relayers and software vendors should be aware of when implementing and using Relaynet. The likelihood and impact of each threat will depend entirely on the context where Relaynet is used, so this document does not constitute a threat model but it can be used in a threat modelling process.
+This document describes the general security threats that end users, service providers, couriers and software vendors should be aware of when implementing and using Relaynet. The likelihood and impact of each threat will depend entirely on the context where Relaynet is used, so this document does not constitute a threat model but it can be used in a threat modelling process.
 
 ## Table of contents
 {: .no_toc }
@@ -26,7 +26,7 @@ Nothing has ever been more important throughout the design of Relaynet than the 
 
 This is meant to be a living document, unlike other Relaynet specifications. Only threats that are inherent to the implementation and use of the technology are eligible to be listed here -- Therefore, specific security vulnerabilities should be fixed in their corresponding implementations and/or specifications.
 
-The term "providers" is used throughout the specification to refer to service providers, relayers and Relaynet software vendors collectively. Providers should conduct their own threat modelling process as this document is only meant to be an input to their models. Two elements that are notably missing from this document are the likelihood and impact of each threat, which should be identified in each threat model.
+The term "providers" is used throughout the specification to refer to service providers, couriers and Relaynet software vendors collectively. Providers should conduct their own threat modelling process as this document is only meant to be an input to their models. Two elements that are notably missing from this document are the likelihood and impact of each threat, which should be identified in each threat model.
 
 Despite the recommendations to address the various threats, this specification remains informational and providers are not required to adopt such recommendations. Providers are strongly encouraged to adopt the most appropriate countermeasures to their specific circumstances.
 

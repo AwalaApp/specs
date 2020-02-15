@@ -47,12 +47,12 @@ The following diagram illustrates the various components of the network and how 
 - A **(service) message** is serialized in the format determined by the service and does not have to be encrypted or signed.
 - An **endpoint** receives a message from its application and converts it into a _parcel_ for the target application's endpoint, and because they still can't communicate directly, they each use a _gateway_ as a broker. When an endpoint receives a parcel from the gateway, it has to decrypt the message and pass it to its application.
 - A **parcel** encapsulates exactly one service message, which is encrypted with the target endpoint's certificate and signed with the origin endpoint's key.
-- A **gateway** receives parcels from endpoints and puts them into cargo for another gateway, using a _relayer_ as a broker. When a gateway receives cargo from a relayer, it decrypts the cargo and delivers the encapsulated parcels to their corresponding target endpoints.
+- A **gateway** receives parcels from endpoints and puts them into cargo for another gateway, using a _courier_ as a broker. When a gateway receives cargo from a courier, it decrypts the cargo and delivers the encapsulated parcels to their corresponding target endpoints.
   - A **user gateway** is a specific type of gateway that runs on a end-user device and serves the endpoints on that device.
   - A **relaying gateway** is a specific type of gateway that allows the endpoints behind its user gateways to reach another network (typically the Internet).
 - A **cargo** encapsulates one or more parcels, and it is encrypted with the target gateway's certificate and signed with the origin gateway's key.
 - The **relay layer** represents the underlying network that transports the cargo between gateways. It could be the Internet, a sneakernet or a [scatternet](https://en.wikipedia.org/wiki/Scatternet), for example. 
-- A **relayer** is the individual or organization that operates the relay layer. For example, in a sneakernet, it is the individual or group that transports the cargo between user gateways and a relaying gateway.
+- A **courier** is the individual or organization that operates the relay layer. For example, in a sneakernet, it is the individual or group that transports the cargo between user gateways and a relaying gateway.
 
 For example, if Twitter supported Relaynet, Twitter would be the _service_, the Twitter mobile apps would be _applications_ and the Twitter API would be another _application_. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the _endpoint_ in the Twitter API could be a new API endpoint (e.g., `https://api.twitter.com/relaynet`).
 
@@ -60,7 +60,7 @@ Relaynet can also be described in terms of the [OSI model](https://en.wikipedia.
 
 ![](diagrams/rs000/osi-layers-mapping.png)
 
-Note that defining same-layer interactions at the application and relay layers is outside the scope of the protocol suite. Relaynet only prescribes the interactions with their adjacent layers. Each service has full control over its applications (see [_service messaging protocol_](#service-messaging-protocol)), and each relayer has full control over its relay layer.
+Note that defining same-layer interactions at the application and relay layers is outside the scope of the protocol suite. Relaynet only prescribes the interactions with their adjacent layers. Each service has full control over its applications (see [_service messaging protocol_](#service-messaging-protocol)), and each courier has full control over its relay layer.
 
 ## Addressing
 
@@ -111,7 +111,7 @@ Extensions to this document MAY define additional message types and their payloa
 
 #### Cargo
 
-Its primary purpose is to encapsulate one or more messages from the [endpoint channel](#endpoint-messaging-protocol) (e.g., parcels). Cargoes are also serialized with RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message type. Relayers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
+Its primary purpose is to encapsulate one or more messages from the [endpoint channel](#endpoint-messaging-protocol) (e.g., parcels). Cargoes are also serialized with RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message type. Couriers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
 
 The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encapsulate zero or more messages (e.g., parcels), and be serialized with the following binary sequence (in little-endian) to be repeated for each message:
 
@@ -120,7 +120,7 @@ The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encap
 
 #### Cargo Collection Authorization (CCA) {#cca}
 
-A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A allows a relayer to collect cargo on its behalf from Gateway B. Its concrete message type is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
+A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A allows a courier to collect cargo on its behalf from Gateway B. Its concrete message type is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
 
 The payload ciphertext MUST be encrypted. The corresponding plaintext MAY contain any [_Parcel Delivery Deauthorizations_ (PDD)](rs002-pki.md#parcel-delivery-deauthorization-pdd) issued by Gateway A's endpoints or Gateway A itself to revoke [PDAs](rs002-pki.md#parcel-delivery-authorization-pda).
 
@@ -169,7 +169,7 @@ message CollectedParcel {
 
 ## Message Transport Bindings
 
-A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) in Relaynet. [Parcel delivery bindings](#parcel-delivery-binding) define the communication between endpoints and gateways, and [cargo relay bindings](#cargo-relay-binding) define the communication between gateways and relayers. This document describes the requirements applicable to all bindings, but does not define any concrete binding.
+A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) in Relaynet. [Parcel delivery bindings](#parcel-delivery-binding) define the communication between endpoints and gateways, and [cargo relay bindings](#cargo-relay-binding) define the communication between gateways and couriers. This document describes the requirements applicable to all bindings, but does not define any concrete binding.
 
 Bindings will typically leverage [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols, such as HTTP or purpose-built ones, but they can also use an Inter-Process Communication (IPC) mechanism provided by the host system.
 
@@ -230,21 +230,21 @@ The gateway MUST NOT start delivering parcels until the endpoint has signalled t
 
 ### Cargo Relay Binding
 
-This is a protocol that establishes a _Cargo Relay Connection_ (CRC) between a gateway and a relayer with the primary purpose of exchanging cargo bidirectionally.
+This is a protocol that establishes a _Cargo Relay Connection_ (CRC) between a gateway and a courier with the primary purpose of exchanging cargo bidirectionally.
 
-The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are at least two hops in a relay: One from the origin gateway to the relayer, and another from the relayer to the target gateway.
+The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are at least two hops in a relay: One from the origin gateway to the courier, and another from the courier to the target gateway.
 
-Completing one relay MAY involve hops with different bindings. For example, the CRC between a user gateway and a relayer could use [CoSocket](rs004-cosocket.md), whilst the CRC between the relayer and the relaying gateway could use [CogRPC](rs008-cogrpc.md).
+Completing one relay MAY involve hops with different bindings. For example, the CRC between a user gateway and a courier could use [CoSocket](rs004-cosocket.md), whilst the CRC between the courier and the relaying gateway could use [CogRPC](rs008-cogrpc.md).
 
 The gateway sending a cargo MUST NOT remove it until the target gateway has acknowledged its receipt. The acknowledgment MAY be received via a CRC or an Internet-based PDC (once the two gateways can communicate directly over the Internet). The recipient MUST send the acknowledgement after the cargo is safely stored -- Consequently, if the cargo is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
 
-A gateway MAY provide the relayer with a CCA so that the relayer can collect cargo from its peer gateway.
+A gateway MAY provide the courier with a CCA so that the courier can collect cargo from its peer gateway.
 
-A user gateway MAY require the relayer to provide a CCA from the relaying gateway, but a relaying gateway MUST require at least one CCA because it needs the user gateway's certificate to identify the parcels that belong to the user gateway (the user gateway's certificate is part of the PDA certification chain).
+A user gateway MAY require the courier to provide a CCA from the relaying gateway, but a relaying gateway MUST require at least one CCA because it needs the user gateway's certificate to identify the parcels that belong to the user gateway (the user gateway's certificate is part of the PDA certification chain).
 
-The relayer SHOULD deliver the cargo and then wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
+The courier SHOULD deliver the cargo and then wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
 
-Note that relayers are not assigned Relaynet PKI certificates, but per the requirements above for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. In such cases, the relayer MUST provide a valid client- or server-side certificate when it acts as client or server, respectively.
+Note that couriers are not assigned Relaynet PKI certificates, but per the requirements above for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. In such cases, the courier MUST provide a valid client- or server-side certificate when it acts as client or server, respectively.
 
 ## Open Questions
 
