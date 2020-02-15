@@ -59,7 +59,7 @@ When relaying parcels where the recipient is a private endpoint, gateways MUST r
 
 Endpoint A MAY rate limit the volume of parcels that Endpoint B may send with the PDA by including the non-critical extension _PDA Rate Limiting_.
 
-Gateways SHOULD enforce the rate limiting specified by the extension, if present. When evaluating the eligibility of a message for rate limiting purposes, relaying gateways MUST use the time when the message was received, whilst user gateways MUST use the date specified in the RAMF message.
+Gateways SHOULD enforce the rate limiting specified by the extension, if present. When evaluating the eligibility of a message for rate limiting purposes, relaying gateways MUST use the time when the message was received, whilst private gateways MUST use the date specified in the RAMF message.
 
 The target endpoint (Endpoint A) MAY enforce the rate limiting.
 
