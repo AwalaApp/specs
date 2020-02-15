@@ -1,0 +1,1280 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:lucid="lucid"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="362"
+   height="325"
+   version="1.1"
+   id="svg326"
+   sodipodi:docname="osi-layers-mapping.svg"
+   inkscape:version="0.92.4 (f8dce91, 2019-08-02)">
+  <metadata
+     id="metadata332">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs330" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview328"
+     showgrid="false"
+     inkscape:zoom="0.20415225"
+     inkscape:cx="422.5"
+     inkscape:cy="-212"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg326" />
+  <g
+     transform="translate(-239,-756)"
+     lucid:page-tab-id="0_0"
+     id="g324">
+    <path
+       d="m 440,965 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 110 c 0,2.76 -2.24,5 -5,5 H 445 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path2"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:2" />
+    <use
+       xlink:href="#a"
+       transform="translate(492.575,1024.1)"
+       id="use4"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <path
+       d="m 440,885 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 70 c 0,2.76 -2.24,5 -5,5 H 445 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path6"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:2" />
+    <use
+       xlink:href="#b"
+       transform="translate(488.125,923.6)"
+       id="use8"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <path
+       d="m 440,845 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 30 c 0,2.76 -2.24,5 -5,5 H 445 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path10"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:2" />
+    <use
+       xlink:href="#c"
+       transform="translate(487.025,863.6)"
+       id="use12"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <path
+       d="m 440,805 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 30 c 0,2.76 -2.24,5 -5,5 H 445 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path14"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:2" />
+    <use
+       xlink:href="#d"
+       transform="translate(477.575,823.6)"
+       id="use16"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <path
+       d="m 240,925 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 30 c 0,2.76 -2.24,5 -5,5 H 245 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path18"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:2" />
+    <use
+       xlink:href="#e"
+       transform="translate(285.425,944.1)"
+       id="use20"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <path
+       d="m 240,885 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 30 c 0,2.76 -2.24,5 -5,5 H 245 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path22"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:2" />
+    <use
+       xlink:href="#f"
+       transform="translate(292.525,903.6)"
+       id="use24"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <path
+       d="m 240,845 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 30 c 0,2.76 -2.24,5 -5,5 H 245 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path26"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:2" />
+    <use
+       xlink:href="#g"
+       transform="translate(275.6,863.6)"
+       id="use28"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <path
+       d="m 240,805 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 30 c 0,2.76 -2.24,5 -5,5 H 245 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path30"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:2" />
+    <use
+       xlink:href="#d"
+       transform="translate(277.575,823.6)"
+       id="use32"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <path
+       d="m 240,1045 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 30 c 0,2.76 -2.24,5 -5,5 H 245 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path34"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:2" />
+    <use
+       xlink:href="#h"
+       transform="translate(289.55,1064.1)"
+       id="use36"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <path
+       d="m 240,1005 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 30 c 0,2.76 -2.24,5 -5,5 H 245 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path38"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:2" />
+    <use
+       xlink:href="#i"
+       transform="translate(286.825,1023.6)"
+       id="use40"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#j"
+       transform="translate(325.175,1023.6)"
+       id="use42"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <path
+       d="m 240,965 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 30 c 0,2.76 -2.24,5 -5,5 H 245 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path44"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:2" />
+    <use
+       xlink:href="#k"
+       transform="translate(288.6,983.6)"
+       id="use46"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <path
+       d="m 240,762 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 36 c 0,2.76 -2.24,5 -5,5 H 245 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path48"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-opacity:0" />
+    <use
+       xlink:href="#l"
+       transform="translate(253.175,783.6)"
+       id="use50"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#m"
+       transform="translate(286.575,783.6)"
+       id="use52"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#n"
+       transform="translate(338.025,783.6)"
+       id="use54"
+       x="0"
+       y="0"
+       width="100%"
+       height="100%" />
+    <path
+       d="m 440,762 c 0,-2.76 2.24,-5 5,-5 h 150 c 2.76,0 5,2.24 5,5 v 36 c 0,2.76 -2.24,5 -5,5 H 445 c -2.76,0 -5,-2.24 -5,-5 z"
+       id="path56"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-opacity:0" />
+    <g
+       id="g62">
+      <use
+         xlink:href="#o"
+         transform="translate(461.425,783.6)"
+         id="use58"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%" />
+      <use
+         xlink:href="#n"
+         transform="translate(529.775,783.6)"
+         id="use60"
+         x="0"
+         y="0"
+         width="100%"
+         height="100%" />
+    </g>
+    <defs
+       id="defs322">
+      <path
+         d="m 52,-115 c 0,93 80,130 150,87 l 7,-35 h 11 l -1,55 C 196,-1 167,4 136,4 60,4 19,-37 15,-115 10,-228 112,-256 216,-229 l 1,51 h -12 l -5,-30 c -15,-9 -39,-16 -62,-16 -66,0 -86,41 -86,109"
+         id="p"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 90,-170 c 52,0 76,32 76,87 0,54 -24,87 -77,87 -51,0 -75,-34 -75,-87 0,-54 24,-87 76,-87 z m -1,160 c 39,0 46,-35 46,-73 0,-39 -7,-73 -46,-73 -39,1 -44,34 -44,73 0,39 6,72 44,73"
+         id="q"
+         inkscape:connector-curvature="0" />
+      <path
+         d="M 124,-13 C 89,8 26,15 26,-45 v -108 c -8,-3 -24,2 -21,-12 h 50 v 118 c -3,37 42,32 69,25 v -131 l -25,-4 v -8 h 54 v 153 c 8,3 24,-2 21,12 h -48"
+         id="r"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 57,-145 c 16,-10 35,-24 60,-25 v 45 c -19,1 -8,-30 -40,-17 l -20,6 v 124 l 29,4 V 0 H 7 v -8 l 21,-4 v -141 c -8,-3 -24,2 -21,-12 h 48"
+         id="s"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 47,-200 c -23,0 -25,-39 0,-38 13,0 18,7 20,19 -1,11 -8,19 -20,19 z m 18,188 28,4 V 0 H 8 v -8 l 28,-4 v -141 l -24,-4 v -8 h 53 v 153"
+         id="t"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 84,-170 c 49,0 66,33 63,87 H 46 c -8,60 38,80 95,63 v 10 C 128,-2 108,4 88,4 34,4 14,-29 14,-84 c -1,-54 22,-86 70,-86 z m 33,73 c 12,-57 -57,-82 -69,-24 -1,7 -2,15 -2,24 h 71"
+         id="u"
+         inkscape:connector-curvature="0" />
+      <g
+         id="a">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#p"
+           id="use70"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,12,0)"
+           xlink:href="#q"
+           id="use72"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,21,0)"
+           xlink:href="#r"
+           id="use74"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,30,0)"
+           xlink:href="#s"
+           id="use76"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,35.95,0)"
+           xlink:href="#t"
+           id="use78"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,40.95,0)"
+           xlink:href="#u"
+           id="use80"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,48.9,0)"
+           xlink:href="#s"
+           id="use82"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="m 52,-115 c 0,90 69,126 140,93 v -67 l -30,-5 v -9 h 87 v 9 l -23,5 v 77 C 199,-4 170,4 136,4 59,2 15,-37 15,-115 c -1,-82 41,-123 122,-123 31,0 59,4 83,10 v 51 h -12 l -5,-29 c -15,-12 -38,-18 -65,-18 -66,-1 -86,42 -86,109"
+         id="v"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 32,-163 c 41,-10 102,-14 102,39 v 112 c 8,3 24,-2 21,12 h -45 l -4,-17 C 83,13 3,13 13,-46 c -2,-50 45,-50 92,-51 4,-36 -5,-70 -42,-56 -6,2 -12,4 -16,6 -4,7 0,23 -15,20 z m 10,116 c 0,41 41,33 63,22 v -59 c -34,1 -63,-1 -63,37"
+         id="w"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 54,-38 c -1,25 24,26 44,20 V -6 C 71,10 25,9 25,-35 V -150 H 4 c -2,-14 14,-10 21,-15 l 18,-38 h 11 v 38 h 38 v 15 H 54 v 112"
+         id="x"
+         inkscape:connector-curvature="0" />
+      <path
+         d="M 240,-154 185,4 H 171 L 130,-105 90,4 H 77 L 20,-153 c -7,-3 -23,1 -20,-12 h 79 v 8 l -27,4 39,112 40,-108 h 14 l 40,109 38,-113 -28,-4 v -8 h 63 v 8"
+         id="y"
+         inkscape:connector-curvature="0" />
+      <path
+         d="M 161,-154 85,37 C 75,66 49,86 8,75 V 39 C 26,37 14,63 37,60 67,56 75,28 84,2 L 21,-153 c -7,-3 -20,0 -17,-12 h 77 v 8 l -26,4 45,116 43,-116 -26,-4 v -8 h 62 v 8"
+         id="z"
+         inkscape:connector-curvature="0" />
+      <g
+         id="b">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#v"
+           id="use90"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,12.95,0)"
+           xlink:href="#w"
+           id="use92"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,20.9,0)"
+           xlink:href="#x"
+           id="use94"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,25.9,0)"
+           xlink:href="#u"
+           id="use96"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,33.85,0)"
+           xlink:href="#y"
+           id="use98"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,46.8,0)"
+           xlink:href="#w"
+           id="use100"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,54.75,0)"
+           xlink:href="#z"
+           id="use102"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="m 10,-9 31,-5 v -208 l -31,-4 v -10 h 177 v 57 h -11 l -6,-38 c -28,-4 -63,-3 -95,-3 v 92 h 63 l 6,-28 h 11 v 73 h -11 l -6,-29 H 75 v 96 l 105,-3 10,-43 h 12 L 199,0 H 10 v -9"
+         id="A"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 125,-118 c 4,-37 -41,-34 -68,-26 v 132 l 23,4 V 0 H 8 C 5,-13 21,-9 28,-12 v -141 c -7,-3 -23,1 -20,-12 h 47 l 2,13 c 31,-23 98,-29 98,31 v 109 c 7,3 23,-1 20,12 h -72 v -8 l 22,-4 v -106"
+         id="B"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 13,-81 c 0,-71 46,-101 114,-85 l -1,-72 -28,-4 v -8 h 57 v 238 c 8,3 24,-2 21,12 h -47 l -2,-12 C 80,23 13,-1 13,-81 Z m 77,-74 c -37,1 -44,33 -45,74 0,38 9,66 45,66 14,0 27,-3 36,-7 v -130 c -10,-1 -24,-3 -36,-3"
+         id="C"
+         inkscape:connector-curvature="0" />
+      <path
+         d="M 166,-85 C 169,-18 122,17 55,0 l 1,64 29,4 v 9 H 6 v -9 l 21,-4 v -217 c -7,-3 -22,1 -19,-12 h 46 l 1,9 c 11,-8 26,-14 45,-14 47,2 64,36 66,85 z M 56,-13 c 53,14 83,-14 78,-72 7,-53 -33,-79 -78,-60 v 132"
+         id="D"
+         inkscape:connector-curvature="0" />
+      <g
+         id="c">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#A"
+           id="use109"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,10.95,0)"
+           xlink:href="#B"
+           id="use111"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,19.95,0)"
+           xlink:href="#C"
+           id="use113"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,28.95,0)"
+           xlink:href="#D"
+           id="use115"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,37.95,0)"
+           xlink:href="#q"
+           id="use117"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,46.95,0)"
+           xlink:href="#t"
+           id="use119"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,51.95,0)"
+           xlink:href="#B"
+           id="use121"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,60.95,0)"
+           xlink:href="#x"
+           id="use123"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="M 81,-9 V 0 H 4 v -9 l 26,-5 81,-224 h 33 l 83,224 30,5 v 9 h -99 v -9 l 31,-5 -23,-68 H 73 l -24,68 z m 38,-203 -41,114 h 82"
+         id="E"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 65,-12 28,4 V 0 H 7 v -8 l 28,-4 v -226 l -28,-4 v -8 h 58 v 238"
+         id="F"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 45,-84 c 0,64 52,80 104,63 C 150,4 119,4 94,4 38,4 14,-28 14,-84 c 0,-76 62,-98 131,-80 v 46 h -10 c -5,-15 -4,-31 -23,-35 -47,-10 -67,21 -67,69"
+         id="G"
+         inkscape:connector-curvature="0" />
+      <g
+         id="d">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#E"
+           id="use129"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,12.95,0)"
+           xlink:href="#D"
+           id="use131"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,21.95,0)"
+           xlink:href="#D"
+           id="use133"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,30.95,0)"
+           xlink:href="#F"
+           id="use135"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,35.95,0)"
+           xlink:href="#t"
+           id="use137"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,40.95,0)"
+           xlink:href="#G"
+           id="use139"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,48.9,0)"
+           xlink:href="#w"
+           id="use141"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,56.85,0)"
+           xlink:href="#x"
+           id="use143"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,61.85,0)"
+           xlink:href="#t"
+           id="use145"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,66.85,0)"
+           xlink:href="#q"
+           id="use147"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,75.85,0)"
+           xlink:href="#B"
+           id="use149"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="m 55,0 v -9 l 38,-5 v -207 c -22,1 -53,0 -70,4 l -5,37 H 7 v -56 h 207 v 56 h -12 l -5,-37 -70,-3 v 206 l 37,5 V 0 H 55"
+         id="H"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 41,-130 c 7,48 86,23 86,84 0,56 -69,57 -112,41 v -40 c 20,0 9,29 31,31 35,19 77,-26 41,-50 -27,-18 -72,-13 -72,-59 0,-50 58,-52 100,-41 v 36 c -19,1 -8,-25 -28,-25 -21,-7 -50,-1 -46,23"
+         id="I"
+         inkscape:connector-curvature="0" />
+      <g
+         id="e">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#H"
+           id="use154"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,10.3,0)"
+           xlink:href="#s"
+           id="use156"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,16.25,0)"
+           xlink:href="#w"
+           id="use158"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,24.2,0)"
+           xlink:href="#B"
+           id="use160"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,33.2,0)"
+           xlink:href="#I"
+           id="use162"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,40.2,0)"
+           xlink:href="#D"
+           id="use164"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,49.2,0)"
+           xlink:href="#q"
+           id="use166"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,58.2,0)"
+           xlink:href="#s"
+           id="use168"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,64.15,0)"
+           xlink:href="#x"
+           id="use170"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="M 178,-68 C 178,11 83,14 24,-9 v -54 h 12 c 1,35 22,52 60,52 50,0 69,-58 33,-82 -39,-24 -105,-21 -105,-85 0,-67 86,-66 142,-53 v 49 h -12 l -6,-29 c -31,-27 -121,-7 -89,42 28,43 119,24 119,101"
+         id="J"
+         inkscape:connector-curvature="0" />
+      <g
+         id="f">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#J"
+           id="use174"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,10,0)"
+           xlink:href="#u"
+           id="use176"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,17.95,0)"
+           xlink:href="#I"
+           id="use178"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,24.95,0)"
+           xlink:href="#I"
+           id="use180"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,31.95,0)"
+           xlink:href="#t"
+           id="use182"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,36.95,0)"
+           xlink:href="#q"
+           id="use184"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,45.95,0)"
+           xlink:href="#B"
+           id="use186"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="m 75,-108 c 48,3 76,-12 76,-58 0,-46 -28,-57 -76,-54 z m 111,-58 c -1,60 -46,78 -111,74 v 78 l 37,5 V 0 H 13 v -9 l 28,-5 v -208 l -31,-4 v -10 c 81,1 178,-14 176,70"
+         id="K"
+         inkscape:connector-curvature="0" />
+      <g
+         id="g">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#K"
+           id="use190"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,10,0)"
+           xlink:href="#s"
+           id="use192"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,15.95,0)"
+           xlink:href="#u"
+           id="use194"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,23.9,0)"
+           xlink:href="#I"
+           id="use196"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,30.9,0)"
+           xlink:href="#u"
+           id="use198"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,38.85,0)"
+           xlink:href="#B"
+           id="use200"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,47.85,0)"
+           xlink:href="#x"
+           id="use202"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,52.85,0)"
+           xlink:href="#w"
+           id="use204"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,60.8,0)"
+           xlink:href="#x"
+           id="use206"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,65.8,0)"
+           xlink:href="#t"
+           id="use208"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,70.8,0)"
+           xlink:href="#q"
+           id="use210"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,79.8,0)"
+           xlink:href="#B"
+           id="use212"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="m 126,-119 c 3,-38 -42,-31 -69,-25 v 132 l 23,4 V 0 H 7 v -8 l 21,-4 v -226 l -24,-4 v -8 h 53 l -1,98 c 31,-22 99,-31 99,31 v 109 c 7,3 23,-1 20,12 h -71 v -8 l 22,-4 v -107"
+         id="L"
+         inkscape:connector-curvature="0" />
+      <g
+         id="h">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#K"
+           id="use216"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,10,0)"
+           xlink:href="#L"
+           id="use218"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,19,0)"
+           xlink:href="#z"
+           id="use220"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,28,0)"
+           xlink:href="#I"
+           id="use222"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,35,0)"
+           xlink:href="#t"
+           id="use224"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,40,0)"
+           xlink:href="#G"
+           id="use226"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,47.95,0)"
+           xlink:href="#w"
+           id="use228"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,55.9,0)"
+           xlink:href="#F"
+           id="use230"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="m 75,-17 c 87,13 134,-18 134,-103 0,-78 -51,-106 -134,-100 z M 246,-119 C 246,5 139,7 10,0 v -9 l 31,-5 v -208 l -31,-4 v -10 h 107 c 82,0 129,35 129,117"
+         id="M"
+         inkscape:connector-curvature="0" />
+      <g
+         id="i">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#M"
+           id="use234"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,12.95,0)"
+           xlink:href="#w"
+           id="use236"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,20.9,0)"
+           xlink:href="#x"
+           id="use238"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,25.9,0)"
+           xlink:href="#w"
+           id="use240"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="m 60,-80 68,-73 c -7,-3 -20,0 -17,-12 h 58 c 3,13 -13,9 -20,12 l -47,48 60,93 c 7,3 21,-1 18,12 h -68 c -3,-12 9,-9 15,-12 L 82,-83 60,-60 v 48 c 7,3 21,-1 18,12 H 10 v -8 l 21,-4 v -226 l -24,-4 v -8 h 53 v 170"
+         id="N"
+         inkscape:connector-curvature="0" />
+      <g
+         id="j">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#F"
+           id="use244"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,5,0)"
+           xlink:href="#t"
+           id="use246"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,10,0)"
+           xlink:href="#B"
+           id="use248"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,19,0)"
+           xlink:href="#N"
+           id="use250"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="m 203,-222 -32,-4 v -10 h 81 v 10 l -31,4 V 0 H 204 L 59,-212 v 198 l 32,5 V 0 H 10 v -9 l 31,-5 v -208 l -31,-4 v -10 h 72 l 121,175 v -161"
+         id="O"
+         inkscape:connector-curvature="0" />
+      <g
+         id="k">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#O"
+           id="use254"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,12.95,0)"
+           xlink:href="#u"
+           id="use256"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,20.9,0)"
+           xlink:href="#x"
+           id="use258"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,25.9,0)"
+           xlink:href="#y"
+           id="use260"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,38.85,0)"
+           xlink:href="#q"
+           id="use262"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,47.85,0)"
+           xlink:href="#s"
+           id="use264"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,53.8,0)"
+           xlink:href="#N"
+           id="use266"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="m 130,-224 c -62,0 -78,43 -78,106 0,64 16,108 78,108 62,0 78,-45 78,-108 0,-63 -16,-106 -78,-106 z M 130,4 C 53,4 15,-39 15,-118 c -1,-80 37,-120 115,-120 78,0 115,42 115,120 0,79 -38,122 -115,122"
+         id="P"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 77,-14 30,5 V 0 H 13 v -9 l 30,-5 v -208 l -30,-4 v -10 h 94 v 10 l -30,4 v 208"
+         id="Q"
+         inkscape:connector-curvature="0" />
+      <g
+         id="l">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#P"
+           id="use271"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,12.95,0)"
+           xlink:href="#J"
+           id="use273"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,22.95,0)"
+           xlink:href="#Q"
+           id="use275"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="m 152,0 h -7 L 59,-203 v 189 l 32,5 V 0 H 10 v -9 l 31,-5 v -208 l -31,-4 v -10 h 72 l 76,180 84,-180 h 68 v 10 l -31,4 v 208 l 31,5 v 9 h -96 v -9 l 32,-5 v -189"
+         id="R"
+         inkscape:connector-curvature="0" />
+      <g
+         id="m">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#R"
+           id="use279"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,16,0)"
+           xlink:href="#q"
+           id="use281"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,25,0)"
+           xlink:href="#C"
+           id="use283"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,34,0)"
+           xlink:href="#u"
+           id="use285"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,41.95,0)"
+           xlink:href="#F"
+           id="use287"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="m 111,-226 -36,4 v 207 c 33,-1 73,2 101,-4 l 11,-49 h 11 L 195,0 H 10 v -9 l 31,-5 v -208 l -31,-4 v -10 h 101 v 10"
+         id="S"
+         inkscape:connector-curvature="0" />
+      <g
+         id="n">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#S"
+           id="use291"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,10.95,0)"
+           xlink:href="#w"
+           id="use293"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,18.9,0)"
+           xlink:href="#z"
+           id="use295"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,27.9,0)"
+           xlink:href="#u"
+           id="use297"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,35.85,0)"
+           xlink:href="#s"
+           id="use299"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,41.8,0)"
+           xlink:href="#I"
+           id="use301"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <path
+         d="m 199,-173 c -1,36 -21,56 -49,65 l 64,94 26,5 V 0 H 183 L 117,-103 H 75 v 89 l 35,5 V 0 H 13 v -9 l 28,-5 v -208 l -31,-4 v -10 c 80,4 190,-20 189,63 z m -124,54 c 50,2 89,-1 89,-51 0,-49 -39,-52 -89,-50 v 101"
+         id="T"
+         inkscape:connector-curvature="0" />
+      <g
+         id="o">
+        <use
+           transform="scale(0.05)"
+           xlink:href="#T"
+           id="use305"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,12,0)"
+           xlink:href="#u"
+           id="use307"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,19.95,0)"
+           xlink:href="#F"
+           id="use309"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,24.95,0)"
+           xlink:href="#w"
+           id="use311"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,32.9,0)"
+           xlink:href="#z"
+           id="use313"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,41.9,0)"
+           xlink:href="#B"
+           id="use315"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,50.9,0)"
+           xlink:href="#u"
+           id="use317"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           transform="matrix(0.05,0,0,0.05,58.85,0)"
+           xlink:href="#x"
+           id="use319"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+    </defs>
+  </g>
+</svg>

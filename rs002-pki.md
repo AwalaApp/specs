@@ -44,14 +44,14 @@ An endpoint certificate MUST be issued by one of the following Certificate Autho
 
 ### Parcel Delivery Authorization (PDA)
 
-Given private Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its relaying gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a special endpoint certificate called _Parcel Delivery Authorization_ (PDA).
+Given private Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its public gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a special endpoint certificate called _Parcel Delivery Authorization_ (PDA).
 
 The certification path of a PDA is formed of the following sequence (from end entity to root):
 
 1. Endpoint B's certificate.
 1. Endpoint A's certificate.
 1. Endpoint A's local gateway.
-1. Endpoint A's relaying gateway.
+1. Endpoint A's public gateway.
 
 When relaying parcels where the recipient is a private endpoint, gateways MUST refuse those where the certificate for the sender of the parcel was not issued by the target endpoint. In other words, the Common Name of the second certificate MUST match the recipient of the RAMF-serialized parcel.
 
@@ -59,7 +59,7 @@ When relaying parcels where the recipient is a private endpoint, gateways MUST r
 
 Endpoint A MAY rate limit the volume of parcels that Endpoint B may send with the PDA by including the non-critical extension _PDA Rate Limiting_.
 
-Gateways SHOULD enforce the rate limiting specified by the extension, if present. When evaluating the eligibility of a message for rate limiting purposes, relaying gateways MUST use the time when the message was received, whilst user gateways MUST use the date specified in the RAMF message.
+Gateways SHOULD enforce the rate limiting specified by the extension, if present. When evaluating the eligibility of a message for rate limiting purposes, public gateways MUST use the time when the message was received, whilst private gateways MUST use the date specified in the RAMF message.
 
 The target endpoint (Endpoint A) MAY enforce the rate limiting.
 
@@ -103,7 +103,7 @@ An endpoint or gateway initiating a certificate rotation MUST share the new cert
 - Have their payload encrypted as specified in the [Core](rs000-core.md) and [RAMF](rs001-ramf.md) specifications.
 - Have its payload plaintext contain only the new certificate.
 
-CRMs MUST be top-level messages in the [endpoint channel](rs000-core.md#endpoint-messaging-protocol), but they MUST be encapsulated in cargo in the [gateway channel](rs000-core.md#gateway-messaging-protocol) (along with parcels) to prevent malicious relayers from identifying and dropping such messages.
+CRMs MUST be top-level messages in the [endpoint channel](rs000-core.md#endpoint-messaging-protocol), but they MUST be encapsulated in cargo in the [gateway channel](rs000-core.md#gateway-messaging-protocol) (along with parcels) to prevent malicious couriers from identifying and dropping such messages.
 
 Since a recipient could have multiple keys at any point in time, endpoints and gateways MUST include the appropriate metadata to identify the correct certificate in any [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652) enveloped-data values that they generate.
 
@@ -130,13 +130,13 @@ An endpoint MUST use the [message transport binding](rs000-core.md#message-trans
 
 Gateways MUST include all their active PDDs in their [_Cargo Collection Authorizations_](rs000-core.md#cca), and they MUST enforce PDDs for as long as they are active.
  
-Relaying gateways MAY cache PDDs until they expire in order to refuse future parcels whose PDA has been revoked.
+Public gateways MAY cache PDDs until they expire in order to refuse future parcels whose PDA has been revoked.
 
 ### Gateway Certificate Revocation (GCR)
 
 A gateway MAY revoke its own certificate by issuing a GCR message to its peer gateway(s). These messages MUST be serialized with RAMF, using the octet `0x11` as its _concrete message type_, and have an empty payload (i.e., one of length zero).
 
-GCRs MUST be sent in the payload plaintext of a cargo, along with parcels, in order to prevent a malicious relayer from identifying and dropping such messages.
+GCRs MUST be sent in the payload plaintext of a cargo, along with parcels, in order to prevent a malicious courier from identifying and dropping such messages.
 
 ## X.509 Extensions
 

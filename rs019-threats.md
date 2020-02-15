@@ -12,7 +12,7 @@ permalink: /RS-019
 ## Abstract
 {: .no_toc }
 
-This document describes the general security threats that end users, service providers, relayers and software vendors should be aware of when implementing and using Relaynet. The likelihood and impact of each threat will depend entirely on the context where Relaynet is used, so this document does not constitute a threat model but it can be used in a threat modelling process.
+This document describes the general security threats that end users, service providers, couriers and software vendors should be aware of when implementing and using Relaynet. The likelihood and impact of each threat will depend entirely on the context where Relaynet is used, so this document does not constitute a threat model but it can be used in a threat modelling process.
 
 ## Table of contents
 {: .no_toc }
@@ -26,7 +26,7 @@ Nothing has ever been more important throughout the design of Relaynet than the 
 
 This is meant to be a living document, unlike other Relaynet specifications. Only threats that are inherent to the implementation and use of the technology are eligible to be listed here -- Therefore, specific security vulnerabilities should be fixed in their corresponding implementations and/or specifications.
 
-The term "providers" is used throughout the specification to refer to service providers, relayers and Relaynet software vendors collectively. Providers should conduct their own threat modelling process as this document is only meant to be an input to their models. Two elements that are notably missing from this document are the likelihood and impact of each threat, which should be identified in each threat model.
+The term "providers" is used throughout the specification to refer to service providers, couriers and Relaynet software vendors collectively. Providers should conduct their own threat modelling process as this document is only meant to be an input to their models. Two elements that are notably missing from this document are the likelihood and impact of each threat, which should be identified in each threat model.
 
 Despite the recommendations to address the various threats, this specification remains informational and providers are not required to adopt such recommendations. Providers are strongly encouraged to adopt the most appropriate countermeasures to their specific circumstances.
 
@@ -39,7 +39,7 @@ Despite the recommendations to address the various threats, this specification r
 | [Tampered Copy of Software](#tampered-software) | Spoofing, Tampering, Repudiation, Information disclosure, DoS | All | All |
 | [DoS from Legitimate Node](#dos-legitimate-node) | DoS | All | All |
 | [DoS via Binding](#dos-binding) | DoS | All | All |
-| [Public Endpoint Address Exposed to Gateway](#public-endpoint-address) | Information disclosure, DoS | Relaying gateway | End users |
+| [Public Endpoint Address Exposed to Gateway](#public-endpoint-address) | Information disclosure, DoS | Public gateway | End users |
 
 ### Private Keys Compromise {#private-keys-compromise}
 
@@ -75,7 +75,7 @@ Providers should have monitoring in place to detect ongoing DoS attacks, as well
 
 Public endpoints and gateways are inherently susceptible to DoS attacks at the [binding](rs000-core.md#message-transport-bindings) level. Such attacks could be distributed (DDoS) or could come from a single origin. [SYN](https://en.wikipedia.org/wiki/SYN_flood) and [application-layer floods](https://en.wikipedia.org/wiki/Denial_of_Service_attack#Application-layer_floods) are examples of such attacks.
 
-Providers should have the appropriate network-level protections in place, such as network- and application-level firewalls. They should also have adequate monitoring to detect the attack and an adequate plan to respond to it. Where possible, relaying gateways should only accept [Cargo Relay Connections](rs000-core.md#cargo-relay-binding) from a set of whitelisted IP addresses.
+Providers should have the appropriate network-level protections in place, such as network- and application-level firewalls. They should also have adequate monitoring to detect the attack and an adequate plan to respond to it. Where possible, public gateways should only accept [Cargo Relay Connections](rs000-core.md#cargo-relay-binding) from a set of whitelisted IP addresses.
 
 An attacker may also target the DNS records of endpoints and gateways, also causing a denial of service. Even though the sender will continue to retry the delivery of the parcel or cargo until the target server uses a valid TLS certificate, the attack may last until some messages expire, forcing the sender to drop them.
 
@@ -83,9 +83,9 @@ An attacker may also target the DNS records of endpoints and gateways, also caus
 
 Gateways have to know the sender and the recipient of the parcels they relay, which means that they could find out the service that a parcel belongs to by looking at the public endpoint address (e.g., `rne+https://relaynet.twitter.com/`). Thanks to the use of end-to-end encryption in Relaynet, gateways would not be able to see the contents of the parcel; however, exposing the endpoint address could be cause for concern in some circumstances.
 
-This information could be persisted and used subsequently, causing privacy issues -- And even more severe risks to certain end users, such as journalists. A relaying gateway operator may also be coerced to use this information to censor a particular service.
+This information could be persisted and used subsequently, causing privacy issues -- And even more severe risks to certain end users, such as journalists. A public gateway operator may also be coerced to use this information to censor a particular service.
 
-Users that wish to conceal the address of the centralized services they use should consider using a relaying gateway that does not persist or use that information in any way. They may do so by using the services of a third party provider or by hosting the gateway on a server under their control.
+Users that wish to conceal the address of the centralized services they use should consider using a public gateway that does not persist or use that information in any way. They may do so by using the services of a third party provider or by hosting the gateway on a server under their control.
 
 ## Acknowledgements
 

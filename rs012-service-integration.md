@@ -36,7 +36,7 @@ The service does not support Relaynet.
 
 The service does not officially support Relaynet, but a third party integrator is using AsyncRPC on top of the service's original RPC interface. The following diagram illustrates this scenario with Twitter:
 
-![](diagrams/rs012/level4.png)
+![](diagrams/rs012/level4.svg)
 
 Unless the original messages are also encrypted with the RPC server's key, this integration does not offer end-to-end encryption because the messages will be available as plaintext to the AsyncRPC server run by the third party.
 
@@ -46,7 +46,7 @@ The service does not officially support Relaynet, but a third party integrator h
 
 The following diagram illustrates this scenario with Twitter:
 
-![](diagrams/rs012/level3.png)
+![](diagrams/rs012/level3.svg)
 
 Unless the original messages are also encrypted with the RPC server's key, this integration does not offer end-to-end encryption because the messages will be available as plaintext to the third-party adapter and endpoint.
 
@@ -56,7 +56,7 @@ The service officially supports Relaynet by running its own AsyncRPC instance on
 
 The following diagram illustrates this scenario with Twitter:
 
-![](diagrams/rs012/level2.png)
+![](diagrams/rs012/level2.svg)
 
 ### Level 1: First-party messaging adapter
 
@@ -64,7 +64,7 @@ The service officially support Relaynet through a custom adapter endpoint that u
 
 The following diagram illustrates this scenario with Twitter:
 
-![](diagrams/rs012/level1.png)
+![](diagrams/rs012/level1.svg)
 
 ### Level 0: Relaynet native
 
@@ -72,6 +72,6 @@ The service was built using asynchronous messaging with Relaynet instead of RPCs
 
 The following diagram illustrates this scenario with Twitter:
 
-![](diagrams/rs012/level0-offline.png)
+![](diagrams/rs012/level0-offline.svg)
 
 A service may eventually reach this level because it may be too expensive to support both Relaynet and the original RPC interface. Note that [Relaynet can still be used when the Internet is available](rs017-adaptive-relay.md).

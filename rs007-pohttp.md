@@ -24,7 +24,7 @@ This document describes PoHTTP, a [parcel delivery binding](rs000-core.md#parcel
 
 PoHTTP was specifically designed to make it easier for maintainers of existing systems to support Relaynet. For example, an organization maintaining a REST API could collect parcels by implementing a new API endpoint (e.g., `/relaynet`), or they could integrate an [Enterprise Service Bus](https://en.wikipedia.org/wiki/Enterprise_service_bus) to convert Relaynet service messages to API calls.
 
-In some cases, it may also be desirable for a relaying gateway to expose an HTTP interface so it can receive parcels from certain endpoints. For example, a Shell script in a legacy system could use `curl` to deliver parcels.
+In some cases, it may also be desirable for a public gateway to expose an HTTP interface so it can receive parcels from certain endpoints. For example, a Shell script in a legacy system could use `curl` to deliver parcels.
 
 As an Internet-based PDC, the only operation supported by this binding is [parcel delivery](#parcel-delivery).
 
@@ -33,14 +33,14 @@ As an Internet-based PDC, the only operation supported by this binding is [parce
 To deliver each parcel, the client MUST make a `POST` request to the HTTP URL corresponding to the node address, with the parcel as the body and the following headers:
 
 - `Content-Type` MUST be set to `application/vnd.relaynet.parcel`.
-- If the client is a relaying gateway, `X-Relaynet-Gateway` MUST provide the target endpoint with its address using the request header `X-Relaynet-Gateway`. For example, `X-Relaynet-Gateway: https://gateway.humanitarian.org`.
+- If the client is a public gateway, `X-Relaynet-Gateway` MUST provide the target endpoint with its address using the request header `X-Relaynet-Gateway`. For example, `X-Relaynet-Gateway: https://gateway.humanitarian.org`.
 
 The server MUST respond with one of the following status codes:
 
 - `202` (Accepted) response as soon as it successfully [stores or forwards](https://en.wikipedia.org/wiki/Store_and_forward) the parcel.
 - `307` (Temporary Redirect) per [RFC-7231](https://tools.ietf.org/html/rfc7231#section-6.4.7) or `308` (Permanent Redirect) per [RFC-7238](https://tools.ietf.org/html/rfc7238), in which case the client MUST repeat the `POST` request against the URL specified in the `Location` response header. Clients MUST honor up to 3 consecutive redirects; additional consecutive redirects MAY be honored.
 - `400` if the body of the request is not a valid RAMF-serialized parcel.
-- A relaying gateway MAY return a `507` (Insufficient Storage) response when it no longer has the capacity to accept parcels for the target endpoint or its gateway. In this case, the client SHOULD retry to deliver the parcel at a later point but before it expires.
+- A public gateway MAY return a `507` (Insufficient Storage) response when it no longer has the capacity to accept parcels for the target endpoint or its gateway. In this case, the client SHOULD retry to deliver the parcel at a later point but before it expires.
 - Any other standard status code in the range 400-599 that the server regards applicable. For example, a `415 Unsupported Media Type` code could be returned if the `Content-Type` request header did not match `application/vnd.relaynet.parcel`.
 
 The response MAY contain a body, but defining how to process it is outside this specification.
