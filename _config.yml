@@ -1,7 +1,7 @@
 title: Relaynet Specs
 description: Specifications of the Relaynet Protocol Suite
 
-remote_theme: "pmarsceill/just-the-docs@v0.2.3"
+remote_theme: "pmarsceill/just-the-docs@v0.2.7"
 
 # Theme-specific options
 search_enabled: true
