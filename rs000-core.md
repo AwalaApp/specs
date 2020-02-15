@@ -58,7 +58,7 @@ For example, if Twitter supported Relaynet, Twitter would be the _service_, the 
 
 Relaynet can also be described in terms of the [OSI model](https://en.wikipedia.org/wiki/OSI_model) as shown in the diagram below -- With [same-layer and adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) defined by [_messaging protocols_](#messaging-protocols) and [_message transport bindings_](#message-transport-bindings), respectively.
 
-![](diagrams/rs000/osi-layers-mapping.png)
+![](diagrams/rs000/osi-layers-mapping.svg)
 
 Note that defining same-layer interactions at the application and relay layers is outside the scope of the protocol suite. Relaynet only prescribes the interactions with their adjacent layers. Each service has full control over its applications (see [_service messaging protocol_](#service-messaging-protocol)), and each courier has full control over its relay layer.
 
