@@ -44,14 +44,14 @@ An endpoint certificate MUST be issued by one of the following Certificate Autho
 
 ### Parcel Delivery Authorization (PDA)
 
-Given private Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its relaying gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a special endpoint certificate called _Parcel Delivery Authorization_ (PDA).
+Given private Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its public gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a special endpoint certificate called _Parcel Delivery Authorization_ (PDA).
 
 The certification path of a PDA is formed of the following sequence (from end entity to root):
 
 1. Endpoint B's certificate.
 1. Endpoint A's certificate.
 1. Endpoint A's local gateway.
-1. Endpoint A's relaying gateway.
+1. Endpoint A's public gateway.
 
 When relaying parcels where the recipient is a private endpoint, gateways MUST refuse those where the certificate for the sender of the parcel was not issued by the target endpoint. In other words, the Common Name of the second certificate MUST match the recipient of the RAMF-serialized parcel.
 
@@ -59,7 +59,7 @@ When relaying parcels where the recipient is a private endpoint, gateways MUST r
 
 Endpoint A MAY rate limit the volume of parcels that Endpoint B may send with the PDA by including the non-critical extension _PDA Rate Limiting_.
 
-Gateways SHOULD enforce the rate limiting specified by the extension, if present. When evaluating the eligibility of a message for rate limiting purposes, relaying gateways MUST use the time when the message was received, whilst private gateways MUST use the date specified in the RAMF message.
+Gateways SHOULD enforce the rate limiting specified by the extension, if present. When evaluating the eligibility of a message for rate limiting purposes, public gateways MUST use the time when the message was received, whilst private gateways MUST use the date specified in the RAMF message.
 
 The target endpoint (Endpoint A) MAY enforce the rate limiting.
 
@@ -130,7 +130,7 @@ An endpoint MUST use the [message transport binding](rs000-core.md#message-trans
 
 Gateways MUST include all their active PDDs in their [_Cargo Collection Authorizations_](rs000-core.md#cca), and they MUST enforce PDDs for as long as they are active.
  
-Relaying gateways MAY cache PDDs until they expire in order to refuse future parcels whose PDA has been revoked.
+Public gateways MAY cache PDDs until they expire in order to refuse future parcels whose PDA has been revoked.
 
 ### Gateway Certificate Revocation (GCR)
 

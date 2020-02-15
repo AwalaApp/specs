@@ -23,7 +23,7 @@ This document describes CogRPC (pronounced _Co-Jee-Arr-Pee-See_), a [cargo relay
 
 As a cargo relay binding, CogRPC's objective is to establish a Cargo Relay Connection (CRC) between a courier and a gateway so they can exchange cargo.
 
-When a CRC is established between a local gateway and a courier, the gateway and the courier act as the client and the server, respectively. Similarly, when a CRC is established between a relaying gateway and a courier, they act as the server and the client, respectively.
+When a CRC is established between a local gateway and a courier, the gateway and the courier act as the client and the server, respectively. Similarly, when a CRC is established between a public gateway and a courier, they act as the server and the client, respectively.
 
 This binding defines multiple message types and RPCs under a single gRPC service called `CargoRelay`. The gRPC interface described by this binding is defined in full in the form of Protocol Buffers at the end of this document.
  

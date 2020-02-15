@@ -49,10 +49,10 @@ The following diagram illustrates the various components of the network and how 
 - A **parcel** encapsulates exactly one service message, which is encrypted with the target endpoint's certificate and signed with the origin endpoint's key.
 - A **gateway** receives parcels from endpoints and puts them into cargo for another gateway, using a _courier_ as a broker. When a gateway receives cargo from a courier, it decrypts the cargo and delivers the encapsulated parcels to their corresponding target endpoints.
   - A **private gateway** is a specific type of gateway that runs on a end-user device and serves the endpoints on that device.
-  - A **relaying gateway** is a specific type of gateway that allows the endpoints behind its private gateways to reach another network (typically the Internet).
+  - A **public gateway** is a specific type of gateway that allows the endpoints behind its private gateways to reach another network (typically the Internet).
 - A **cargo** encapsulates one or more parcels, and it is encrypted with the target gateway's certificate and signed with the origin gateway's key.
 - The **relay layer** represents the underlying network that transports the cargo between gateways. It could be the Internet, a sneakernet or a [scatternet](https://en.wikipedia.org/wiki/Scatternet), for example. 
-- A **courier** is the individual or organization that operates the relay layer. For example, in a sneakernet, it is the individual or group that transports the cargo between a private gateway and its corresponding relaying gateway.
+- A **courier** is the individual or organization that operates the relay layer. For example, in a sneakernet, it is the individual or group that transports the cargo between a private gateway and its corresponding public gateway.
 
 For example, if Twitter supported Relaynet, Twitter would be the _service_, the Twitter mobile apps would be _applications_ and the Twitter API would be another _application_. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the _endpoint_ in the Twitter API could be a new API endpoint (e.g., `https://api.twitter.com/relaynet`).
 
@@ -193,11 +193,11 @@ This specification defines two types of parcel delivery bindings: Local and Inte
 
 #### Internet-based PDC {#internet-pdc}
 
-An Internet-based PDC allows a client node to deliver parcels to a server node over the Internet. The client node MUST be a private gateway, a relaying gateway or a public endpoint, while the server node MUST be a relaying gateway or a public endpoint.
+An Internet-based PDC allows a client node to deliver parcels to a server node over the Internet. The client node MUST be a private gateway, a public gateway or a public endpoint, while the server node MUST be a public gateway or a public endpoint.
 
 The server MUST NOT require client authentication, but it MAY still refuse to serve suspicious and/or ill-behaved clients.
 
-If the client is a user or relaying gateway, it SHOULD include the Internet address of the corresponding relaying gateway if that gateway is able to collect parcels for the endpoint that sent the parcel.
+If the client is a user or public gateway, it SHOULD include the Internet address of the corresponding public gateway if that gateway is able to collect parcels for the endpoint that sent the parcel.
 
 The client MUST close the connection as soon as all parcels have been delivered.
 
@@ -234,13 +234,13 @@ This is a protocol that establishes a _Cargo Relay Connection_ (CRC) between a g
 
 The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are at least two hops in a relay: One from the origin gateway to the courier, and another from the courier to the target gateway.
 
-Completing one relay MAY involve hops with different bindings. For example, the CRC between a private gateway and a courier could use [CoSocket](rs004-cosocket.md), whilst the CRC between the courier and the relaying gateway could use [CogRPC](rs008-cogrpc.md).
+Completing one relay MAY involve hops with different bindings. For example, the CRC between a private gateway and a courier could use [CoSocket](rs004-cosocket.md), whilst the CRC between the courier and the public gateway could use [CogRPC](rs008-cogrpc.md).
 
 The gateway sending a cargo MUST NOT remove it until the target gateway has acknowledged its receipt. The acknowledgment MAY be received via a CRC or an Internet-based PDC (once the two gateways can communicate directly over the Internet). The recipient MUST send the acknowledgement after the cargo is safely stored -- Consequently, if the cargo is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
 
 A gateway MAY provide the courier with a CCA so that the courier can collect cargo from its peer gateway.
 
-A private gateway MAY require the courier to provide a CCA from the relaying gateway, but a relaying gateway MUST require at least one CCA because it needs the private gateway's certificate to identify the parcels that belong to the private gateway (the private gateway's certificate is part of the PDA certification chain).
+A private gateway MAY require the courier to provide a CCA from the public gateway, but a public gateway MUST require at least one CCA because it needs the private gateway's certificate to identify the parcels that belong to the private gateway (the private gateway's certificate is part of the PDA certification chain).
 
 The courier SHOULD deliver the cargo and then wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
 

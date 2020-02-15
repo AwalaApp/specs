@@ -29,7 +29,7 @@ Syntax: `rnt:serviceId[/topicId[?queryString]]`. The format of the `serviceId` d
 - Centralised: A domain name or IP address.
 - Decentralised: A random, 128-bit hex string.
 
-A _relaying gateway_ could subscribe to the topics relevant to its peer gateways so they can relay relevant parcels.
+A _public gateway_ could subscribe to the topics relevant to its peer gateways so they can relay relevant parcels.
 
 ## Messaging Protocols
 
