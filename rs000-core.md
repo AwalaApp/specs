@@ -178,7 +178,7 @@ For performance reasons, nodes SHOULD use Unix domain sockets or any other IPC m
 
 For availability and performance reasons, the node sending messages SHOULD limit the number of messages pending acknowledgements to five. Consequently, the node on the receiving end MUST hold at least five incoming messaging in its processing queue at any point in time. The receiving end MAY close the connection when this limit is exceeded.
 
-For privacy and censorship-circumvention reasons, public addresses using DNS records SHOULD be resolved using [DNS over HTTPS](https://tools.ietf.org/html/rfc8484) or [DNS over TLS/DTLS](https://tools.ietf.org/html/rfc8310), using a DNS resolver trusted by the implementer. Advanced end users SHOULD also be allowed to override the DNS resolver or even use the one provided by the host system.
+For privacy and censorship-circumvention reasons, public addresses using DNS records SHOULD be resolved using [DNS over HTTPS](https://tools.ietf.org/html/rfc8484) or [DNS over TLS/DTLS](https://tools.ietf.org/html/rfc8310), using a DNS resolver trusted by the implementer. Implementations MAY allow advanced users to set the DNS resolver. Additionally, when the connection is done over TLS 1.3 or newer, the [Encrypted Server Name Identification extension](https://tools.ietf.org/html/draft-rescorla-tls-esni-00) SHOULD be used.
 
 Bindings MAY extend this specification, but they MUST NOT override it.
 
