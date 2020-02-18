@@ -168,7 +168,7 @@ message CollectedParcel {
 
 ## Message Transport Bindings
 
-A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) in Relaynet. Their objective is to facilitate the exchange of messages in endpoint and gateway messaging protocols (e.g., parcels, cargoes, acknowledgements). This document describes the requirements applicable to all bindings, but does not define any concrete binding.
+A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) in Relaynet. Its objective is to facilitate the exchange of messages in endpoint and gateway messaging protocols (e.g., parcels, cargoes, acknowledgements). This document describes the requirements applicable to all bindings, but does not define any concrete binding.
 
 Bindings will typically leverage [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols, such as HTTP or purpose-built ones, but they can also use an Inter-Process Communication (IPC) mechanism provided by the host system.
 
