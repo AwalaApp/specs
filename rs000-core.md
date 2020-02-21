@@ -112,10 +112,12 @@ Extensions to this document MAY define additional message types and their payloa
 
 Its primary purpose is to encapsulate one or more messages from the [endpoint channel](#endpoint-messaging-protocol) (e.g., parcels). Cargoes are also serialized with RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message type. Couriers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
 
-The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encapsulate zero or more messages (e.g., parcels), and be serialized with the following binary sequence (in little-endian) to be repeated for each message:
+The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encapsulate zero or more messages (e.g., parcels), and it MUST be serialized as the DER representation of the `CargoMessageSet` ASN.1 value as defined below:
 
-1. A 32-bit unsigned integer (4 octets) representing the length of the parcel.
-1. The parcel serialized in the RAMF.
+```asn1
+CargoMessageSet ::= SET OF Message
+Message ::= BIT STRING
+```
 
 #### Cargo Collection Authorization (CCA) {#cca}
 
