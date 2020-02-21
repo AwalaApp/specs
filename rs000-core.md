@@ -119,6 +119,8 @@ CargoMessageSet ::= SET OF Message
 Message ::= BIT STRING
 ```
 
+Where the content of `Message` is a RAMF serialization.
+
 #### Cargo Collection Authorization (CCA) {#cca}
 
 A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A allows a courier to collect cargo on its behalf from Gateway B. Its concrete message type is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
