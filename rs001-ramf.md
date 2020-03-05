@@ -36,7 +36,7 @@ The format signature MUST span the first 10 octets of the message, representing 
 
 1. Prefix (8 octets): "Relaynet" in ASCII (hex: `52 65 6c 61 79 6e 65 74`).
 1. Concrete message type (1 octet).
-1. Format version (1 octet). An 8-bit unsigned integer.
+1. Concrete message format version (1 octet). This MUST be an 8-bit unsigned integer. 
 
 The format signature MUST be followed by a DER-encoded CMS signed-data value where:
 
