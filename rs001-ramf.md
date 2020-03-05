@@ -26,7 +26,9 @@ Messages exchanged within an endpoint or gateway channel require metadata attach
 
 Every endpoint and gateway channel message is serialized as a _RAMF message_, which encapsulates the payload along with relevant metadata to be used for routing, authentication and authorization purposes. The message payload and metadata, collectively known as the _message fields_, are serialized as an ASN.1 DER value.
 
-A RAMF message begins with a sequence of octets, collectively known as _the format signature_, which specify the type of the message and its format version. The format signature is followed by a DER-encoded [CMS Signed-data](https://tools.ietf.org/html/rfc5652#section-5) value that encapsulates the message fields and the digital signature (including the [Relaynet PKI](rs002-pki.md) certificate of the sender). By specifying the message type and version in the format signature, future RAMF versions could use different serialization formats, including formats incompatible with ASN.1.
+A RAMF message begins with a sequence of octets, collectively known as _the format signature_, which specify the type of the message (e.g., a parcel) and its format version (e.g., version 1). The format signature is followed by a DER-encoded [CMS Signed-data](https://tools.ietf.org/html/rfc5652#section-5) value that encapsulates the message fields and the digital signature (including the [Relaynet PKI](rs002-pki.md) certificate of the sender).
+
+By specifying the message type and version in the format signature, future RAMF versions could use different serialization formats, including formats incompatible with ASN.1.
 
 ## Format
 
