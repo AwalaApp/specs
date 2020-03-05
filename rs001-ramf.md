@@ -12,7 +12,7 @@ permalink: /RS-001
 ## Abstract
 {: .no_toc }
 
-This document defines version 1 of the Relaynet Abstract Message Format (RAMF), a binary format used to serialize messages in the endpoint and gateway messaging protocols of Relaynet. It also defines some basic requirements for any recipient of the message.
+This document defines version 1 of the _Relaynet Abstract Message Format_ (RAMF), a binary format used to serialize Relaynet [channel](./rs000-core.md#messaging-protocols) messages. RAMF is based on the [ASN.1 Distinguished Encoding Rules](https://www.itu.int/rec/T-REC-X.680-X.693-201508-I/en) (DER) and uses the [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652). It also defines a series of requirements for recipients and intermediaries processing such messages.
 
 ## Table of contents
 {: .no_toc }
@@ -22,32 +22,41 @@ This document defines version 1 of the Relaynet Abstract Message Format (RAMF), 
 
 ## Introduction
 
-RAMF messages encapsulate payloads along with relevant metadata to be used for routing, authentication and authorization purposes.
+Messages exchanged within an endpoint or gateway channel require metadata attached to their payload so that gateways and couriers processing such messages can verify the validity of the message and then deliver the verified message to the next node on the route.
 
-Endpoint and gateway channels communicate amongst themselves using messages whose formats are based on RAMF.
+Every endpoint and gateway channel message is serialized as a _RAMF message_, which encapsulates the payload along with relevant metadata to be used for routing, authentication and authorization purposes. The message payload and metadata, collectively known as the _message fields_, are serialized as an ASN.1 DER value.
+
+A RAMF message begins with a sequence of octets, collectively known as _the format signature_, which specify the type of the message and its format version. The format signature is followed by a DER-encoded [CMS Signed-data](https://tools.ietf.org/html/rfc5652#section-5) value that encapsulates the message fields and the digital signature (including the [Relaynet PKI](rs002-pki.md) certificate of the sender). By specifying the message type and version in the format signature, future RAMF versions could use different serialization formats, including formats incompatible with ASN.1.
 
 ## Format
 
-A message is serialized using the following byte sequence ([little-endian](https://en.wikipedia.org/wiki/Endianness)), and its fields are framed with [length prefixes instead of delimiters](https://blog.stephencleary.com/2009/04/message-framing.html).
+The format signature MUST span the first 10 octets of the message, representing the following sequence (encoded in little-endian):
 
-1. [File format signature](https://en.wikipedia.org/wiki/List_of_file_signatures) (10 octets):
-   1. Prefix (8 octets): "Relaynet" in ASCII (hex: "52 65 6c 61 79 6e 65 74").
-   1. Concrete message type (1 octet).
-   1. Format version (1 octet). An 8-bit unsigned integer.
-1. Recipient address. UTF-8 encoded, and length-prefixed with a 10-bit unsigned integer (2 octets). Consequently, the address can be as long as 1024 octets.
-1. Message id. Unique to the sender. This is an opaque value, so it has no structure or semantics. This field is ASCII encoded and length-prefixed with 8-bit integer (1 octets).
-1. Date. Creation date of the message (in UTC), represented as the number of seconds since Unix epoch. This is serialized as a 32-bit unsigned integer (4 octets), so it is not susceptible to the [Year 2038 Problem](https://en.wikipedia.org/wiki/Year_2038_problem).
-1. Time to live (TTL). Number of seconds during which the message is valid, starting from the date in the Date field. Zero (`0`) means the message does not expire. The value MUST be encoded as a 24-bit, unsigned integer (3 octets), so maximum TTL is just over 6 months.
-1. Payload. Contains the [service data unit](https://en.wikipedia.org/wiki/Service_data_unit) encapsulated in a [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652) value, which MUST be length-prefixed with a 23-bit unsigned integer (3 octets), so the maximum length is 8 MiB.
-1. Signature. The sender's [detached signature](https://en.wikipedia.org/wiki/Detached_signature) to validate the integrity and authenticity of the message. This is at the bottom to make it easy to generate and process messages with a single pass.
-   - The plaintext MUST be the entire RAMF message before the signature.
-   - The ciphertext MUST be encapsulated as a valid [CMS signed data](https://tools.ietf.org/html/rfc5652#section-5) value where:
-     - `digestAlgorithms`, the collection of message digest algorithm identifiers, MUST contain exactly one OID and it MUST correspond to a valid algorithm per [RS-018](rs018-algorithms.md).
-     - `encapContentInfo`, the signed content, MUST NOT include the content itself, since this is a detached signature.
-     - `certificates` MUST contain the sender's certificate and it SHOULD also include the rest of the certificates in the chain. All certificates MUST comply with the [Relaynet PKI](rs002-pki.md).
-     - `crls` MUST be empty, since certificate revocation is part of the [Relaynet PKI](rs002-pki.md).
-     - `signerInfos` MUST contain exactly one signer (`SignerInfo`), and whose `signatureAlgorithm` MUST be valid per [RS-018](rs018-algorithms.md).
-   - The CMS value MUST be length-prefixed with a 14-bit unsigned integer (2 octets), so the maximum length is 16 KiB.
+1. Prefix (8 octets): "Relaynet" in ASCII (hex: `52 65 6c 61 79 6e 65 74`).
+1. Concrete message type (1 octet).
+1. Format version (1 octet). An 8-bit unsigned integer.
+
+The format signature MUST be followed by a DER-encoded CMS signed-data value where:
+
+  - `digestAlgorithms`, the collection of message digest algorithm identifiers, MUST contain exactly one OID and it MUST correspond to a valid algorithm per [RS-018](rs018-algorithms.md).
+  - `encapContentInfo`, the signed content, MUST include signed ciphertext -- In this case, the message fields.
+  - `certificates` MUST contain the sender's certificate and it SHOULD also include the rest of the certificates in the chain. All certificates MUST comply with the [Relaynet PKI](rs002-pki.md).
+  - `crls` MUST be empty, since certificate revocation is part of the [Relaynet PKI](rs002-pki.md).
+  - `signerInfos` MUST contain exactly one signer (`SignerInfo`), and whose `signatureAlgorithm` MUST be valid per [RS-018](rs018-algorithms.md).
+
+The message fields MUST be represented as the DER serialization of the ASN.1 `RAMF` type below:
+
+```
+{% include_relative diagrams/rs001/ramf.asn1 %}
+```
+
+Where the items in the `RAMFMessage` sequence are defined as follows:
+
+- `recipientAddress` MUST be the public or private address of the recipient. It MUST NOT span more than 1024 octets.
+- `messageId` MUST be the unique identifier assigned to this message by its sender. It MUST NOT span more than 256 octets.
+- `creationTimeUtc` MUST be the creation date of the message (in UTC)
+- `ttl` MUST represent the time-to-live of the message -- That is, the number of seconds since `creationTimeUtc` during which the message is regarded valid. It MUST NOT be less than zero or greater than 15552000 (180 days).
+- `payload` MUST be the [service data unit](https://en.wikipedia.org/wiki/Service_data_unit) encapsulated in a DER-encoded [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652) value (e.g., Enveloped-data). This field MUST not span more than 8388608 octets (8 MiB).
 
 ## Post-Deserialization Validation
 
