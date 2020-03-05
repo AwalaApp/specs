@@ -12,7 +12,7 @@ permalink: /RS-001
 ## Abstract
 {: .no_toc }
 
-This document defines version 1 of the _Relaynet Abstract Message Format_ (RAMF), a binary format used to serialize Relaynet [channel](./rs000-core.md#messaging-protocols) messages. RAMF is based on the [ASN.1 Distinguished Encoding Rules](https://www.itu.int/rec/T-REC-X.680-X.693-201508-I/en) (DER) and uses the [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652). It also defines a series of requirements for recipients and intermediaries processing such messages.
+This document defines version 1 of the _Relaynet Abstract Message Format_ (RAMF), a binary format used to serialize Relaynet [channel](./rs000-core.md#messaging-protocols) messages. RAMF is based on the [ASN.1 Distinguished Encoding Rules](https://www.itu.int/rec/T-REC-X.680-X.693-201508-I/en) (DER) and the [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652). It also defines a series of requirements for recipients and intermediaries processing such messages.
 
 ## Table of contents
 {: .no_toc }
