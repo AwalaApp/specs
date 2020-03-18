@@ -60,6 +60,8 @@ Where the items in the `RAMFMessage` sequence are defined as follows:
 - `ttl` MUST represent the time-to-live of the message -- That is, the number of seconds since `creationTimeUtc` during which the message is regarded valid. It MUST NOT be less than zero or greater than 15552000 (180 days).
 - `payload` MUST be the [service data unit](https://en.wikipedia.org/wiki/Service_data_unit) encapsulated in a DER-encoded [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652) value (e.g., Enveloped-data). This field MUST not span more than 8388608 octets (8 MiB).
 
+A RAMF message MUST NOT span more than 9437184 octets (9 MiB).
+
 ## Post-Deserialization Validation
 
 Recipients and brokers of a RAMF message MUST validate the message as soon as it is received, before any further processing or relay. The message MUST be refused when any of the conditions below is not met:
