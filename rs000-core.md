@@ -241,7 +241,7 @@ The action of transmitting a cargo over a CRC is called _hop_, and the action of
 
 Completing one relay MAY involve hops with different bindings. For example, the CRC between a private gateway and a courier could use [CoSocket](rs004-cosocket.md), whilst the CRC between the courier and the public gateway could use [CogRPC](rs008-cogrpc.md).
 
-The gateway sending a cargo MUST NOT remove it until the target gateway has acknowledged its receipt. The acknowledgment MAY be received via a CRC or an Internet-based PDC (once the two gateways can communicate directly over the Internet). The recipient MUST send the acknowledgement after the cargo is safely stored -- Consequently, if the cargo is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
+The node sending a cargo MUST NOT remove it until the target node has acknowledged its receipt. The recipient MUST send the acknowledgement after the cargo is safely stored -- Consequently, if the cargo is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
 
 A gateway MAY provide the courier with a CCA so that the courier can collect cargo from its peer gateway.
 
