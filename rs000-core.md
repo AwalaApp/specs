@@ -249,7 +249,7 @@ When a CRC is established, the following process should be done sequentially:
 
    How this step is initiated will depend on the type of node acting as the client:
    
-   - When the client is a private gateway, it MUST initiate this step by sending one or more CCAs to the courier and the courier MUST then return all the cargo it holds for each gateway, if any.
+   - When the client is a private gateway, it MUST initiate this step by sending one or more CCAs to the courier and the courier MUST then return all the cargo it holds for each gateway, if any. The courier MUST persist those CCAs so it can send them to their respective target gateways when collecting cargo from them in the future.
    - When the client is a courier, it MUST simply deliver the cargo bound for the current gateway, if any.
    
    Cargo and CCA messages SHOULD be redelivered one last time when they are not acknowledged within 5 seconds since its delivery.
