@@ -237,7 +237,7 @@ The gateway MUST NOT start delivering parcels until the endpoint has signalled t
 
 This is a protocol that establishes a _Cargo Relay Connection_ (CRC) between a gateway and a courier with the primary purpose of exchanging cargo bidirectionally.
 
-The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are at least two hops in the relay of a cargo: One from its origin gateway to the courier and another from the courier to its target gateway, with one or more couriers participating in that relay.
+The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are two hops in the relay of a cargo: One from its origin gateway to the courier and another from the courier to its target gateway. A courier MAY also act as a gateway to exchange cargo with another courier via a CRC, in which case the number of hops will increase accordingly.
 
 The node sending a cargo MUST NOT remove it until the target node has acknowledged its receipt. The recipient MUST send the acknowledgement after the cargo is safely stored -- Consequently, if the cargo is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
 
