@@ -1,0 +1,23 @@
+title CRC between private gateway and courier
+
+Private Gateway->Courier: Start connection
+
+loop Send cargo to gateway
+    Private Gateway->Courier: CCA
+
+    loop (asynchronously)
+        Courier->Private Gateway: Cargo
+        Private Gateway->Courier: ACK
+    end
+
+    Courier->Private Gateway: Delivery complete
+end
+
+note over Courier: Wait 3 seconds
+
+loop Send cargo to courier (asynchronously)
+    Private Gateway->Courier: Cargo
+    Courier->Private Gateway: ACK
+end
+
+Courier->Private Gateway: End connection
