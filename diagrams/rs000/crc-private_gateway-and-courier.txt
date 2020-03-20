@@ -20,4 +20,4 @@ loop Send cargo to courier (asynchronously)
     Courier->Private Gateway: ACK
 end
 
-Courier->Private Gateway: End connection
+Private Gateway->Courier: End connection

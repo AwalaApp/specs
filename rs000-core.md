@@ -245,25 +245,27 @@ On the other hand, to establish a CRC between a courier and a public gateway, th
 
 When a CRC is established, the following process should be done sequentially:
 
-1. Any cargo in the courier bound for the current gateway MUST be delivered, and the gateway MUST acknowledge the receipt of each cargo as soon as it is safely stored. Finally, the courier MUST notify the gateway when all cargo has been delivered.
+1. Any cargo in the courier bound for the current gateway MUST be delivered, and the gateway MUST acknowledge the receipt of each cargo as soon as it is safely stored.
 
    How this step is initiated will depend on the type of node acting as the client:
    
    - When the client is a private gateway, it MUST initiate this step by sending one or more CCAs to the courier and the courier MUST then return all the cargo it holds for each gateway, if any. The courier MUST persist those CCAs so it can send them to their respective target gateways when collecting cargo from them in the future.
    - When the client is a courier, it MUST simply deliver the cargo bound for the current gateway, if any.
-   
-   Cargo and CCA messages SHOULD be redelivered one last time when they are not acknowledged within 5 seconds since its delivery.
 1. No further cargoes MUST be exchanged for 3 to 5 seconds to allow sufficient time for the gateway to (a) deliver the parcels contained in the cargo to their corresponding endpoints and (b) collect any new parcels that those endpoints might have automatically produced in response to the parcels they received.
   
    The underlying connection (e.g., a TCP connection) MAY be closed during this time, in which case a new connection will have to be created when resuming this process.
    
    This step SHOULD be skipped when the courier did not deliver any cargo to the gateway in the previous step.
-1. The gateway MUST send to the courier any cargo it wants the courier to relay, and the courier MUST acknowledge the receipt of each cargo as soon as it is safely stored. Finally, the gateway MUST notify the gateway when all cargo has been delivered and then close the underlying connection.
+1. The gateway MUST send to the courier any cargo it wants the courier to relay, and the courier MUST acknowledge the receipt of each cargo as soon as it is safely stored. The client MUST close the underlying connection at the end of this step.
 
    How this step is initiated will depend on the type of node acting as the client:
    
    - When the client is a courier, it MUST initiate this step by sending one or more CCAs to the public gateway and the public gateway MUST then return all the cargo it holds for the gateway of each CCA, if any.
    - When the client is a private gateway, it MUST simply deliver the cargo bound for the current gateway, if any.
+
+When a client sends a CCA, the server MUST notify the client when it is done sending cargo for that CCA, even if no cargo was sent. The client SHOULD resend a CCA one last time when the server does not finish processing it within 5 seconds since the CCA was sent or the last cargo was received, whichever happened last. Couriers MUST NOT reuse CCAs when collecting cargo from a public gateway, so each CCA SHOULD be discarded as soon as the gateway confirms it completed processing it.
+
+Cargoes SHOULD be redelivered one last time when they are not acknowledged within 5 seconds since their delivery.
 
 The following diagram illustrates the binding between a private gateway and a courier:
 
