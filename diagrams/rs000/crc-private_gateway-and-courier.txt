@@ -13,7 +13,7 @@ loop Send cargo to gateway
     Courier->Private Gateway: Delivery complete
 end
 
-note over Courier: Wait 3 seconds
+note over Private Gateway: Wait 3 seconds
 
 loop Send cargo to courier (asynchronously)
     Private Gateway->Courier: Cargo

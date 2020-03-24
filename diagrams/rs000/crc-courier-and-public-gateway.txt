@@ -18,7 +18,7 @@ loop Send cargo to courier
     end
 
     Public Gateway->Courier: Delivery complete
-    note over Courier: Delete CCA
+    note over Public Gateway: Delete CCA
 end
 
 Courier->Public Gateway: End connection
