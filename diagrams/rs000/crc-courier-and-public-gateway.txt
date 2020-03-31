@@ -17,7 +17,7 @@ loop Send cargo to courier
         Courier->Public Gateway: ACK
     end
 
-    Public Gateway->Courier: Delivery complete
+    Public Gateway->Courier: CCA fulfilled
     note over Courier: Delete CCA
 end
 
