@@ -1,4 +1,4 @@
-title CRC between courier and public
+title CRC between a courier and a public gateway
 
 Courier->Public Gateway: Start connection
 
@@ -7,7 +7,7 @@ loop Send cargo to gateway (asynchronously)
     Public Gateway->Courier: ACK
 end
 
-note over Public Gateway: Wait 3 seconds
+note over Courier: Wait 3 seconds
 
 loop Send cargo to courier
     Courier->Public Gateway: CCA
@@ -18,7 +18,7 @@ loop Send cargo to courier
     end
 
     Public Gateway->Courier: Delivery complete
-    note over Public Gateway: Delete CCA
+    note over Courier: Delete CCA
 end
 
 Courier->Public Gateway: End connection

@@ -1,4 +1,4 @@
-title CRC between private gateway and courier
+title CRC between a private gateway and a courier
 
 Private Gateway->Courier: Start connection
 
