@@ -45,6 +45,8 @@ This bidirectional streaming RPC MUST be used to collect cargo from the server. 
 
 This call MUST be authenticated by setting the `Authorization` metadata to the string `Relaynet-CCA ${crcBase64}`, where `${crcBase64}` is the Base64-encoded serialization of a valid [Cargo Collection Authorization (CCA)](./rs000-core.md#cca). As a consequence, each call is bound to exactly one target gateway.
 
+The server MUST end the gRPC call when it has no further cargoes to send to the client. The underlying connection MAY remain open in case the client wishes to use the `DeliverCargo` RPC next.
+
 ## Acknowledgement Messages
 
 A node sending cargo MUST attach a UUID4 to each individual message. The recipient MUST attach such identifier to each acknowledgement message.
