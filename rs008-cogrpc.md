@@ -27,7 +27,7 @@ When a CRC is established between a private gateway and a courier, the gateway a
 
 This binding defines multiple message types and RPCs under a single gRPC service called `CargoRelay`. The gRPC interface described by this binding is defined in full in the form of Protocol Buffers at the end of this document.
  
-The client is responsible for initiating the delivery and collection of parcels using the corresponding RPC. Note that per [RS-000](./rs000-core.md), it is recommended that the client sends the cargo before attempting to collect any cargo.
+The client is responsible for initiating the delivery and collection of parcels using the corresponding RPC. Note that per [RS-000](./rs000-core.md), it is required that the gateway receives any cargo before attempting to send any.
 
 ## Remote Procedure Calls (RPCs) {#rpcs}
 
