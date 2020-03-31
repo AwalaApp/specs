@@ -256,12 +256,14 @@ When a CRC is established, the following process should be done sequentially:
    The underlying connection (e.g., a TCP connection) MAY be closed during this time, in which case a new connection will have to be created when resuming this process.
    
    This step SHOULD be skipped when the courier did not deliver any cargo to the gateway in the previous step.
-1. The gateway MUST send to the courier any cargo it wants the courier to relay, and the courier MUST acknowledge the receipt of each cargo as soon as it is safely stored. The client MUST close the underlying connection at the end of this step.
+1. The gateway MUST send to the courier any cargo it wants the courier to relay, and the courier MUST acknowledge the receipt of each cargo as soon as it is safely stored.
 
    How this step is initiated will depend on the type of node acting as the client:
    
    - When the client is a courier, it MUST initiate this step by sending one or more CCAs to the public gateway and the public gateway MUST then return all the cargo it holds for the gateway of each CCA, if any.
    - When the client is a private gateway, it MUST simply deliver the cargo bound for its peer gateway, if any.
+   
+   The client MUST close the underlying connection at the end of this step.
 
 When a client sends a CCA, the server MUST notify the client when it is done sending cargo for that CCA, even if no cargo was sent. The client SHOULD resend a CCA one last time when the server does not finish processing it within 5 seconds since the CCA was sent or the last cargo was received, whichever happened last. Couriers MUST NOT reuse CCAs when collecting cargo from a public gateway, so each CCA SHOULD be discarded as soon as the gateway confirms it completed processing it.
 
