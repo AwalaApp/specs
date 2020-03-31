@@ -23,11 +23,11 @@ This document describes CogRPC (pronounced _Co-Jee-Arr-Pee-See_), a [cargo relay
 
 As a cargo relay binding, CogRPC's objective is to establish a Cargo Relay Connection (CRC) between a courier and a gateway so they can exchange cargo.
 
-When a CRC is established between a local gateway and a courier, the gateway and the courier act as the client and the server, respectively. Similarly, when a CRC is established between a public gateway and a courier, they act as the server and the client, respectively.
+When a CRC is established between a private gateway and a courier, the gateway and the courier act as the client and the server, respectively. Similarly, when a CRC is established between a public gateway and a courier, they act as the server and the client, respectively.
 
 This binding defines multiple message types and RPCs under a single gRPC service called `CargoRelay`. The gRPC interface described by this binding is defined in full in the form of Protocol Buffers at the end of this document.
  
-The client is responsible for initiating the delivery and collection of parcels using the corresponding RPC. Note that per [RS-000](./rs000-core.md), it is recommended that the client sends the cargo before attempting to collect any cargo.
+The client is responsible for initiating the delivery and collection of parcels using the corresponding RPC. Note that per [RS-000](./rs000-core.md), it is required that the gateway receives any cargo before attempting to send any.
 
 ## Remote Procedure Calls (RPCs) {#rpcs}
 
@@ -44,6 +44,8 @@ The cargo sent to the server MAY originate in different gateways.
 This bidirectional streaming RPC MUST be used to collect cargo from the server. The server MUST send zero or more [RAMF](rs001-ramf.md)-serialized cargo messages and the client MUST acknowledge the receipt of each cargo per the requirements and recommendations in RS-000.
 
 This call MUST be authenticated by setting the `Authorization` metadata to the string `Relaynet-CCA ${crcBase64}`, where `${crcBase64}` is the Base64-encoded serialization of a valid [Cargo Collection Authorization (CCA)](./rs000-core.md#cca). As a consequence, each call is bound to exactly one target gateway.
+
+The server MUST end the gRPC call when it has no further cargoes to send to the client. The underlying connection MAY remain open in case the client wishes to use the `DeliverCargo` RPC next.
 
 ## Acknowledgement Messages
 

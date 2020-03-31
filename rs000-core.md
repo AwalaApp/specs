@@ -237,19 +237,51 @@ The gateway MUST NOT start delivering parcels until the endpoint has signalled t
 
 This is a protocol that establishes a _Cargo Relay Connection_ (CRC) between a gateway and a courier with the primary purpose of exchanging cargo bidirectionally.
 
-The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are at least two hops in a relay: One from the origin gateway to the courier, and another from the courier to the target gateway.
+The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are two hops in the relay of a cargo: One from its origin gateway to a courier and another from the courier to its target gateway. A courier MAY also act as a gateway to exchange cargo with another courier via a CRC, in which case the number of hops will increase accordingly.
 
-Completing one relay MAY involve hops with different bindings. For example, the CRC between a private gateway and a courier could use [CoSocket](rs004-cosocket.md), whilst the CRC between the courier and the public gateway could use [CogRPC](rs008-cogrpc.md).
+To establish a CRC between a private gateway and a courier, the operator of the courier MUST first make the courier available for incoming connections from such gateways. Then the private gateway MUST initiate the connection subject to the approval of the operator of the device running the gateway. In this scenario, the gateway and the courier will play the roles of client and server, respectively.
 
-The node sending a cargo MUST NOT remove it until the target node has acknowledged its receipt. The recipient MUST send the acknowledgement after the cargo is safely stored -- Consequently, if the cargo is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
+On the other hand, to establish a CRC between a courier and a public gateway, the courier MUST initiate a CRC connection with each gateway for which any cargoes and/or CCAs are bound. In this scenario, the courier and the gateway will play the roles of client and server, respectively.
 
-A gateway MAY provide the courier with a CCA so that the courier can collect cargo from its peer gateway.
+When a CRC is established, the following process should be done sequentially:
 
-A private gateway MAY require the courier to provide a CCA from the public gateway, but a public gateway MUST require at least one CCA because it needs the private gateway's certificate to identify the parcels that belong to the private gateway (the private gateway's certificate is part of the PDA certification chain).
+1. Any cargo in the courier bound for the current gateway MUST be delivered, and the gateway MUST acknowledge the receipt of each cargo as soon as it is safely stored.
 
-The courier SHOULD deliver the cargo and then wait a few seconds before collecting cargo from the gateway, in case there are any responses to the messages in the cargo that was delivered.
+   How this step is initiated will depend on the type of node acting as the client:
+   
+   - When the client is a private gateway, it MUST initiate this step by sending one or more CCAs to the courier and the courier MUST then return all the cargo it holds for each gateway, if any. The courier MUST persist those CCAs so it can send them to their respective target gateways when collecting cargo from them in the future.
+   - When the client is a courier, it MUST simply deliver the cargo bound for the current gateway, if any.
+1. No further cargoes MUST be exchanged for 3 to 5 seconds to allow sufficient time for the gateway to (a) deliver the parcels contained in the cargo to their corresponding endpoints and (b) collect any new parcels that those endpoints might have automatically produced in response to the parcels they received.
+  
+   The underlying connection (e.g., a TCP connection) MAY be closed during this time, in which case a new connection will have to be created when resuming this process.
+   
+   This step SHOULD be skipped when the courier did not deliver any cargo to the gateway in the previous step.
+1. The gateway MUST send to the courier any cargo it wants the courier to relay, and the courier MUST acknowledge the receipt of each cargo as soon as it is safely stored.
 
-Note that couriers are not assigned Relaynet PKI certificates, but per the requirements above for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. In such cases, the courier MUST provide a valid client- or server-side certificate when it acts as client or server, respectively.
+   How this step is initiated will depend on the type of node acting as the client:
+   
+   - When the client is a courier, it MUST initiate this step by sending one or more CCAs to the public gateway and the public gateway MUST then return all the cargo it holds for the gateway of each CCA, if any.
+   - When the client is a private gateway, it MUST simply deliver the cargo bound for its peer gateway, if any.
+   
+   The client MUST close the underlying connection at the end of this step.
+
+When a client sends a CCA, the server MUST notify the client when it is done sending cargo for that CCA, even if no cargo was sent. The client SHOULD resend a CCA one last time when the server does not finish processing it within 5 seconds since the CCA was sent or the last cargo was received, whichever happened last. Couriers MUST NOT reuse CCAs when collecting cargo from a public gateway, so each CCA SHOULD be discarded as soon as the gateway confirms it completed processing it.
+
+Cargoes SHOULD be redelivered one last time when they are not acknowledged within 5 seconds since their delivery.
+
+The following diagram illustrates the binding between a private gateway and a courier:
+
+![](./diagrams/rs000/crc-private_gateway-and-courier.png)
+
+And the following diagram illustrates the binding between a courier and a public gateway:
+
+![](./diagrams/rs000/crc-courier-and-public-gateway.png)
+
+Gateways SHOULD defer the encapsulation of parcels and other messages into cargo until they are about to send it to the courier as that would allow them to exclude expired messages and send as few cargoes as possible. They MAY, however, set a creation date in the past to prevent an eavesdropper from tracking the time when the CRC took place.
+
+Gateways MUST NOT delete parcels as a consequence of encapsulating them in cargo sent to couriers as that would be incompatible with the requirements of the [Parcel Delivery Binding](#parcel-delivery-binding) (there is no guarantee that the courier will be able to deliver those parcels before they expire).
+
+Note that couriers are not assigned Relaynet PKI certificates, but per the requirements for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. Consequently, the node acting server MUST provide a valid certificate which MAY NOT be issued by a Certificate Authority trusted by the client when the server is a courier: Couriers are unlikely to get certificates issued by widely trusted authorities because they are not Internet hosts, but this is deemed to be acceptable from a security standpoint because the purpose of TLS (or equivalent) in this case is to provide confidentiality from eavesdroppers, not to authenticate the server.
 
 ## Open Questions
 
