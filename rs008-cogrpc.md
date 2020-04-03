@@ -49,7 +49,7 @@ The server MUST end the gRPC call when it has no further cargoes to send to the 
 
 ## Acknowledgement Messages
 
-A node sending cargo MUST attach a UUID4 to each individual message. The recipient MUST attach such identifier to each acknowledgement message.
+A node sending cargo MUST attach a UUID4 to each individual message. The recipient MUST attach such an identifier to each acknowledgement message.
 
 ## Protocol Buffers Package Definition
 
