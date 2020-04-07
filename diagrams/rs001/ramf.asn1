@@ -2,7 +2,7 @@ Relaynet-RAMF DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
   RAMFMessage ::= SEQUENCE
   {
-     recipientAddress   VisibleString (SIZE(0..1023)),
+     recipientAddress   VisibleString (SIZE(0..1024)),
      messageId          VisibleString (SIZE(0..64)),
      creationTimeUtc    DATE-TIME,
      ttl                INTEGER (0..15552000),
