@@ -56,7 +56,7 @@ Where the items in the `RAMFMessage` sequence are defined as follows:
 
 - `recipientAddress` MUST be the public or private address of the recipient. It MUST NOT span more than 1024 octets.
 - `messageId` MUST be the unique identifier assigned to this message by its sender. It MUST NOT span more than 256 octets.
-- `creationTimeUtc` MUST be the creation date of the message (in UTC)
+- `creationTimeUtc` MUST be the creation date of the message (in UTC).
 - `ttl` MUST represent the time-to-live of the message -- That is, the number of seconds since `creationTimeUtc` during which the message is regarded valid. It MUST NOT be less than zero or greater than 15552000 (180 days).
 - `payload` MUST be the [service data unit](https://en.wikipedia.org/wiki/Service_data_unit) encapsulated in a DER-encoded [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652) value (e.g., Enveloped-data). This field MUST not span more than 8388608 octets (8 MiB).
 
