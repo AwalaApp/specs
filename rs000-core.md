@@ -102,50 +102,11 @@ The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the se
 
 ### Gateway Messaging Protocol
 
-This protocol establishes the channel between two gateways, and its primary purpose is to enable the exchange of cargo in both directions.
+This protocol establishes the channel between two gateways, and its primary purpose is to facilitate the delivery of messages from the endpoint messaging protocol over the underlying network that is available at any point in time (e.g., the Internet, a sneakernet).
 
 The two gateways MUST maintain a single session using the [Channel Session Protocol](rs003-key-agreement.md), and all keys used to encrypt payloads in this channel MUST be derived from that session.
 
-Extensions to this document MAY define additional message types and their payloads MAY be unencrypted.
-
-#### Cargo
-
-Its primary purpose is to encapsulate one or more messages from the [endpoint channel](#endpoint-messaging-protocol) (e.g., parcels). Cargoes are also serialized with RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message type. Couriers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
-
-The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encapsulate zero or more messages (e.g., parcels), and it MUST be serialized as the DER representation of the `CargoMessageSet` ASN.1 value as defined below:
-
-```asn1
-CargoMessageSet ::= SET OF Message
-Message ::= BIT STRING
-```
-
-Where the content of `Message` is a RAMF serialization.
-
-#### Cargo Collection Authorization (CCA) {#cca}
-
-A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A allows a courier to collect cargo on its behalf from Gateway B. Its concrete message type is the octet `0x44`. This is to be eventually used as described in the [cargo relay binding](#cargo-relay-binding).
-
-The payload ciphertext MUST be encrypted. The corresponding plaintext MAY contain any [_Parcel Delivery Deauthorizations_ (PDD)](rs002-pki.md#parcel-delivery-deauthorization-pdd) issued by Gateway A's endpoints or Gateway A itself to revoke [PDAs](rs002-pki.md#parcel-delivery-authorization-pda).
-
-The payload plaintext MUST be serialized with [Protocol Buffers v3](https://developers.google.com/protocol-buffers/docs/proto3) using the `CargoCollectionAuthorization` message as defined below:
-
-```proto
-syntax = "proto3";
-
-package relaynet.messaging.gateway;
-
-import "google/protobuf/timestamp.proto";
-
-message CargoCollectionAuthorization {
-    repeated ParcelDeliveryDeauthorization parcel_delivery_deauthorizations = 1;
-}
-
-message ParcelDeliveryDeauthorization {
-    string endpoint_address = 1;
-    string pda_serial_numbers = 2;
-    google.protobuf.Timestamp expiry = 3;
-}
-```
+In addition to relaying messages from the endpoint messaging protocol, this protocol supports the following _control messages_ to enable the two gateways to coordinate their work.
 
 #### Parcel Collection Acknowledgement (PCA) {#pca}
 
@@ -169,6 +130,27 @@ message CollectedParcel {
 ```
 
 `origin_endpoint_private_address` represents the private node address of the endpoint sending the parcel and `parcel_id` represents the RAMF message id of said parcel.
+
+#### Parcel Delivery Deauthorization (PDD) {#pdd}
+
+A Parcel Delivery Deauthorization (PDD) revokes one or more PDAs issued by a specific endpoint. It MAY be requested by the endpoint itself or its gateway. Regardless of which node initiated the PDD, the message sent to the peer gateway MUST have the following structure:
+
+- The private address for the endpoint whose PDAs should be revoked.
+- Serial numbers of the PDAs to revoke. It may be empty to revoke all the PDAs issued by the endpoint.
+- Expiry date of the deauthorization. If revoking all PDAs from the endpoint, this MUST be the expiry date of the endpoint certificate. If revoking specific PDAs, this MUST be the expiry date of the PDA with the latest expiry date.
+
+The message MUST be serialized as the DER representation of the `ParcelDeliveryDeauthorization` ASN.1 type defined below:
+
+```asn1
+ParcelDeliveryDeauthorization ::= SEQUENCE
+{
+  recipientAddress  VisibleString (SIZE(0..1024)),
+  pdaSerialNumbers  SET OF INTEGER,
+  expiryDateUtc     DATE-TIME
+}
+```
+
+Gateways MUST enforce PDDs for as long as they are active. Public gateways MAY additionally cache PDDs until they expire in order to refuse future parcels whose PDA has been revoked.
 
 ## Message Transport Bindings
 
@@ -213,7 +195,7 @@ Internet PDCs MUST always use TLS or equivalent in non-TCP connections.
 A local PDC connects an endpoint and its private gateway. Typically, both nodes will be private and run on the same computer, but they might also be public and run on different computers in a private network or on the Internet. In addition to both nodes being able to send parcels to each other, the endpoint MAY also:
 
 - Request a certificate from the gateway, so the endpoint can issue PDAs.
-- Send PDDs to the gateway, to revoke previously issued PDAs.
+- Revoke previously issued PDAs, thus instructing the gateway to block future parcels with those PDAs.
 
 The endpoint MUST initiate the connection with the gateway. To find which binding to use and the address for the gateway, the endpoint MUST get the _Gateway Connection URL_. For example, the Gateway Connection URL `ws://127.0.0.1/path` specifies [PoWebSocket](rs016-powebsocket.md) as the binding and `127.0.0.1:80/path` as the WebSocket address of the gateway. The endpoint MUST get the connection URL from one of the following places, sorted by precedence:
 
@@ -235,7 +217,7 @@ The gateway MUST NOT start delivering parcels until the endpoint has signalled t
 
 ### Cargo Relay Binding
 
-This is a protocol that establishes a _Cargo Relay Connection_ (CRC) between a gateway and a courier with the primary purpose of exchanging cargo bidirectionally.
+This is a protocol that establishes a _Cargo Relay Connection_ (CRC) between a gateway and a courier with the primary purpose of exchanging cargo bidirectionally. Consequently, this is only applicable when the underlying network is a sneakernet.
 
 The action of transmitting a cargo over a CRC is called _hop_, and the action of transmitting a cargo from its origin gateway to its target gateway is _relay_. There are two hops in the relay of a cargo: One from its origin gateway to a courier and another from the courier to its target gateway. A courier MAY also act as a gateway to exchange cargo with another courier via a CRC, in which case the number of hops will increase accordingly.
 
@@ -283,8 +265,24 @@ Gateways MUST NOT delete parcels as a consequence of encapsulating them in cargo
 
 Note that couriers are not assigned Relaynet PKI certificates, but per the requirements for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. Consequently, the node acting server MUST provide a valid certificate which MAY NOT be issued by a Certificate Authority trusted by the client when the server is a courier: Couriers are unlikely to get certificates issued by widely trusted authorities because they are not Internet hosts, but this is deemed to be acceptable from a security standpoint because the purpose of TLS (or equivalent) in this case is to provide confidentiality from eavesdroppers, not to authenticate the server.
 
+#### Cargo
+
+Its sole purpose is to encapsulate one or more messages from the [gateway channel](#gateway-messaging-protocol) (e.g., parcels). Cargoes MUST be serialized with RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message type. Couriers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
+
+The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encapsulate zero or more messages (e.g., parcels), and it MUST be serialized as the DER representation of the `CargoMessageSet` ASN.1 type defined below:
+
+```asn1
+CargoMessageSet ::= SET OF Message
+Message ::= BIT STRING
+```
+
+Where each `Message` is the binary serialization of each message contained in the cargo.
+
+#### Cargo Collection Authorization (CCA) {#cca}
+
+A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A (the sender) allows a courier to collect cargo on its behalf from Gateway B (the recipient). Its concrete message type MUST be the octet `0x44` and its payload MUST be an empty byte sequence.
+
 ## Open Questions
 
 - How should the Gateway Connection URL be discovered on Android and iOS? A clean solution could be having a fixed binding (e.g., PoWebSocket) and URL (e.g., `ws://localhost:1234`).
-- Should the CCA be encoded with DER instead of Protocol Buffers since ASN.1/DER serialization is already necessary for the Relaynet PKI?
 - This specification only defines how to make Relaynet work on sneakernets. Maybe all the definitions specific to sneakernets should be moved to a separate spec so the core spec is agnostic of the relay layer? Using the Internet as the relay layer is already in a separate spec ([RS-017](rs017-adaptive-relay.md)).

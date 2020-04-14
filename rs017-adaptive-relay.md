@@ -46,7 +46,7 @@ The local PDC between the private gateway and the public gateway will be almost 
 
 Given the nature of the connection, when the private gateway requests a certificate from the public gateway, it would be requesting a [Gateway Certificate](rs002-pki.md#gateway-certificate) for itself.
 
-The private gateway SHOULD send any [Parcel Delivery Deauthorizations (PDDs)](rs002-pki.md#parcel-delivery-deauthorization-pdd) before signalling that it is ready to collect parcels, so that the public gateway can discard any parcels that should not be sent.
+The private gateway SHOULD send any [Parcel Delivery Deauthorizations (PDDs)](rs000-core.md#pdd) before signalling that it is ready to collect parcels, so that the public gateway can discard any parcels that should not be sent.
 
 ## Store-and-Forward vs Cut-Through Mode Selection
 

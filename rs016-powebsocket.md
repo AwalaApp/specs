@@ -24,7 +24,7 @@ This document describes _PoWebSocket_, a binding for [local Parcel Delivery Conn
 
 PoWebSocket allows an endpoint and its gateway to maintain a long-lived PDC over WebSockets. This binding is functionally equivalent to [PoSocket](rs005-posocket.md), but is based on a standard [Application Layer](https://en.wikipedia.org/wiki/Application_layer) protocol to make integration easier.
 
-As a local PDC, in addition to allowing both nodes to send parcels in either direction, the endpoint can use this connection to request a certificate from its gateway in order to issue [Parcel Delivery Authorizations (PDAs)](rs002-pki.md#parcel-delivery-authorization-pda) or revoke them with [Parcel Delivery Deauthorizations (PDD)](rs002-pki.md#parcel-delivery-deauthorization-pdd).
+As a local PDC, in addition to allowing both nodes to send parcels in either direction, the endpoint can use this connection to request a certificate from its gateway in order to issue [Parcel Delivery Authorizations (PDAs)](rs002-pki.md#parcel-delivery-authorization-pda) or revoke them with [Parcel Delivery Deauthorizations (PDD)](rs000-core.md#pdd).
 
 The messages sent over WebSockets are serialized with [Protocol Buffers](https://developers.google.com/protocol-buffers/).
 
@@ -85,7 +85,7 @@ Once the certificate has been generated, the server MUST attach it to an _endpoi
 
 ### Parcel Delivery Deauthorization
 
-To revoke all or some PDAs, the endpoint MUST send a _parcel delivery deauthorization_ message with the [data required per Relaynet PKI](rs002-pki.md#parcel-delivery-deauthorization-pdd).
+To revoke all or some PDAs, the endpoint MUST send a _parcel delivery deauthorization_ message with the fields specified in [Relaynet Core](rs000-core.md#pdd).
 
 ## Message Serialization
 

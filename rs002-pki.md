@@ -113,22 +113,8 @@ Certificates MUST be revoked when their private keys are compromised, when a [ro
 
 The endpoint MUST:
  
-- Issue [_parcel delivery deauthorizations_ (PDDs)](#parcel-delivery-deauthorization-pdd) for all its active PDAs.
+- Issue [_parcel delivery deauthorizations_ (PDDs)](rs000-core.md#pdd) for all its active PDAs.
 - Securely destroy its private key.
-
-### Parcel Delivery Deauthorization (PDD)
-
-A Parcel Delivery Deauthorization (PDD) revokes one or more [PDAs](#parcel-delivery-authorization-pda). It may be requested by the endpoint or its gateway.
-
-An endpoint MUST use the [message transport binding](rs000-core.md#message-transport-bindings) to instruct its gateway to revoke its self-issued certificate or a specific PDA. Such a request MUST include the following data, serialized in the format determined by the specific binding:
-
-- (Required) The endpoint address affected by the deauthorization. This is needed in case the endpoint has multiple active certificates as a result of a key rotation.
-- (Optional) Serial numbers of the PDAs to revoke. It may be absent to revoke all the PDAs issued by the endpoint.
-- (Required) Expiry date of the deauthorization. If revoking all PDAs from the endpoint, this MUST be the expiry date of the endpoint certificate. If revoking a specific PDA, this MUST be the expiry date of the PDA.
-
-Gateways MUST include all their active PDDs in their [_Cargo Collection Authorizations_](rs000-core.md#cca), and they MUST enforce PDDs for as long as they are active.
- 
-Public gateways MAY cache PDDs until they expire in order to refuse future parcels whose PDA has been revoked.
 
 ### Gateway Certificate Revocation (GCR)
 
