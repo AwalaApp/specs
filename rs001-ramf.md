@@ -62,7 +62,7 @@ Where the items in the `RAMFMessage` sequence are defined as follows:
 
   This field MUST NOT span more than 8 MiB (8388608 octets). For this reason, implementations SHOULD enforce a lower limit on the SDU depending on how it is to be encapsulated: Any SDU to be encrypted SHOULD be at least 65 KiB below the limit (up to 8322048 octets), and any SDU to be encapsulated as-is SHOULD be at least 1 KiB below the limit (up to 8387584 octets).
 
-A RAMF message MUST NOT span more than 9 MiB (9437184 octets).
+A RAMF message MUST NOT span more than 8396800 octets. This allows for the largest possible payload (8 MiB), and up to 8 KiB to serialize the remaining RAMF fields and the CMS signed-data value.
 
 ## Post-Deserialization Validation
 
