@@ -278,6 +278,8 @@ Message ::= BIT STRING
 
 Where each `Message` is the binary serialization of each message contained in the cargo.
 
+Note that as the encrypted payload of a RAMF message, the `CargoMessageSet` serialization cannot be greater than 8322048 octets. Consequently, each `Message` MUST be up to 8322046 octets long.
+
 #### Cargo Collection Authorization (CCA) {#cca}
 
 A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A (the sender) allows a courier to collect cargo on its behalf from Gateway B (the recipient). Its concrete message type MUST be the octet `0x44` and its payload MUST be an empty byte sequence.
