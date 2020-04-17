@@ -64,6 +64,8 @@ Where the items in the `RAMFMessage` sequence are defined as follows:
 
 A RAMF message MUST NOT span more than 8396800 octets. This allows for the largest possible payload (8 MiB), and up to 8 KiB to serialize the remaining RAMF fields and the CMS signed-data value.
 
+Concrete RAMF formats MAY require lower limits for the payload and overall size of its messages.
+
 ## Post-Deserialization Validation
 
 Recipients and brokers of a RAMF message MUST validate the message as soon as it is received, before any further processing or relay. The message MUST be refused when any of the conditions below is not met:

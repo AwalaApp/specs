@@ -100,6 +100,8 @@ The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the se
 1. A 32-bit unsigned integer (4 octets) representing the length of the service message.
 1. The service message serialized in the format dictated by the service.
 
+In order to make parcels fit in [cargo](#cargo) messages, a parcel MUST NOT span more than 8322037 octets. To support this requirement, the service message MUST be at least 65 KiB below this limit (up to 8256501 octets).
+
 ### Gateway Messaging Protocol
 
 This protocol establishes the channel between two gateways, and its primary purpose is to facilitate the delivery of messages from the endpoint messaging protocol over the underlying network that is available at any point in time (e.g., the Internet, a sneakernet).
@@ -267,7 +269,7 @@ Note that couriers are not assigned Relaynet PKI certificates, but per the requi
 
 #### Cargo
 
-Its sole purpose is to encapsulate one or more messages from the [gateway channel](#gateway-messaging-protocol) (e.g., parcels). Cargoes MUST be serialized with RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message type. Couriers and gateways MUST enforce the post-deserialization validation listed in the RAMF specification.
+Its sole purpose is to encapsulate one or more messages from the [gateway channel](#gateway-messaging-protocol) (e.g., parcels). Cargoes MUST be serialized with RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message type. Couriers and gateways MUST enforce the post-deserialization validation described on the RAMF specification.
 
 The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encapsulate zero or more messages (e.g., parcels), and it MUST be serialized as the DER representation of the `CargoMessageSet` ASN.1 type defined below:
 
@@ -276,9 +278,9 @@ CargoMessageSet ::= SET OF Message
 Message ::= BIT STRING
 ```
 
-Where each `Message` is the binary serialization of each message contained in the cargo.
+Where each `Message` is the binary serialization of each message contained in the cargo. Implementations SHOULD encapsulate messages into as few cargoes as possible.
 
-Note that as the encrypted payload of a RAMF message, the `CargoMessageSet` serialization cannot be greater than 8322048 octets. Consequently, each `Message` MUST be up to 8322046 octets long.
+Note that as the encrypted payload of a RAMF message, the `CargoMessageSet` serialization cannot be greater than 8322048 octets. Consequently, each `Message` MUST NOT span more than 8322037 octets long to account for the encoding of the type and length prefix in DER.
 
 #### Cargo Collection Authorization (CCA) {#cca}
 
