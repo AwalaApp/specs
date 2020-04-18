@@ -89,18 +89,18 @@ This protocol establishes the bidirectional channel between two endpoints. The o
 
 #### Parcel
 
-A parcel encapsulates a service message and is serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the octet `0x50` ("P" in ASCII) as its _concrete message type_. Gateways and the target endpoint MUST enforce the post-deserialization validation listed in the RAMF specification.
+A parcel encapsulates a service message and is serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the octet `0x50` ("P" in ASCII) as its _concrete message type_. Gateways and the target endpoint MUST enforce the post-deserialization validation described on the RAMF specification.
 
-The payload [ciphertext](https://en.wikipedia.org/wiki/Ciphertext) MUST be serialized as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`). The encryption key SHOULD be generated with the [Relaynet Channel Session Protocol](rs003-key-agreement.md) -- Alternatively, the key MAY be that of the target endpoint's certificate, in which case the CMS value MUST be serialized with the `KeyTransRecipientInfo` choice. Extensions to this document MAY support alternative CMS structures.
+In order to make parcels fit in [cargo](#cargo) messages, a parcel MUST NOT span more than 8322037 octets.
 
-The payload [plaintext](https://en.wikipedia.org/wiki/Plaintext) contains the service message and its media type, and is serialized with the following binary sequence (little-endian):
+The payload ciphertext MUST be serialized as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`). The encryption key SHOULD be generated with the [Relaynet Channel Session Protocol](rs003-key-agreement.md) -- Alternatively, the key MAY be that of the target endpoint's certificate, in which case the CMS value MUST be serialized with the `KeyTransRecipientInfo` choice. Extensions to this document MAY support alternative CMS structures.
+
+The payload plaintext MUST contain the service message and its media type, and it MUST be at least 65 KiB below the overall limit for a parcel (i.e., the payload plaintext MUST NOT be longer than 8256501 octets). The plaintext MUST be serialized with the following binary sequence (little-endian):
 
 1. An 8-bit unsigned integer (1 octet) representing the length of the service message type.
 1. A UTF-8 encoded string representing the type of the service message. For example, `application/x-protobuf; messageType="twitter.Tweet"`.
-1. A 32-bit unsigned integer (4 octets) representing the length of the service message.
+1. A 23-bit unsigned integer (3 octets) representing the length of the service message.
 1. The service message serialized in the format dictated by the service.
-
-In order to make parcels fit in [cargo](#cargo) messages, a parcel MUST NOT span more than 8322037 octets. To support this requirement, the service message MUST be at least 65 KiB below this limit (up to 8256501 octets).
 
 ### Gateway Messaging Protocol
 
