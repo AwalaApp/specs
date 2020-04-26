@@ -110,6 +110,25 @@ The two gateways MUST maintain a single session using the [Channel Session Proto
 
 In addition to relaying messages from the endpoint messaging protocol, this protocol supports the following _control messages_ to enable the two gateways to coordinate their work.
 
+#### Cargo
+
+Its sole purpose is to encapsulate one or more messages from the [gateway channel](#gateway-messaging-protocol) (e.g., parcels). Cargoes MUST be serialized with RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message type. Couriers and gateways MUST enforce the post-deserialization validation described on the RAMF specification.
+
+The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encapsulate zero or more messages (e.g., parcels), and it MUST be serialized as the DER representation of the `CargoMessageSet` ASN.1 type defined below:
+
+```asn1
+CargoMessageSet ::= SET OF Message
+Message ::= BIT STRING
+```
+
+Where each `Message` is the binary serialization of each message contained in the cargo. Implementations SHOULD encapsulate messages into as few cargoes as possible.
+
+Note that as the encrypted payload of a RAMF message, the `CargoMessageSet` serialization cannot be greater than 8322048 octets. Consequently, each `Message` MUST NOT span more than 8322037 octets long to account for the encoding of the type and length prefix in DER.
+
+#### Cargo Collection Authorization (CCA) {#cca}
+
+A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A (the sender) allows a courier to collect cargo on its behalf from Gateway B (the recipient). Its concrete message type MUST be the octet `0x44` and its payload MUST be an empty byte sequence.
+
 #### Parcel Collection Acknowledgement (PCA) {#pca}
 
 A Parcel Collection Acknowledgement (PCA) is a RAMF-serialized message used to signal to the peer gateway that the specified parcel(s) has been received and safely stored; its concrete message type is the octet `0x51`. The gateway that sent the original parcels MAY permanently delete such parcels at that point.
@@ -266,25 +285,6 @@ Gateways SHOULD defer the encapsulation of parcels and other messages into cargo
 Gateways MUST NOT delete parcels as a consequence of encapsulating them in cargo sent to couriers as that would be incompatible with the requirements of the [Parcel Delivery Binding](#parcel-delivery-binding) (there is no guarantee that the courier will be able to deliver those parcels before they expire).
 
 Note that couriers are not assigned Relaynet PKI certificates, but per the requirements for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. Consequently, the node acting server MUST provide a valid certificate which MAY NOT be issued by a Certificate Authority trusted by the client when the server is a courier: Couriers are unlikely to get certificates issued by widely trusted authorities because they are not Internet hosts, but this is deemed to be acceptable from a security standpoint because the purpose of TLS (or equivalent) in this case is to provide confidentiality from eavesdroppers, not to authenticate the server.
-
-#### Cargo
-
-Its sole purpose is to encapsulate one or more messages from the [gateway channel](#gateway-messaging-protocol) (e.g., parcels). Cargoes MUST be serialized with RAMF, using the octet `0x43` ("C" in ASCII) as its concrete message type. Couriers and gateways MUST enforce the post-deserialization validation described on the RAMF specification.
-
-The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encapsulate zero or more messages (e.g., parcels), and it MUST be serialized as the DER representation of the `CargoMessageSet` ASN.1 type defined below:
-
-```asn1
-CargoMessageSet ::= SET OF Message
-Message ::= BIT STRING
-```
-
-Where each `Message` is the binary serialization of each message contained in the cargo. Implementations SHOULD encapsulate messages into as few cargoes as possible.
-
-Note that as the encrypted payload of a RAMF message, the `CargoMessageSet` serialization cannot be greater than 8322048 octets. Consequently, each `Message` MUST NOT span more than 8322037 octets long to account for the encoding of the type and length prefix in DER.
-
-#### Cargo Collection Authorization (CCA) {#cca}
-
-A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A (the sender) allows a courier to collect cargo on its behalf from Gateway B (the recipient). Its concrete message type MUST be the octet `0x44` and its payload MUST be an empty byte sequence.
 
 ## Open Questions
 
