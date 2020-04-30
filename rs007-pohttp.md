@@ -39,7 +39,8 @@ The server MUST respond with one of the following status codes:
 
 - `202` (Accepted) response as soon as it successfully [stores or forwards](https://en.wikipedia.org/wiki/Store_and_forward) the parcel.
 - `307` (Temporary Redirect) per [RFC-7231](https://tools.ietf.org/html/rfc7231#section-6.4.7) or `308` (Permanent Redirect) per [RFC-7238](https://tools.ietf.org/html/rfc7238), in which case the client MUST repeat the `POST` request against the URL specified in the `Location` response header. Clients MUST honor up to 3 consecutive redirects; additional consecutive redirects MAY be honored.
-- `400` if the body of the request is not a valid RAMF-serialized parcel.
+- `400` if the request does not meet the requirements specified in this document.
+- `403` if the overall request meets the requirements in this document but the parcel specified in the request body is invalid (e.g., it expired, it is bound for another address). The client MUST NOT try to send the parcel again.
 - A public gateway MAY return a `507` (Insufficient Storage) response when it no longer has the capacity to accept parcels for the target endpoint or its gateway. In this case, the client SHOULD retry to deliver the parcel at a later point but before it expires.
 - Any other standard status code in the range 400-599 that the server regards applicable. For example, a `415 Unsupported Media Type` code could be returned if the `Content-Type` request header did not match `application/vnd.relaynet.parcel`.
 
