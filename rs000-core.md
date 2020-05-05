@@ -296,6 +296,14 @@ Gateways MUST NOT delete parcels as a consequence of encapsulating them in cargo
 
 Note that couriers are not assigned Relaynet PKI certificates, but per the requirements for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. Consequently, the node acting server MUST provide a valid certificate which MAY NOT be issued by a Certificate Authority trusted by the client when the server is a courier: Couriers are unlikely to get certificates issued by widely trusted authorities because they are not Internet hosts, but this is deemed to be acceptable from a security standpoint because the purpose of TLS (or equivalent) in this case is to provide confidentiality from eavesdroppers, not to authenticate the server.
 
+## Clock Drift Tolerance
+
+Devices disconnected from the Internet will not typically have the ability to keep their clocks in synchronization with the current time. This situation, commonly known as _clock drift_, will be particularly bad in old devices that have never been connected to the Internet, and it could be exacerbated with a recent daylight saving time switch.
+
+For this reason, Relaynet implementations SHOULD be tolerant to clock drifts of up two hours in all channel- or binding-level communications where at least one of the peers is a private node. For instance, this tolerance applies to the validity period of RAMF messages and Relaynet PKI certificates, as well as the validity of TLS certificates of couriers in a CRC.
+
+For the avoidance of doubt, this recommendation does not apply to the CRC between a courier and a public gateway because neither peer is a private node. Consequently, in this scenario, couriers are still required to refuse any TLS certificate that is not valid at the time the connection takes places, but it is still recommended that the public gateway be tolerant to a potential clock drift in the channels with private gateways.
+
 ## Open Questions
 
 - How should the Gateway Connection URL be discovered on Android and iOS? A clean solution could be having a fixed binding (e.g., PoWebSocket) and URL (e.g., `ws://localhost:1234`).
