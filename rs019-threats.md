@@ -89,4 +89,4 @@ Users that wish to conceal the address of the centralized services they use shou
 
 ## Acknowledgements
 
-This work is based on a lightweight threat analysis by [Include Security](http://www.includesecurity.com/) as part of a [security audit commissioned by the Open Technology Fund](https://relaynet.link/archives/security-audit-2019-03.pdf).
+This work is based on a lightweight threat analysis by [Include Security](http://www.includesecurity.com/) as part of a [security audit commissioned by the Open Technology Fund](https://relaynet.network/archives/security-audit-2019-03.pdf).

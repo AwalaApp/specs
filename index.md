@@ -3,7 +3,7 @@ nav_exclude: true
 ---
 # Relaynet Protocol Suite Specifications
 
-This website hosts the official [Relaynet](https://relaynet.link/) specifications. If you're new to Relaynet, you may want to start by watching a [high-level explanation of how it works](https://youtu.be/_4zP0CfcTj4) and the [demo of the proof of concept with Twitter](https://www.youtube.com/watch?v=fi_RKwmrXIY).
+This website hosts the official [Relaynet](https://relaynet.network/) specifications. If you're new to Relaynet, you may want to start by watching a [high-level explanation of how it works](https://youtu.be/_4zP0CfcTj4) and the [demo of the proof of concept with Twitter](https://www.youtube.com/watch?v=fi_RKwmrXIY).
 
 ## Main Specifications
 

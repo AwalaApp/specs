@@ -1,6 +1,6 @@
 # Relaynet Protocol Suite Specifications
 
-This is a [Jekyll](https://jekyllrb.com/) site for all the official [Relaynet](https://relaynet.link/) specifications. A live version of the site is available at [specs.relaynet.link](https://specs.relaynet.link).
+This is a [Jekyll](https://jekyllrb.com/) site for all the official [Relaynet](https://relaynet.network/) specifications. A live version of the site is available at [specs.relaynet.network](https://specs.relaynet.network).
 
 ## Run locally
 
