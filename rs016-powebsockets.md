@@ -12,7 +12,7 @@ permalink: /RS-016
 ## Abstract
 {: .no_toc }
 
-This document describes _PoWebSocket_, a binding for [local Parcel Delivery Connections (PDC)](rs000-core.md#internal-pdc) on top of the [WebSocket (RFC-6455)](https://tools.ietf.org/html/rfc6455) protocol.
+This document describes _PoWebSockets_, a binding for [local Parcel Delivery Connections (PDC)](rs000-core.md#internal-pdc) on top of the [WebSocket (RFC-6455)](https://tools.ietf.org/html/rfc6455) protocol.
 
 ## Table of contents
 {: .no_toc }
