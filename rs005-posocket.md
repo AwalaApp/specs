@@ -14,4 +14,4 @@ This document will describe _PoSocket_, a binding for [local Parcel Delivery Con
 
 ## Open Questions
 
-- Is this binding really worth having? [PoWebSocket](rs016-powebsocket.md) can achieve exactly the same, although not very efficiently because implementations typically load the whole message in memory and the protocol adds some overhead (especially due to the lack of HTTP/2 support). Would these theoretical performance gains be noticeable? And if so, do they justify having a purpose-built Layer 7 protocol?
+- Is this binding really worth having? [PoWebSockets](rs016-powebsockets.md) can achieve exactly the same, although not very efficiently because implementations typically load the whole message in memory and the protocol adds some overhead (especially due to the lack of HTTP/2 support). Would these theoretical performance gains be noticeable? And if so, do they justify having a purpose-built Layer 7 protocol?

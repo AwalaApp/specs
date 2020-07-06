@@ -1,7 +1,7 @@
 ---
 permalink: /RS-016
 ---
-# PoWebSocket: Parcel Delivery over WebSocket
+# PoWebSockets: Parcel Delivery over WebSocket
 {: .no_toc }
 
 - Id: RS-016.
@@ -22,7 +22,7 @@ This document describes _PoWebSocket_, a binding for [local Parcel Delivery Conn
 
 ## Introduction
 
-PoWebSocket allows an endpoint and its gateway to maintain a long-lived PDC over WebSockets. This binding is functionally equivalent to [PoSocket](rs005-posocket.md), but is based on a standard [Application Layer](https://en.wikipedia.org/wiki/Application_layer) protocol to make integration easier.
+PoWebSockets allows an endpoint and its gateway to maintain a long-lived PDC over WebSockets. This binding is functionally equivalent to [PoSocket](rs005-posocket.md), but is based on a standard [Application Layer](https://en.wikipedia.org/wiki/Application_layer) protocol to make integration easier.
 
 As a local PDC, in addition to allowing both nodes to send parcels in either direction, the endpoint can use this connection to request a certificate from its gateway in order to issue [Parcel Delivery Authorizations (PDAs)](rs002-pki.md#parcel-delivery-authorization-pda) or revoke them with [Parcel Delivery Deauthorizations (PDD)](rs000-core.md#pdd).
 
@@ -41,7 +41,7 @@ These messages are serialized using the following Protocol Buffers definition:
 ```proto
 syntax = "proto3";
 
-package relaynet.powebsocket.handshake;
+package relaynet.powebsockets.handshake;
 
 message Challenge {
     // Sent by the gateway at the start of the connection
@@ -94,7 +94,7 @@ The following Protocol Buffers file defines the messages in this connection:
 ```proto
 syntax = "proto3";
 
-package relaynet.powebsocket;
+package relaynet.powebsockets;
 
 import "google/protobuf/timestamp.proto";
 
@@ -148,7 +148,7 @@ Both the client and the server SHOULD send each other _ping_ messages and they M
 
 ## Relevant Specifications
 
-[Relaynet Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [parcel delivery bindings](rs000-core.md#parcel-delivery-binding) specifically, all of which apply to PoWebSocket. [Relaynet PKI (RS-002)](rs002-pki.md) is also particularly relevant to this specification.
+[Relaynet Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [parcel delivery bindings](rs000-core.md#parcel-delivery-binding) specifically, all of which apply to PoWebSockets. [Relaynet PKI (RS-002)](rs002-pki.md) is also particularly relevant to this specification.
 
 ## Open Questions
 
