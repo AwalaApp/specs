@@ -28,23 +28,22 @@ The messages sent over WebSockets are serialized with [Protocol Buffers](https:/
 
 ## Handshake
 
-Per Relaynet Core, the handshake involves three steps:
+Per Relaynet Core, the handshake involves a challenge-response transaction:
 
 1. The gateway _challenges_ the endpoint to sign a nonce with its key(s).
 1. The endpoint signs the nonce with each of its keys and sends the signatures to the gateway.
-1. The gateway verifies the signatures and confirms the end of the handshake.
 
 These messages are serialized using the following Protocol Buffers definition:
 
 ```proto
 syntax = "proto3";
 
-package relaynet.powebsockets.handshake;
+package relaynet.poweb.handshake;
 
 message Challenge {
     // Sent by the gateway at the start of the connection
 
-    string gateway_nonce = 1;
+    bytes gateway_nonce = 1;
 }
 
 message Response {
@@ -53,21 +52,25 @@ message Response {
     // The gateway's nonce signed by each endpoint certificate.
     repeated bytes gateway_nonce_signatures = 1;
 }
-
-message Complete {
-    // Sent by the gateway after successfully validating Response
-
-    bool success = 1;
-}
 ```
+
+CMS SignedData:
+
+- TODO: Copy requirements from RAMF
+- SHA-256 only
+- Detached signature
 
 ## Operations
 
 The connection can be used to exchange parcels and perform other actions as soon as the handshake is completed successfully.
 
-### Parcel Collection Request
+### Parcel Collection
 
 The endpoint will send a _parcel collection request_ message when it is ready to collect parcels from the gateway. Per Relaynet Core, the gateway would not attempt to deliver parcels until then.
+
+WebSocket closure reasons:
+
+- `1003` if the handshake response is invalid.
 
 ### Parcel Delivery
 
@@ -134,6 +137,10 @@ And since Protocol Buffers messages do not contain any information to identify t
 - `0x5`: `EndpointCertificateResponse`.
 - `0x6`: `ParcelDeliveryDeauthorization`.
 
+## Port number
+
+In a local PDC, the server SHOULD listen on port 276 if it has the appropriate permissions to do so. Otherwise, it SHOULD listen on port 13276.
+
 ## WebSocket Considerations
 
 Clients and servers implementing this specification MUST support HTTP version 1.1.
@@ -143,6 +150,10 @@ Both the client and the server SHOULD send each other _ping_ messages and they M
 ## TLS Considerations
 
 [Server Name Identification](https://en.wikipedia.org/wiki/Server_Name_Indication) MUST be supported by clients and MAY be used by servers.
+
+## Security Considerations
+
+Disable CORS in HTTP endpoints and refuse requests with `Origin` header in WebSockets to prevent webpages visited in the host computer from accessing the server.
 
 ## Relevant Specifications
 
