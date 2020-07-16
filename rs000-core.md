@@ -168,7 +168,7 @@ The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encap
 
 ```asn1
 CargoMessageSet ::= SEQUENCE OF Message
-Message ::= BIT STRING
+Message ::= OCTET STRING
 ```
 
 Where each `Message` is the binary serialization of each message contained in the cargo. Implementations SHOULD encapsulate messages into as few cargoes as possible.
