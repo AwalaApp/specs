@@ -167,7 +167,7 @@ Cargoes MUST be serialized with RAMF, using the octet `0x43` ("C" in ASCII) as i
 The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encapsulate zero or more messages (e.g., parcels), and it MUST be serialized as the DER representation of the `CargoMessageSet` ASN.1 type defined below:
 
 ```asn1
-CargoMessageSet ::= SET OF Message
+CargoMessageSet ::= SEQUENCE OF Message
 Message ::= BIT STRING
 ```
 
