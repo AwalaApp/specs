@@ -44,7 +44,12 @@ The server MUST respond with one of the following status codes:
 - A public gateway MAY return a `507` (Insufficient Storage) response when it no longer has the capacity to accept parcels for the target endpoint or its gateway. In this case, the client SHOULD retry to deliver the parcel at a later point but before it expires.
 - Any other standard status code in the range 400-599 that the server regards applicable. For example, a `415 Unsupported Media Type` code could be returned if the `Content-Type` request header did not match `application/vnd.relaynet.parcel`.
 
-The response MAY contain a body, but defining how to process it is outside this specification.
+An error response (status code 40X or 50X) MAY have a body, in which case the following will apply to the response:
+
+- The body MUST be serialized as a JSON document.
+- The `Content-Type` MUST be `application/json`.
+- A description of the error SHOULD be provided in the `message` property of the JSON document.
+- The JSON document MAY have additional properties, but their semantics would be outside the scope of this specification.
 
 ## HTTP Considerations
 
