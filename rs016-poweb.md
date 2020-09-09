@@ -26,6 +26,14 @@ PoWeb establishes local and Internet-based PDCs where remote procedure calls are
 
 The messages sent over WebSockets are serialized with [Protocol Buffers](https://developers.google.com/protocol-buffers/).
 
+## Endpoints
+
+### Pre-registration
+
+### Registration
+
+Maximum response body size: 1 MiB
+
 ## Handshake
 
 Per Relaynet Core, the handshake involves a challenge-response transaction:
