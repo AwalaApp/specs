@@ -7,10 +7,10 @@ assignees: ''
 
 ---
 
-**Executive summary**
+# Executive summary
 
 <!-- A succinct description of the issue aimed at technical people who may not necessarily be familiar with Relaynet terminology. It should ideally be just one paragraph, but could span two or three. -->
 
-**Describe the bug**
+# Describe the bug
 
 <-- A clear and concise description of what the bug is. -->
