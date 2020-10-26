@@ -306,5 +306,4 @@ For the avoidance of doubt, this recommendation does not apply to the CRC betwee
 
 ## Open Questions
 
-- How should the Gateway Connection URL be discovered on Android and iOS? A clean solution could be having a fixed binding (e.g., PoWeb) and URL (e.g., `ws://localhost:1234`).
 - This specification only defines how to make Relaynet work on sneakernets. Maybe all the definitions specific to sneakernets should be moved to a separate spec so the core spec is agnostic of the relay layer? Using the Internet as the relay layer is already in a separate spec ([RS-017](rs017-adaptive-relay.md)).
