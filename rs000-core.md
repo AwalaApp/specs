@@ -211,40 +211,41 @@ This specification defines two types of parcel delivery bindings: Local and Inte
 
 #### Internet-based PDC {#internet-pdc}
 
-An Internet-based PDC allows a client node to deliver parcels to a server node over the Internet. The client node MUST be a private gateway, a public gateway or a public endpoint, while the server node MUST be a public gateway or a public endpoint.
+An Internet-based PDC allows a client to deliver parcels to a server via the Internet. The client node MUST be a private gateway, a public gateway or a public endpoint, while the server node MUST be a public gateway or a public endpoint. Clients are only able to deliver parcels, not collect them.
 
-The server MUST NOT require client authentication, but it MAY still refuse to serve suspicious and/or ill-behaved clients.
+The server MUST NOT require client authentication, but it MAY still refuse to serve suspicious, ill-behaved or abusive clients.
 
-If the client is a user or public gateway, it SHOULD include the Internet address of the corresponding public gateway if that gateway is able to collect parcels for the endpoint that sent the parcel.
+If the client is a private or public gateway, it SHOULD include the Internet address of the corresponding public gateway if that gateway is able to collect parcels for the endpoint that sent the parcel.
 
-The client MUST close the connection as soon as all parcels have been delivered.
+The client MUST close the underlying connection as soon as all parcels have been delivered.
 
 Internet PDCs MUST always use TLS or equivalent in non-TCP connections.
 
 #### Local PDC
 
-A local PDC connects an endpoint and its private gateway. Typically, both nodes will be private and run on the same computer, but they might also be public and run on different computers in a private network or on the Internet. In addition to both nodes being able to send parcels to each other, the endpoint MAY also:
+A local PDC enables peers to exchange parcels bidirectionally. If the client is acting on behalf of one or more private endpoints, the server MUST be a private gateway. Alternatively, if the client is acting on behalf of a private gateway, the server MUST be a public gateway.
 
-- Request a certificate from the gateway, so the endpoint can issue PDAs.
-- Revoke previously issued PDAs, thus instructing the gateway to block future parcels with those PDAs.
+In addition to sending parcels to each other, the client MAY also register [Parcel Delivery Deauthorizations (PDD)](#pdd) with the server.
 
-The endpoint MUST initiate the connection with the gateway. To find which binding to use and the address for the gateway, the endpoint MUST get the _Gateway Connection URL_. For example, the Gateway Connection URL `ws://127.0.0.1/path` specifies [PoWeb](rs016-poweb.md) as the binding and `127.0.0.1:80/path` as the WebSocket address of the gateway. The endpoint MUST get the connection URL from one of the following places, sorted by precedence:
+The first time a client connects to a server on behalf of a private node, the node MUST register the private node with the gateway behind the server.
+
+To find which binding to use and the address for the gateway, the client MUST get the _Gateway Connection URL_. For example, the Gateway Connection URL `http://127.0.0.1` specifies [PoWeb](rs016-poweb.md) as the binding and `127.0.0.1:80` as the address of the gateway. The endpoint MUST get the connection URL from one of the following places, sorted by precedence:
 
 1. Its application. For example, the end-user might have set the URL.
 1. The environment variable `RELAYNET_GATEWAY_URL`.
 1. The file `/etc/relaynet-gateway` on Unix-like systems or `C:\Windows\System32\Drivers\etc\relaynet-gateway` on Windows.
 
-The server SHOULD listen on a system port (one in the range 0-1023). Alternatively, if using Unix domain sockets, the endpoint SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems).
+The server SHOULD listen on port `276` if it has the appropriate permissions to do so; otherwise, it SHOULD listen on port `13276`. Alternatively, if using Unix domain sockets, the endpoint SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems).
 
-As soon as the connection is established, a handshake MUST be performed for the gateway to authenticate the endpoint. The endpoint will be challenged to sign a nonce with each Relaynet PKI key it claims to have, as shown in the following sequence diagram.
+Note that only the private nodes owned by the client are authenticated because the server needs to make sure that it is delivering the parcel to the right node, given that it has to destroy its copy of the parcel upon delivery. The gateway can be trusted because it is set by the end-user or systems administrator, and TLS (or equivalent) has to be used anyway if the gateway is on a different computer.
+
+##### Parcel collection handshake
+
+As soon as the connection is established, a handshake MUST be performed for the gateway to authenticate the private node(s). The client will be challenged to sign a nonce with the key of each private node it claims to own, as shown in the following sequence diagram.
 
 ![](diagrams/rs000/pdc-handshake-sequence.png)
 
-The connection MUST be closed if the handshake fails. Once the handshake completes successfully, the connection SHOULD remain open for as long as the two nodes are running.
-
-Note that only the endpoint is authenticated because the gateway needs to make sure that it is delivering the parcel to the right endpoint, especially because it has to destroy its copy of the parcel upon delivery. The gateway can be trusted because it is set by the end-user or systems administrator, and TLS (or equivalent) has to be used anyway if the gateway is on a different computer.
-
-The gateway MUST NOT start delivering parcels until the endpoint has signalled that it is ready to collect them -- The endpoint could be connecting to the gateway just to deliver one or more parcels, and it may not intend to collect any parcels.
+The connection MUST be closed if the handshake fails.
 
 ### Cargo Relay Binding
 
