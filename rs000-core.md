@@ -228,7 +228,7 @@ A local PDC connects an endpoint and its private gateway. Typically, both nodes 
 - Request a certificate from the gateway, so the endpoint can issue PDAs.
 - Revoke previously issued PDAs, thus instructing the gateway to block future parcels with those PDAs.
 
-The endpoint MUST initiate the connection with the gateway. To find which binding to use and the address for the gateway, the endpoint MUST get the _Gateway Connection URL_. For example, the Gateway Connection URL `ws://127.0.0.1/path` specifies [PoWebSockets](rs016-powebsockets.md) as the binding and `127.0.0.1:80/path` as the WebSocket address of the gateway. The endpoint MUST get the connection URL from one of the following places, sorted by precedence:
+The endpoint MUST initiate the connection with the gateway. To find which binding to use and the address for the gateway, the endpoint MUST get the _Gateway Connection URL_. For example, the Gateway Connection URL `ws://127.0.0.1/path` specifies [PoWeb](rs016-poweb.md) as the binding and `127.0.0.1:80/path` as the WebSocket address of the gateway. The endpoint MUST get the connection URL from one of the following places, sorted by precedence:
 
 1. Its application. For example, the end-user might have set the URL.
 1. The environment variable `RELAYNET_GATEWAY_URL`.
@@ -306,5 +306,4 @@ For the avoidance of doubt, this recommendation does not apply to the CRC betwee
 
 ## Open Questions
 
-- How should the Gateway Connection URL be discovered on Android and iOS? A clean solution could be having a fixed binding (e.g., PoWebSockets) and URL (e.g., `ws://localhost:1234`).
 - This specification only defines how to make Relaynet work on sneakernets. Maybe all the definitions specific to sneakernets should be moved to a separate spec so the core spec is agnostic of the relay layer? Using the Internet as the relay layer is already in a separate spec ([RS-017](rs017-adaptive-relay.md)).
