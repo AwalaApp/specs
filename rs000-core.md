@@ -235,7 +235,7 @@ To find which binding to use and the address for the gateway, the client MUST ge
 1. The environment variable `RELAYNET_GATEWAY_URL`.
 1. The file `/etc/relaynet-gateway` on Unix-like systems or `C:\Windows\System32\Drivers\etc\relaynet-gateway` on Windows.
 
-The server SHOULD listen on port `276` if it has the appropriate permissions to do so; otherwise, it SHOULD listen on port `13276`. Alternatively, if using Unix domain sockets, the endpoint SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems).
+If the server corresponds to a private gateway, it SHOULD listen on port `276` if it has the appropriate permission to do so or port `13276` if it does not have the appropriate permission; alternatively, if using Unix domain sockets, the endpoint SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems). Servers for public gateways MAY use any port.
 
 Note that only the private nodes owned by the client are authenticated because the server needs to make sure that it is delivering the parcel to the right node, given that it has to destroy its copy of the parcel upon collection. The gateway can be trusted because it is set by the end-user or systems administrator, and TLS (or equivalent) has to be used anyway if the gateway is on a different computer.
 
@@ -296,6 +296,8 @@ Gateways SHOULD defer the encapsulation of parcels and other messages into cargo
 Gateways MUST NOT delete parcels as a consequence of encapsulating them in cargo sent to couriers as that would be incompatible with the requirements of the [Parcel Delivery Binding](#parcel-delivery-binding) (there is no guarantee that the courier will be able to deliver those parcels before they expire).
 
 Note that couriers are not assigned Relaynet PKI certificates, but per the requirements for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. Consequently, the node acting server MUST provide a valid certificate which MAY NOT be issued by a Certificate Authority trusted by the client when the server is a courier: Couriers are unlikely to get certificates issued by widely trusted authorities because they are not Internet hosts, but this is deemed to be acceptable from a security standpoint because the purpose of TLS (or equivalent) in this case is to provide confidentiality from eavesdroppers, not to authenticate the server.
+
+CRC servers SHOULD listen on port `21473`, which stands for "too late".
 
 ## Clock Drift Tolerance
 
