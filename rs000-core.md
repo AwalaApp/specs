@@ -237,7 +237,7 @@ To find which binding to use and the address for the gateway, the client MUST ge
 
 The server SHOULD listen on port `276` if it has the appropriate permissions to do so; otherwise, it SHOULD listen on port `13276`. Alternatively, if using Unix domain sockets, the endpoint SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems).
 
-Note that only the private nodes owned by the client are authenticated because the server needs to make sure that it is delivering the parcel to the right node, given that it has to destroy its copy of the parcel upon delivery. The gateway can be trusted because it is set by the end-user or systems administrator, and TLS (or equivalent) has to be used anyway if the gateway is on a different computer.
+Note that only the private nodes owned by the client are authenticated because the server needs to make sure that it is delivering the parcel to the right node, given that it has to destroy its copy of the parcel upon collection. The gateway can be trusted because it is set by the end-user or systems administrator, and TLS (or equivalent) has to be used anyway if the gateway is on a different computer.
 
 ##### Parcel collection handshake
 
