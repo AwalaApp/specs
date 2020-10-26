@@ -1,18 +1,18 @@
 ---
 permalink: /RS-016
 ---
-# PoWeb: Parcel Delivery over HTTP and WebSockets
+# PoWeb: Parcel Delivery over HTTP and WebSockets, Version 1
 {: .no_toc }
 
 - Id: RS-016.
 - Status: Working draft.
 - Type: Implementation.
-- Proof of concept: https://github.com/relaynet/poc/tree/master/PoWebSocket
+- Reference implementations: [client](https://github.com/relaycorp/relaynet-poweb-js), [server](https://github.com/relaycorp/relaynet-internet-gateway/tree/master/src/services/poweb).
 
 ## Abstract
 {: .no_toc }
 
-This document describes _PoWebSockets_, a binding for [Parcel Delivery Connections (PDC)](rs000-core.md#parcel-delivery-binding) on top of the HTTP and [WebSockets (RFC-6455)](https://tools.ietf.org/html/rfc6455) protocol.
+This document describes _PoWeb_, a binding for local [Parcel Delivery Connections (PDC)](rs000-core.md#parcel-delivery-binding) on top of the HTTP and [WebSockets (RFC-6455)](https://tools.ietf.org/html/rfc6455) protocols.
 
 ## Table of contents
 {: .no_toc }
@@ -22,132 +22,87 @@ This document describes _PoWebSockets_, a binding for [Parcel Delivery Connectio
 
 ## Introduction
 
-PoWeb establishes local and Internet-based PDCs where remote procedure calls are done over HTTP and streams are delivered over WebSockets.
+As a local PDC, the ultimate objective of PoWeb is to enable a gateway to relay parcels for its private endpoints or its private peers. In other words, a private gateway would implement a PoWeb service to exchange parcels with its local endpoints, whilst a public gateway would implement a PoWeb service to exchange parcels with its private gateways.
 
-The messages sent over WebSockets are serialized with [Protocol Buffers](https://developers.google.com/protocol-buffers/).
+PoWeb owes its name to the fact it uses Web-based, Application Layer protocols with its clients: HTTP for remote procedure calls, and WebSockets to stream messages (e.g., parcels). This specification describes the HTTP and WebSocket endpoints that comprise PoWeb, along with their inputs, outputs and any side effects. The serialisation format of the messages exchanged via this protocol are outside the scope of this document, as they are agnostic of the concrete PDC binding.
+
+The private or public gateway implementing the PoWeb service will be referred to as the "server", whilst the private endpoint or private gateway connecting to its will be referred to as the "client".
+
+Clients are required to register their endpoints with the gateway before they can start exchanging messages (e.g., parcels), given that those operations require the client to produce digital signatures using [Relaynet PKI](rs002-pki.md) certificates previously issued by the server.
 
 ## Endpoints
 
-### Pre-registration
+The server MUST expose each PoWeb endpoint under a common URL prefix ending with the path `/v1` (e.g., `https://gateway.com/v1`). Such prefixes MAY include paths and non-standard ports (e.g., `https://gateway.com:1234/path/v1`).
 
-### Registration
+### Private node registration
 
-Maximum response body size: 1 MiB
+The process to register private nodes is split in two parts, at the end of which -- if successful -- the server will issue a certificate for the private node.
 
-## Handshake
+The client MUST initiate the registration process by making a pre-registration request. This preliminary step is used to give the client a nonce to sign, thus avoiding replay attacks. Servers MUST implement the pre-registration endpoint described in this document, unless the server is part of a private gateway on a mobile platform, in which case it MUST implement a platform-specific method that also authenticates the app that owns the endpoint. Pre-registration on mobile platforms is outside the scope of this document.
 
-Per Relaynet Core, the handshake involves a challenge-response transaction:
+If the server approves the pre-registration, it MUST output a single-use _Private Node Registration Authorisation_ (PNRA) that expires in less than 10 seconds. To complete the registration, the client MUST make a registration request by passing the PNRA signed with the private node's key which, if successful, will result in the server issuing a certificate.
 
-1. The gateway _challenges_ the endpoint to sign a nonce with its key(s).
-1. The endpoint signs the nonce with each of its keys and sends the signatures to the gateway.
+#### Pre-registration endpoint
 
-These messages are serialized using the following Protocol Buffers definition:
+To pre-register a private node, the client MUST make a POST request to `/pre-registration` with the SHA-256 hexadecimal digest of the private node's public key. The request Content-Type MUST be `text/plain`. The server MUST respond with one of the following:
 
-```proto
-syntax = "proto3";
+- A `200 OK` if the pre-registration is authorised. The response body MUST be the PNRA and the Content-Type MUST be `application/vnd.relaynet.node-registration.authorization`.
+- A `400 Bad Request` if the client did not adhere to the requirements above.
 
-package relaynet.poweb.handshake;
+Servers SHOULD refuse request bodies larger than 64 octets.
 
-message Challenge {
-    // Sent by the gateway at the start of the connection
+#### Registration endpoint
 
-    bytes gateway_nonce = 1;
-}
+To complete the registration, the client MUST produce a _Private Node Registration Request_ (PNRR) by signing the PNRA with the key of the node being registered. The PNRR MUST then be sent in the body of a POST request to `/nodes`, using the Content-Type `application/vnd.relaynet.node-registration.request`.
 
-message Response {
-    // Sent by the endpoint in response to Challenge
+The server MUST respond with one of the following:
 
-    // The gateway's nonce signed by each endpoint certificate.
-    repeated bytes gateway_nonce_signatures = 1;
-}
-```
+- `200 OK` if the registration was successfully completed. The response body MUST be a _Private Node Registration_ (PNR), which encapsulates the newly-issued certificate for the private endpoint, as well as the certificate for the underlying gateway behind the server. The response Content-Type MUST be `application/vnd.relaynet.node-registration.registration`.
+- `400 Bad Request` if the PNRR sent by the client is malformed or its digital signature is invalid.
+- `403 Forbidden` if the client is using a PNRA issued for a different private node.
 
-CMS SignedData:
+Servers SHOULD refuse request bodies larger than 1 MiB.
 
-- TODO: Copy requirements from RAMF
-- SHA-256 only
-- Detached signature
+### Parcel delivery
 
-## Operations
+To deliver a parcel to the server, the client MUST send the parcel in the body of a POST request to `/parcels` using the Content-Type `application/vnd.relaynet.parcel`. Additionally, it MUST countersign the parcel with the private node's keys and include the base64 encoding of the resulting digital signature in the `Authorization` header, using the `Relaynet-Countersignature` type.
 
-The connection can be used to exchange parcels and perform other actions as soon as the handshake is completed successfully.
+The server MUST respond with one of the following:
 
-### Parcel Collection
+- `202 Accepted` if the parcel and its countersignature are both valid, and the parcel was successfully stored or forwarded.
+- `400 Bad Request` if the parcel is malformed.
+- `401 Unauthorized` if the countersignature was missing or invalid.
+- `403 Forbidden` if the parcel was well-formed but invalid; e.g., the [RAMF](rs001-ramf.md) signature verification failed.
 
-The endpoint will send a _parcel collection request_ message when it is ready to collect parcels from the gateway. Per Relaynet Core, the gateway would not attempt to deliver parcels until then.
+### Parcel collection
 
-WebSocket closure reasons:
+To collect parcels from the server, the client MUST start a WebSocket connection with the endpoint `/parcel-collection`. The client MAY optionally specify whether the server should close the connection as soon as all queued parcels have been collected by setting the HTTP request header `X-Relaynet-Streaming-Mode` to `close-upon-completion`; otherwise, the server will try to keep the connection open indefinitely.
 
-- `1003` if the handshake response is invalid.
+The server MUST send a challenge message to the client as soon as the connection starts. This challenge MUST encapsulate a cryptographic nonce. The client MUST reply to the challenge by sending a response that encapsulates the digital signatures for the nonce using the keys for each private node on whose behalf parcels will be collected. The digital signatures MUST meet the following requirements:
 
-### Parcel Delivery
+- They MUST be DER-encoded, CMS SignedData values and be validated in accordance to [RFC 5652](https://tools.ietf.org/html/rfc5652).
+- The signer's certificate MUST be encapsulated. Other certificates SHOULD NOT be encapsulated.
+- The signer's certificate MUST be issued by the underlying gateway behind the server.
+- The signed content MUST NOT be encapsulated.
 
-To deliver a parcel, the sending node MUST encapsulate it in a _parcel delivery_ message. The receiving node MUST respond with a _parcel delivery acknowledgement_ once the parcel has been safely stored/forwarded.
+The server MUST close the WebSocket connection with the status code `1003` if there are no signatures or at least one of the signatures does not meet any of the requirements above.
 
-When the gateway does not have any further parcels to deliver, it MUST send a _parcel delivery complete_ message. This may be useful in cases where the application behind the endpoint is short-lived and is meant to exit as soon as it has collected all the parcel from the gateway.
+If the handshake is completed successfully, the server MUST send any queued parcels to the client, and the client MUST send an acknowledgement message back to the server for each parcel that is successfully stored or forwarded. Upon reception of each acknowledgement, the server MUST delete the parcel immediately or schedule its deletion.
 
-### Endpoint Certificate Request
+Finally, the server MUST close the connection with the status code `1000` if the client set the HTTP request header `X-Relaynet-Streaming-Mode` to `close-upon-completion` and all parcels were send and acknowledged. Otherwise, both peers SHOULD try to keep the connection open indefinitely, and the server MUST send any new parcels as soon as they are received.
 
-To request a certificate from the gateway, the endpoint MUST send an _endpoint certificate request_ message with the endpoint's public key attached to it. This is analogous to a [Certificate Signing Request](https://en.wikipedia.org/wiki/Certificate_signing_request).
+## Undocumented HTTP status codes
 
-Once the certificate has been generated, the server MUST attach it to an _endpoint certificate response_ message.
+The server MAY return any of the following status codes, but their semantics are not within the scope of this document:
 
-### Parcel Delivery Deauthorization
+- Any other code in the range 400-499 that the implementer or operator of the server deems appropriate but is not explicitly documented in the respective endpoint. The client SHOULD NOT try to make the same request later.
+- Any code in the range 500-599 that the implementer or operator of the server deems appropriate. The client SHOULD try to make the same request later.
 
-To revoke all or some PDAs, the endpoint MUST send a _parcel delivery deauthorization_ message with the fields specified in [Relaynet Core](rs000-core.md#pdd).
+## Port numbers
 
-## Message Serialization
+If the server is a private gateway, it SHOULD listen on port 276 if it has the appropriate permissions to do so. If not, it SHOULD listen on port 13276.
 
-The following Protocol Buffers file defines the messages in this connection:
-
-```proto
-syntax = "proto3";
-
-package relaynet.powebsockets;
-
-import "google/protobuf/timestamp.proto";
-
-message ParcelDelivery {
-    string id = 1;
-    bytes parcel = 2;
-}
-
-message ParcelDeliveryAck {
-    string id = 1;
-}
-
-message ParcelCollectionRequest {}
-
-message ParcelDeliveryComplete {}
-
-message EndpointCertificateRequest {
-    bytes public_key = 1;
-}
-
-message EndpointCertificateResponse {
-    bytes certificate = 1;
-}
-
-message ParcelDeliveryDeauthorization {
-    string endpoint_address = 1;
-    repeated string pda_serial_numbers = 2;
-    google.protobuf.Timestamp expiry = 3;
-}
-```
-
-And since Protocol Buffers messages do not contain any information to identify their message type, each message MUST be prefixed with a corresponding 8-bit integer to specify its type:
-
-- `0x0`: `ParcelDelivery`.
-- `0x1`: `ParcelDeliveryAck`.
-- `0x2`: `ParcelCollectionRequest`.
-- `0x3`: `ParcelDeliveryComplete`.
-- `0x4`: `EndpointCertificateRequest`.
-- `0x5`: `EndpointCertificateResponse`.
-- `0x6`: `ParcelDeliveryDeauthorization`.
-
-## Port number
-
-In a local PDC, the server SHOULD listen on port 276 if it has the appropriate permissions to do so. Otherwise, it SHOULD listen on port 13276.
+If the server is a public gateway, it SHOULD listen on port 443.
 
 ## WebSocket Considerations
 
@@ -155,20 +110,10 @@ Clients and servers implementing this specification MUST support HTTP version 1.
 
 Both the client and the server SHOULD send each other _ping_ messages and they MUST respond with a _pong_ message for every ping they receive.
 
-## TLS Considerations
-
-[Server Name Identification](https://en.wikipedia.org/wiki/Server_Name_Indication) MUST be supported by clients and MAY be used by servers.
-
 ## Security Considerations
 
-Disable CORS in HTTP endpoints and refuse requests with `Origin` header in WebSockets to prevent webpages visited in the host computer from accessing the server.
+To prevent web pages from trying to make unauthorised requests to the server of a private gateway, the server MUST NOT support CORS and WebSocket connections MUST be refused with the status code `1008` if the HTTP request included the header `Origin`.
 
 ## Relevant Specifications
 
 [Relaynet Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [parcel delivery bindings](rs000-core.md#parcel-delivery-binding) specifically, all of which apply to PoWeb. [Relaynet PKI (RS-002)](rs002-pki.md) is also particularly relevant to this specification.
-
-## Open Questions
-
-- Should this spec be future-proof with regards to HTTP/2 support in WebSockets?
-- Should [close codes](https://www.iana.org/assignments/websocket/websocket.xml#close-code-number) other than `1000` (Normal Closure) be used? Note that [there is a question on errors in general in Relaynet Core](rs000-core.md#open-questions).
-- Should there be a required or recommended frequency for ping messages?
