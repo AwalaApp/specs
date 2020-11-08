@@ -11,14 +11,14 @@ assignees: ''
 
 <!-- A succinct description of the issue aimed at technical people who may not necessarily be familiar with Relaynet terminology. It should ideally be just one paragraph, but could span two or three. -->
 
-# Is your feature request related to a problem?
+# The problem you're trying to solve
 
-<!-- A clear and concise description of what the problem is. Ex. I'm always frustrated when [...] -->
+<!-- A clear and concise description of what the problem is. -->
 
-# Describe the solution you'd like
+# The solution you'd like
 
 <!-- A clear and concise description of what you want to happen. -->
 
-# Describe any alternatives you've considered
+# Any alternatives you've considered?
 
 <!-- A clear and concise description of any alternative solutions or features you've considered. -->
