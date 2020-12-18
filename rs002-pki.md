@@ -12,7 +12,7 @@ permalink: /RS-002
 ## Abstract
 {: .no_toc }
 
-This document describes how to issue, distribute, store, revoke and interpret X.509 certificates in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this Public Key Infrastructure (PKI) profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) as used in the TLS protocol.
+This document describes how to issue, revoke and process X.509 certificates in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this Public Key Infrastructure (PKI) profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) as used in the TLS protocol.
 
 ## Table of contents
 {: .no_toc }
@@ -24,9 +24,9 @@ This document describes how to issue, distribute, store, revoke and interpret X.
 
 Relaynet relies extensively on its PKI in order to authenticate and authorize nodes without a real-time connection to an external authentication/authorization server, as well as to encrypt payloads when the [Channel Session Protocol](./rs003-key-agreement.md) is not employed.
 
-The [Relaynet Message Abstract Format (RAMF)](./rs001-ramf.md) depends on Relaynet PKI certificates to authenticate the source of the message and ensure its integrity. Such certificates can be self-issued when the message recipient is a public node, but they have to be pre-authorized by the recipient if said recipient is a private node.
+The [Relaynet Abstract Message Format (RAMF)](./rs001-ramf.md) depends on Relaynet PKI certificates to authenticate the sender of the message and ensure the integrity of the message. Any valid certificate can be used to sign a message bound for a public node, but every message bound for a private node has to be signed with a certificate issued by the recipient (in which case the certificate can also be called a _delivery authorization_).
 
-Private nodes express their willingness to accept messages from another node in the same channel by issuing a _delivery authorization_, which is simply a certificate issued for the sender. When relaying messages bound for private nodes, gateways and couriers have to make sure that the sender signed the message with an appropriate delivery authorization.
+This PKI applies to the long-term keys that identify endpoints and gateways in Relaynet, and it also serves as the basis for issuing certificates for initial keys in the Channel Session Protocol. The requirements and recommendations in this document are limited to Relaynet messaging protocols, and therefore do not apply to [Message Transport Bindings](./rs000-core.md#message-transport-bindings) (where the Internet PKI applies).
 
 ## General Constraints and Attributes
 
@@ -91,16 +91,17 @@ Where, `limit` specifies how many parcels can be sent within a given number of s
 
 ### Gateway Certificate
 
-Given Gateway A and Gateway B, Gateway A's certificate MUST be either self-issued or issued by Gateway B, forming the certification path below (from end entity to root):
+Each gateway has at least two certificates: One self-issued and one certificate issued by each of its peers. Consequently, every private gateway has exactly two certificates because it has exactly one peer, while a public gateway may have more certificates.
 
-1. Gateway A's certificate, issued by Gateway B.
-1. One or more certificates representing the certificate chain for Gateway B.
+Self-issued certificates MUST only be used to issue certificates to peers, and therefore such certificates will be the root for a PDA or a [Cargo Delivery Authorization (CDA)](#cargo-delivery-authorization-cda). Self-issued certificates MUST NOT be used to sign channel or binding messages.
 
-A certificate issued by another gateway MUST NOT be used to issue additional gateway certificates.
+Certificates issued by peers MUST be used to sign channel and binding messages like cargoes. A certificate issued by a private gateway to its public peer is known as a CDA, and additional requirements and recommendations apply.
 
 ### Cargo Delivery Authorization (CDA)
 
 Any certificate issued by a private gateway to a public one is regarded as a Cargo Delivery Authorization (CDA), and it authorizes the public gateway to send messages to the issuer.
+
+CDAs SHOULD be valid for at least 24 hours, and they MUST NOT be valid for more than 30 days.
 
 ## Certificate and Key Rotation
 
