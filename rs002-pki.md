@@ -12,13 +12,21 @@ permalink: /RS-002
 ## Abstract
 {: .no_toc }
 
-This document describes how to issue, distribute, store, revoke and interpret X.509 certificates in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this PKI profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) as used in the TLS protocol.
+This document describes how to issue, distribute, store, revoke and interpret X.509 certificates in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this Public Key Infrastructure (PKI) profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) as used in the TLS protocol.
 
 ## Table of contents
 {: .no_toc }
 
 1. TOC
 {:toc}
+
+## Introduction
+
+Relaynet relies extensively on its PKI in order to authenticate and authorize nodes without a real-time connection to an external authentication/authorization server, as well as to encrypt payloads when the [Channel Session Protocol](./rs003-key-agreement.md) is not employed.
+
+The [Relaynet Message Abstract Format (RAMF)](./rs001-ramf.md) depends on Relaynet PKI certificates to authenticate the source of the message and ensure its integrity. Such certificates can be self-issued when the message recipient is a public node, but they have to be pre-authorized by the recipient if said recipient is a private node.
+
+Private nodes express their willingness to accept messages from another node in the same channel by issuing a _delivery authorization_, which is simply a certificate issued for the sender. When relaying messages bound for private nodes, gateways and couriers have to make sure that the sender signed the message with an appropriate delivery authorization.
 
 ## General Constraints and Attributes
 
@@ -37,7 +45,7 @@ Endpoints and gateways can use the following types of certificates.
 An endpoint certificate MUST be issued by one of the following Certificate Authorities (CAs):
 
 - Itself, if it is a public endpoint.
-- Its local gateway, if it is a private endpoint.
+- Its private gateway, if it is a private endpoint.
 - Another endpoint, resulting in a [_parcel delivery authorization_](#parcel-delivery-authorization-pda).
 
 ### Parcel Delivery Authorization (PDA)
@@ -48,7 +56,7 @@ The certification path of a PDA is formed of the following sequence (from end en
 
 1. Endpoint B's certificate.
 1. Endpoint A's certificate.
-1. Endpoint A's local gateway.
+1. Endpoint A's private gateway.
 1. Endpoint A's public gateway.
 
 When relaying parcels where the recipient is a private endpoint, gateways MUST refuse those where the certificate for the sender of the parcel was not issued by the target endpoint. In other words, the Common Name of the second certificate MUST match the recipient of the RAMF-serialized parcel.
@@ -89,6 +97,10 @@ Given Gateway A and Gateway B, Gateway A's certificate MUST be either self-issue
 1. One or more certificates representing the certificate chain for Gateway B.
 
 A certificate issued by another gateway MUST NOT be used to issue additional gateway certificates.
+
+### Cargo Delivery Authorization (CDA)
+
+Any certificate issued by a private gateway to a public one is regarded as a Cargo Delivery Authorization (CDA), and it authorizes the public gateway to send messages to the issuer.
 
 ## Certificate and Key Rotation
 
@@ -131,9 +143,9 @@ Each certificate MUST have its Basic Constraints extension as defined in the X.5
 | Certificate type | `cA` | `pathLenConstraint` |
 | --- | --- | --- |
 | Self-issued gateway certificate | `true` | `2` |
-| Non-self-issued gateway certificate | `true` | `1` |
+| Non-self-issued gateway certificate (excluding CDAs) | `true` | `1` |
 | Endpoint certificate (excluding PDAs) | `true` | `0` |
-| PDA | `false` | `0` |
+| Delivery authorization (PDAs and CDAs) | `false` | `0` |
 
 ### Authority Key Identifier
 
