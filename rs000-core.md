@@ -79,7 +79,7 @@ Endpoints and gateways MUST comply with the [Relaynet PKI profile](rs002-pki.md)
 
 Endpoint and gateway channels transmit two types of messages:
 
-- Payload-carrying messages, which MUST be serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md).
+- Payload-carrying messages, which MUST be serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md). Nodes and couriers MUST enforce the post-deserialization validation described in the RAMF specification on every message they receive.
 - Control messages, which allow the two nodes to coordinate their work. Such messages are serialized with ASN.1/DER.
 
 Each message format MUST begin with a 10-octet-long format signature that declares the type of the message:
@@ -100,13 +100,11 @@ This protocol establishes the bidirectional channel between two endpoints. The o
 
 #### Parcel
 
-A parcel encapsulates a service message and is serialized with RAMF, using the octet `0x50` ("P" in ASCII) as its _concrete message type_. Gateways and the target endpoint MUST enforce the post-deserialization validation described on the RAMF specification.
+A parcel encapsulates a service message and is serialized with RAMF, using the octet `0x50` ("P" in ASCII) as its _concrete message type_.
 
 In order to make parcels fit in [cargo](#cargo) messages, a parcel MUST NOT span more than 8322037 octets.
 
-The payload ciphertext MUST be serialized as a [CMS enveloped data](https://tools.ietf.org/html/rfc5652#section-6) value with exactly one recipient (`RecipientInfo`). The encryption key SHOULD be generated with the [Relaynet Channel Session Protocol](rs003-key-agreement.md) -- Alternatively, the key MAY be that of the target endpoint's certificate, in which case the CMS value MUST be serialized with the `KeyTransRecipientInfo` choice. Extensions to this document MAY support alternative CMS structures.
-
-The payload plaintext MUST contain the service message and its media type, and it MUST be at least 65 KiB below the overall limit for a parcel (i.e., the payload plaintext MUST NOT be longer than 8256501 octets). The plaintext MUST be serialized with the following binary sequence (little-endian):
+The parcel payload MUST be encrypted. The corresponding plaintext MUST contain the service message and its media type, and it MUST be at least 65 KiB below the overall limit for a parcel (i.e., the payload plaintext MUST NOT be longer than 8256501 octets). The plaintext MUST be serialized with the following binary sequence (little-endian):
 
 1. An 8-bit unsigned integer (1 octet) representing the length of the service message type.
 1. A UTF-8 encoded string representing the type of the service message. For example, `application/x-protobuf; messageType="twitter.Tweet"`.
@@ -179,9 +177,17 @@ A cargo MUST NOT be encapsulated in another cargo.
 
 #### Cargo Collection Authorization (CCA) {#cca}
 
-A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A (the sender) allows a courier to collect cargo on its behalf from Gateway B (the recipient). Its concrete message type MUST be the octet `0x44` and its payload MUST be an empty byte sequence.
+A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gateway A (the sender) allows a courier to collect cargo on its behalf from Gateway B (the recipient). Its concrete message type MUST be the octet `0x44`. CCAs MUST NOT be encapsulated in cargo to enable the courier to process and send the CCA to target gateway.
 
-Since the courier needs access to the CCA, it MUST NOT be encapsulated in cargo.
+Every CCA MUST contain an encrypted Cargo Collection Request (CCR) as its payload. The CCR MUST be serialized with ASN.1/DER using the following schema:
+
+```asn1
+CargoCollectionRequest ::= SEQUENCE {
+   cargoDeliveryAuthorization  OCTET STRING
+}
+```
+
+Where `cargoDeliveryAuthorization` is the DER-encoded, Relaynet PKI certificate for the [Cargo Delivery Authorization (CDA)](./rs002-pki.md#cargo-delivery-authorization-cda) issued by Gateway A to Gateway B.
 
 ## Message Transport Bindings
 
@@ -265,7 +271,9 @@ When a CRC is established, the following process should be done sequentially:
    
    - When the client is a private gateway, it MUST initiate this step by sending one or more CCAs to the courier and the courier MUST then return all the cargo it holds for each gateway, if any. The courier MUST persist those CCAs so it can send them to their respective target gateways when collecting cargo from them in the future.
    - When the client is a courier, it MUST simply deliver the cargo bound for the current gateway, if any.
-1. No further cargoes MUST be exchanged for 3 to 5 seconds to allow sufficient time for the gateway to (a) deliver the parcels contained in the cargo to their corresponding endpoints and (b) collect any new parcels that those endpoints might have automatically produced in response to the parcels they received.
+   
+   The current gateway MUST ignore cargo whose sender's certificate was not issued by its own self-issued certificate.
+1. No further cargoes SHOULD be exchanged for at least 3 seconds to allow sufficient time for the gateway to (a) deliver the parcels contained in the cargo to their corresponding endpoints and (b) collect any new parcels that those endpoints might have automatically produced in response to the parcels they received.
   
    The underlying connection (e.g., a TCP connection) MAY be closed during this time, in which case a new connection will have to be created when resuming this process.
    
@@ -274,7 +282,7 @@ When a CRC is established, the following process should be done sequentially:
 
    How this step is initiated will depend on the type of node acting as the client:
    
-   - When the client is a courier, it MUST initiate this step by sending one or more CCAs to the public gateway and the public gateway MUST then return all the cargo it holds for the gateway of each CCA, if any.
+   - When the client is a courier, it MUST initiate this step by sending one or more CCAs to the public gateway and the public gateway MUST then return all the cargo it holds for the gateway of each CCA, if any. Additionally, the public gateway MUST sign the cargo with the Cargo Delivery Authorization contained in the respective CCA.
    - When the client is a private gateway, it MUST simply deliver the cargo bound for its peer gateway, if any.
    
    The client MUST close the underlying connection at the end of this step.
@@ -295,7 +303,7 @@ Gateways SHOULD defer the encapsulation of parcels and other messages into cargo
 
 Gateways MUST NOT delete parcels as a consequence of encapsulating them in cargo sent to couriers as that would be incompatible with the requirements of the [Parcel Delivery Binding](#parcel-delivery-binding) (there is no guarantee that the courier will be able to deliver those parcels before they expire).
 
-Note that couriers are not assigned Relaynet PKI certificates, but per the requirements for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. Consequently, the node acting server MUST provide a valid certificate which MAY NOT be issued by a Certificate Authority trusted by the client when the server is a courier: Couriers are unlikely to get certificates issued by widely trusted authorities because they are not Internet hosts, but this is deemed to be acceptable from a security standpoint because the purpose of TLS (or equivalent) in this case is to provide confidentiality from eavesdroppers, not to authenticate the server.
+Note that couriers are not assigned Relaynet PKI certificates, but per the requirements for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. Consequently, the node acting as server MUST provide a valid certificate which MAY NOT be issued by a Certificate Authority trusted by the client when the server is a courier: Couriers are unlikely to get certificates issued by widely trusted authorities because they are not Internet hosts, but this is deemed to be acceptable from a security standpoint because the purpose of TLS (or equivalent) in this case is to provide confidentiality from eavesdroppers, not to authenticate the server.
 
 CRC servers SHOULD listen on port `21473`, which stands for "too late".
 
