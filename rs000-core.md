@@ -273,7 +273,7 @@ When a CRC is established, the following process should be done sequentially:
    - When the client is a courier, it MUST simply deliver the cargo bound for the current gateway, if any.
    
    The current gateway MUST ignore cargo whose sender's certificate was not issued by its own self-issued certificate.
-1. No further cargoes SHOULD be exchanged for at least 3 seconds to allow sufficient time for the gateway to (a) deliver the parcels contained in the cargo to their corresponding endpoints and (b) collect any new parcels that those endpoints might have automatically produced in response to the parcels they received.
+1. No further cargoes SHOULD be exchanged for at least 5 seconds to allow sufficient time for the gateway to (a) deliver the parcels contained in the cargo to their corresponding endpoints and (b) collect any new parcels that those endpoints might have automatically produced in response to the parcels they received.
   
    The underlying connection (e.g., a TCP connection) MAY be closed during this time, in which case a new connection will have to be created when resuming this process.
    
