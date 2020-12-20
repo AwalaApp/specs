@@ -60,6 +60,8 @@ Where the items in the `RAMFMessage` sequence are defined as follows:
 - `ttl` MUST represent the time-to-live of the message -- That is, the number of seconds since `creationTimeUtc` during which the message is regarded valid. It MUST NOT be less than zero or greater than 15552000 (180 days).
 - `payload` MUST be the service data unit (SDU) encapsulated in a DER-encoded [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652) value. If the payload requires encryption, it MUST be encapsulated in a CMS Enveloped-Data value; otherwise, it MUST be encapsulated in a CMS Data-Content value. The absence of the payload MUST be represented as an empty sequence of octets.
 
+  If the payload is encrypted, its Enveloped-Data value MUST have exactly one recipient (`RecipientInfo`). The encryption key SHOULD be generated with the [Relaynet Channel Session Protocol](rs003-key-agreement.md) -- Alternatively, the key MAY be that of the target node's certificate, in which case the CMS value MUST be serialized with the `KeyTransRecipientInfo` choice.
+
   This field MUST NOT span more than 8 MiB (8388608 octets). For this reason, implementations SHOULD enforce a lower limit on the SDU depending on how it is to be encapsulated: Any SDU to be encrypted SHOULD be at least 65 KiB below the limit (up to 8322048 octets), and any SDU to be encapsulated as-is SHOULD be at least 1 KiB below the limit (up to 8387584 octets).
 
 A RAMF message MUST NOT span more than 8396800 octets. This allows for the largest possible payload (8 MiB), and up to 8 KiB to serialize the remaining RAMF fields and the CMS signed-data value.
@@ -75,6 +77,7 @@ Recipients and brokers of a RAMF message MUST validate the message as soon as it
 - The message date MUST be within the period of time during which the sender certificate was valid.
 - All certificates MUST be valid per [Relaynet PKI](rs002-pki.md).
 - The signature MUST be valid according to the [CMS verification process](https://tools.ietf.org/html/rfc5652#section-5.6) and the specified signature algorithm. Additionally, the signature MUST be deemed invalid if the signature algorithm is unsupported or the hashing algorithm is unsupported.
+- If the recipient address is [private](./rs000-core.md#addressing), the sender's certificate MUST be issued by the message recipient. That is, the private address of the public key in the issuing certificate MUST match the private address set as the message recipient. Such sender certificates are known as _delivery authorizations_ in the Relaynet PKI.
 
 ## Security Considerations
 

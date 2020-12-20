@@ -12,13 +12,21 @@ permalink: /RS-002
 ## Abstract
 {: .no_toc }
 
-This document describes how to issue, distribute, store, revoke and interpret X.509 certificates in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this PKI profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) as used in the TLS protocol.
+This document describes how to issue, revoke and process X.509 certificates in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this Public Key Infrastructure (PKI) profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) as used in the TLS protocol.
 
 ## Table of contents
 {: .no_toc }
 
 1. TOC
 {:toc}
+
+## Introduction
+
+Relaynet relies extensively on its PKI in order to authenticate and authorize nodes without a real-time connection to an external authentication/authorization server, as well as to encrypt payloads when the [Channel Session Protocol](./rs003-key-agreement.md) is not employed.
+
+One prominent use of the Relaynet PKI is in the [Relaynet Abstract Message Format (RAMF)](./rs001-ramf.md), where certificates are used to authenticate the sender of the message and ensure the integrity of the message. Any valid certificate can be used to sign a message bound for a public node, but every message bound for a private node has to be signed with a certificate issued by the recipient (in which case the certificate will be called a _delivery authorization_).
+
+This PKI applies to the long-term keys that identify endpoints and gateways in Relaynet, and it also serves as the basis for issuing certificates for initial keys in the Channel Session Protocol. The requirements and recommendations in this document do not apply to the Internet PKI certificates used in [Message Transport Bindings](./rs000-core.md#message-transport-bindings).
 
 ## General Constraints and Attributes
 
@@ -37,7 +45,7 @@ Endpoints and gateways can use the following types of certificates.
 An endpoint certificate MUST be issued by one of the following Certificate Authorities (CAs):
 
 - Itself, if it is a public endpoint.
-- Its local gateway, if it is a private endpoint.
+- Its private gateway, if it is a private endpoint.
 - Another endpoint, resulting in a [_parcel delivery authorization_](#parcel-delivery-authorization-pda).
 
 ### Parcel Delivery Authorization (PDA)
@@ -48,7 +56,7 @@ The certification path of a PDA is formed of the following sequence (from end en
 
 1. Endpoint B's certificate.
 1. Endpoint A's certificate.
-1. Endpoint A's local gateway.
+1. Endpoint A's private gateway.
 1. Endpoint A's public gateway.
 
 When relaying parcels where the recipient is a private endpoint, gateways MUST refuse those where the certificate for the sender of the parcel was not issued by the target endpoint. In other words, the Common Name of the second certificate MUST match the recipient of the RAMF-serialized parcel.
@@ -83,12 +91,17 @@ Where, `limit` specifies how many parcels can be sent within a given number of s
 
 ### Gateway Certificate
 
-Given Gateway A and Gateway B, Gateway A's certificate MUST be either self-issued or issued by Gateway B, forming the certification path below (from end entity to root):
+Each gateway has at least two certificates for the same long-term key pair: One self-issued and one certificate issued by each of its peers. Consequently, every private gateway has exactly two certificates because it has exactly one peer, while a public gateway may have more certificates.
 
-1. Gateway A's certificate, issued by Gateway B.
-1. One or more certificates representing the certificate chain for Gateway B.
+Self-issued certificates MUST only be used to issue certificates to peers, and therefore such certificates will be the root for a PDA or a [Cargo Delivery Authorization (CDA)](#cargo-delivery-authorization-cda). Self-issued certificates MUST NOT be used to sign channel or binding messages. Peers MAY use the self-issued certificate to encrypt payloads when not using the Channel Session Protocol.
 
-A certificate issued by another gateway MUST NOT be used to issue additional gateway certificates.
+Certificates issued by peers MUST be used to sign channel and binding messages like cargoes. A certificate issued by a private gateway to its public peer is known as a CDA, and additional requirements and recommendations apply.
+
+### Cargo Delivery Authorization (CDA)
+
+Any certificate issued by a private gateway to a public one is regarded as a Cargo Delivery Authorization (CDA), and it authorizes the public gateway to send cargo to the private gateway.
+
+CDAs SHOULD be valid for at least 24 hours, and they MUST NOT be valid for more than 30 days.
 
 ## Certificate and Key Rotation
 
@@ -131,9 +144,9 @@ Each certificate MUST have its Basic Constraints extension as defined in the X.5
 | Certificate type | `cA` | `pathLenConstraint` |
 | --- | --- | --- |
 | Self-issued gateway certificate | `true` | `2` |
-| Non-self-issued gateway certificate | `true` | `1` |
+| Non-self-issued gateway certificate (excluding CDAs) | `true` | `1` |
 | Endpoint certificate (excluding PDAs) | `true` | `0` |
-| PDA | `false` | `0` |
+| Delivery authorization (PDAs and CDAs) | `false` | `0` |
 
 ### Authority Key Identifier
 
