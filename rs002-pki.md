@@ -93,7 +93,7 @@ Where, `limit` specifies how many parcels can be sent within a given number of s
 
 Each gateway has at least two certificates for the same long-term key pair: One self-issued and one certificate issued by each of its peers. Consequently, every private gateway has exactly two certificates because it has exactly one peer, while a public gateway may have more certificates.
 
-Self-issued certificates MUST only be used to issue certificates to peers, and therefore such certificates will be the root for a PDA or a [Cargo Delivery Authorization (CDA)](#cargo-delivery-authorization-cda). Self-issued certificates MUST NOT be used to sign channel or binding messages, but peers MAY use the self-issued certificate to encrypt payloads when not using the Channel Session Protocol.
+Self-issued certificates MUST only be used to issue certificates to peers, and therefore such certificates will be the root for a PDA or a [Cargo Delivery Authorization (CDA)](#cargo-delivery-authorization-cda). Self-issued certificates MUST NOT be used to sign channel or binding messages. Peers MAY use the self-issued certificate to encrypt payloads when not using the Channel Session Protocol.
 
 Certificates issued by peers MUST be used to sign channel and binding messages like cargoes. A certificate issued by a private gateway to its public peer is known as a CDA, and additional requirements and recommendations apply.
 
