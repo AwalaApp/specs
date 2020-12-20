@@ -145,7 +145,7 @@ A Parcel Delivery Deauthorization (PDD) revokes one or more PDAs issued by a spe
 
 The message MUST be serialized as the DER representation of the `ParcelDeliveryDeauthorization` ASN.1 type defined below:
 
-```asn1
+```
 ParcelDeliveryDeauthorization ::= SEQUENCE
 {
   recipientAddress  VisibleString (SIZE(0..1024)),
@@ -164,7 +164,7 @@ Cargoes MUST be serialized with RAMF, using the octet `0x43` ("C" in ASCII) as i
 
 The payload ciphertext MUST be encrypted. The corresponding plaintext MUST encapsulate zero or more messages (e.g., parcels), and it MUST be serialized as the DER representation of the `CargoMessageSet` ASN.1 type defined below:
 
-```asn1
+```
 CargoMessageSet ::= SEQUENCE OF Message
 Message ::= OCTET STRING
 ```
@@ -181,7 +181,7 @@ A Cargo Collection Authorization (CCA) is a RAMF-serialized message whereby Gate
 
 Every CCA MUST contain an encrypted Cargo Collection Request (CCR) as its payload. The CCR MUST be serialized with ASN.1/DER using the following schema:
 
-```asn1
+```
 CargoCollectionRequest ::= SEQUENCE {
    cargoDeliveryAuthorization  OCTET STRING
 }
