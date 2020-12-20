@@ -24,9 +24,9 @@ This document describes how to issue, revoke and process X.509 certificates in R
 
 Relaynet relies extensively on its PKI in order to authenticate and authorize nodes without a real-time connection to an external authentication/authorization server, as well as to encrypt payloads when the [Channel Session Protocol](./rs003-key-agreement.md) is not employed.
 
-The [Relaynet Abstract Message Format (RAMF)](./rs001-ramf.md) depends on Relaynet PKI certificates to authenticate the sender of the message and ensure the integrity of the message. Any valid certificate can be used to sign a message bound for a public node, but every message bound for a private node has to be signed with a certificate issued by the recipient (in which case the certificate can also be called a _delivery authorization_).
+One prominent use of the Relaynet PKI is in the [Relaynet Abstract Message Format (RAMF)](./rs001-ramf.md), where certificates are used to authenticate the sender of the message and ensure the integrity of the message. Any valid certificate can be used to sign a message bound for a public node, but every message bound for a private node has to be signed with a certificate issued by the recipient (in which case the certificate will be called a _delivery authorization_).
 
-This PKI applies to the long-term keys that identify endpoints and gateways in Relaynet, and it also serves as the basis for issuing certificates for initial keys in the Channel Session Protocol. The requirements and recommendations in this document are limited to Relaynet messaging protocols, and therefore do not apply to [Message Transport Bindings](./rs000-core.md#message-transport-bindings) (where the Internet PKI applies).
+This PKI applies to the long-term keys that identify endpoints and gateways in Relaynet, and it also serves as the basis for issuing certificates for initial keys in the Channel Session Protocol. The requirements and recommendations in this document do not apply to the Internet PKI certificates used in [Message Transport Bindings](./rs000-core.md#message-transport-bindings).
 
 ## General Constraints and Attributes
 
@@ -91,15 +91,15 @@ Where, `limit` specifies how many parcels can be sent within a given number of s
 
 ### Gateway Certificate
 
-Each gateway has at least two certificates: One self-issued and one certificate issued by each of its peers. Consequently, every private gateway has exactly two certificates because it has exactly one peer, while a public gateway may have more certificates.
+Each gateway has at least two certificates for the same long-term key pair: One self-issued and one certificate issued by each of its peers. Consequently, every private gateway has exactly two certificates because it has exactly one peer, while a public gateway may have more certificates.
 
-Self-issued certificates MUST only be used to issue certificates to peers, and therefore such certificates will be the root for a PDA or a [Cargo Delivery Authorization (CDA)](#cargo-delivery-authorization-cda). Self-issued certificates MUST NOT be used to sign channel or binding messages.
+Self-issued certificates MUST only be used to issue certificates to peers, and therefore such certificates will be the root for a PDA or a [Cargo Delivery Authorization (CDA)](#cargo-delivery-authorization-cda). Self-issued certificates MUST NOT be used to sign channel or binding messages, but peers MAY use the self-issued certificate to encrypt payloads when not using the Channel Session Protocol.
 
 Certificates issued by peers MUST be used to sign channel and binding messages like cargoes. A certificate issued by a private gateway to its public peer is known as a CDA, and additional requirements and recommendations apply.
 
 ### Cargo Delivery Authorization (CDA)
 
-Any certificate issued by a private gateway to a public one is regarded as a Cargo Delivery Authorization (CDA), and it authorizes the public gateway to send messages to the issuer.
+Any certificate issued by a private gateway to a public one is regarded as a Cargo Delivery Authorization (CDA), and it authorizes the public gateway to send cargo to the private gateway.
 
 CDAs SHOULD be valid for at least 24 hours, and they MUST NOT be valid for more than 30 days.
 
