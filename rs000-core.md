@@ -65,11 +65,11 @@ Note that defining same-layer interactions at the application and relay layers i
 
 This document only defines [point-to-point](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PointToPointChannel.html) message delivery.
 
-Each endpoint and gateway in Relaynet MUST have a unique, opaque address known as _private address_. It MAY also have a unique Internet address known as _public address_ if the node can be reached by host/port. A node is public if it has a public address, otherwise it is private.
+Each endpoint and gateway in Relaynet MUST have a unique, opaque address known as _private address_. It MAY also have a unique internet address known as _public address_ if the node can be reached through an internet. A node is public if it has a public address, otherwise it is private.
 
 The private address of a node MUST equal to the digest of its public key, computed as `"0" || sha256(publicKey)`, where the `0` (zero) prefix denotes the version of the address format defined in this document, `||` denotes the concatenation of two strings, `publicKey` is the DER encoding of the `SubjectPublicKeyInfo` structure from [RFC 5280](https://tools.ietf.org/html/rfc5280) and `sha256()` outputs the SHA-256 digest in hexadecimal. For example, `0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private address.
 
-A public address MUST be a valid [Uniform Resource Identifier (URI)](https://tools.ietf.org/html/rfc3986) without query or fragment components.
+A public address MUST be a valid [Uniform Resource Identifier (URI)](https://tools.ietf.org/html/rfc3986) without port, path, query or fragment components. Its host name MUST be a domain name, not an IP address. Refer to [public address resolution](#public-address-resolution) to learn how these domain names should be used.
 
 ## Messaging Protocols
 
@@ -201,49 +201,31 @@ For performance reasons, nodes SHOULD use Unix domain sockets or any other IPC m
 
 For availability and performance reasons, the node sending messages SHOULD limit the number of messages pending acknowledgements to five. Consequently, the node on the receiving end MUST hold at least five incoming messaging in its processing queue at any point in time. The receiving end MAY close the connection when this limit is exceeded.
 
-For privacy and censorship-circumvention reasons, public addresses using DNS records SHOULD be resolved using [DNS over HTTPS](https://tools.ietf.org/html/rfc8484) or [DNS over TLS/DTLS](https://tools.ietf.org/html/rfc8310), using a DNS resolver trusted by the implementer. Implementations MAY allow advanced users to set the DNS resolver. Additionally, when the connection is done over TLS 1.3 or newer, the [Encrypted Server Name Identification extension](https://tools.ietf.org/html/draft-rescorla-tls-esni-00) SHOULD be used.
+For privacy and censorship-circumvention reasons, public addresses using DNS records SHOULD be resolved using [DNS-over-HTTPS](https://tools.ietf.org/html/rfc8484) or [DNS-over-TLS/DTLS](https://tools.ietf.org/html/rfc8310), using a DNS resolver trusted by the implementer. Implementations MAY allow advanced users to set the DNS resolver. Additionally, when the connection is done over TLS 1.3 or newer, the [Encrypted Server Name Identification extension](https://tools.ietf.org/html/draft-rescorla-tls-esni-00) SHOULD be used.
+
+The node delivering a message MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the message is safely stored. For example, if the message is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
 
 Bindings MAY extend this specification, but they MUST NOT override it.
 
-### Parcel Delivery Binding
+### Public Address Resolution
 
-This is a protocol that establishes a _Parcel Delivery Connection_ (PDC) between an endpoint and a gateway, or between two gateways, with the primary purpose of exchanging parcels bidirectionally.
+The host name in a public address MUST be an [SRV record](https://tools.ietf.org/html/rfc2782), where the service name and OSI Layer 4 protocol is determined by the respective binding.
 
-The node delivering a parcel MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the parcel is safely stored -- Consequently, if the parcel is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
+The target host in the SRV record MUST be used exclusively in the client-server connection. For example, if the public node `example.com` resolves to the host `foo.example.com`, then `foo.example.com` should be specified in the TLS Server Name Identification (SNI) value and the HTTP `Host` request header (assuming that the binding uses the TLS and HTTP protocols).
 
-Gateways MUST override any previously queued parcel with the same id. Endpoints can use this to replace stale messages in the same relay -- For example, an application sending a message to replace the user's email address could use this to discard any previous message to replace this value.
+This specification forbids the use the original domain name in the public address in order to allow the same public gateway instance to share a single public IP address across its binding implementations. However, to prevent hijacking through DNS spoofing, clients MUST use DNSSEC and refuse results whose DNSSEC validation fails. A client MAY delegate DNSSEC validation to a DNS-over-HTTPS or DNS-over-TLS/DTLS resolver.
 
-This specification defines two types of parcel delivery bindings: Local and Internet-based.
+### Gateway Synchronization Binding
 
-#### Internet-based PDC {#internet-pdc}
+This is a protocol that establishes a _Gateway Synchronization Connection_ (GSC) between a private node (a private endpoint or a private gateway) and its gateway, with the primary purpose of exchanging parcels bidirectionally. The private node and its gateway MUST act as the client and server, respectively.
 
-An Internet-based PDC allows a client to deliver parcels to a server via the Internet. The client node MUST be a private gateway, a public gateway or a public endpoint, while the server node MUST be a public gateway or a public endpoint. Clients are only able to deliver parcels, not collect them.
+Before the nodes can exchange parcels, the private node MUST register with its gateway. If the gateway behind the server accepts the registration, it MUST issue a [Relaynet PKI certificate](rs002-pki.md) to the private node. The private node MUST use its certificate to sign requests to exchange parcels with its gateway.
 
-The server MUST NOT require client authentication, but it MAY still refuse to serve suspicious, ill-behaved or abusive clients.
+If the server corresponds to a private gateway, it SHOULD listen on port `276` if it has the appropriate permission to do so or port `13276` if it does not. Alternatively, if using Unix domain sockets, the client SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems).
 
-If the client is a private or public gateway, it SHOULD include the Internet address of the corresponding public gateway if that gateway is able to collect parcels for the endpoint that sent the parcel.
-
-The client MUST close the underlying connection as soon as all parcels have been delivered.
-
-Internet PDCs MUST always use TLS or equivalent in non-TCP connections.
-
-#### Local PDC
-
-A local PDC enables peers to exchange parcels bidirectionally. If the client is acting on behalf of one or more private endpoints, the server MUST be a private gateway. Alternatively, if the client is acting on behalf of a private gateway, the server MUST be a public gateway.
+If the server corresponds to a public gateway, it MUST use `rgsc` as the service string in the SRV record.
 
 In addition to sending parcels to each other, the client MAY also register [Parcel Delivery Deauthorizations (PDD)](#pdd) with the server.
-
-The first time a client connects to a server on behalf of a private node, the node MUST register the private node with the gateway behind the server.
-
-To find which binding to use and the address for the gateway, the client MUST get the _Gateway Connection URL_. For example, the Gateway Connection URL `http://127.0.0.1` specifies [PoWeb](rs016-poweb.md) as the binding and `127.0.0.1:80` as the address of the gateway. The endpoint MUST get the connection URL from one of the following places, sorted by precedence:
-
-1. Its application. For example, the end-user might have set the URL.
-1. The environment variable `RELAYNET_GATEWAY_URL`.
-1. The file `/etc/relaynet-gateway` on Unix-like systems or `C:\Windows\System32\Drivers\etc\relaynet-gateway` on Windows.
-
-If the server corresponds to a private gateway, it SHOULD listen on port `276` if it has the appropriate permission to do so or port `13276` if it does not have the appropriate permission; alternatively, if using Unix domain sockets, the endpoint SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems). Servers for public gateways MAY use any port.
-
-Note that only the private nodes owned by the client are authenticated because the server needs to make sure that it is delivering the parcel to the right node, given that it has to destroy its copy of the parcel upon collection. The gateway can be trusted because it is set by the end-user or systems administrator, and TLS (or equivalent) has to be used anyway if the gateway is on a different computer.
 
 ##### Parcel collection handshake
 
@@ -252,6 +234,22 @@ As soon as the connection is established, a handshake MUST be performed for the 
 ![](diagrams/rs000/pdc-handshake-sequence.png)
 
 The connection MUST be closed if the handshake fails.
+
+### Parcel Delivery Binding
+
+This is a protocol that establishes a _Parcel Delivery Connection_ (PDC), whose sole purpose is to allow gateways and public endpoints to deliver parcels to public nodes. In this case, the sender and the recipient will act as client and server, respectively.
+
+If the recipient is a public gateway, it MUST override any previously queued parcel with the same id. The sending endpoint MAY use this to replace stale messages in the same relay -- For example, an application sending a message to replace the user's email address could use this to discard any previous message to replace this value.
+
+The server MUST NOT require client authentication, but it MAY still refuse to serve suspicious, ill-behaved or abusive clients.
+
+If the client is a private or public gateway, it SHOULD include the Internet address of the corresponding public gateway if that gateway is able to collect parcels for the endpoint that sent the parcel.
+
+The client MUST close the underlying connection as soon as all parcels have been delivered.
+
+Servers MUST use `rpdc` as the service string for the SRV record corresponding to their PDC server(s).
+
+PDCs MUST always use TLS (or equivalent in non-TCP connections).
 
 ### Cargo Relay Binding
 
@@ -305,7 +303,9 @@ Gateways MUST NOT delete parcels as a consequence of encapsulating them in cargo
 
 Note that couriers are not assigned Relaynet PKI certificates, but per the requirements for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. Consequently, the node acting as server MUST provide a valid certificate which MAY NOT be issued by a Certificate Authority trusted by the client when the server is a courier: Couriers are unlikely to get certificates issued by widely trusted authorities because they are not Internet hosts, but this is deemed to be acceptable from a security standpoint because the purpose of TLS (or equivalent) in this case is to provide confidentiality from eavesdroppers, not to authenticate the server.
 
-CRC servers SHOULD listen on port `21473`, which stands for "too late".
+Public gateways MUST use `rcrc` as the service string for the SRV record corresponding to their CRC server(s).
+
+CRC servers in couriers SHOULD listen on port `21473`, which stands for "too late".
 
 ## Clock Drift Tolerance
 

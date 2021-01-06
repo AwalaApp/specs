@@ -12,7 +12,7 @@ permalink: /RS-007
 ## Abstract
 {: .no_toc }
 
-This document describes PoHTTP, a [parcel delivery binding](rs000-core.md#parcel-delivery-binding) for Internet-based Parcel Delivery Connections (PDC) based on HTTP.
+This document describes PoHTTP, a [parcel delivery binding](rs000-core.md#parcel-delivery-binding) based on HTTP.
 
 ## Table of contents
 {: .no_toc }
@@ -26,7 +26,7 @@ PoHTTP was specifically designed to make it easier for maintainers of existing s
 
 In some cases, it may also be desirable for a public gateway to expose an HTTP interface so it can receive parcels from certain endpoints. For example, a Shell script in a legacy system could use `curl` to deliver parcels.
 
-As an Internet-based PDC, the only operation supported by this binding is [parcel delivery](#parcel-delivery).
+As a PDC, the only operation supported by this binding is [parcel delivery](#parcel-delivery).
 
 ## Parcel Delivery
 
@@ -48,6 +48,16 @@ An error response (status code 40X or 50X) MAY have a body, in which case it wil
 
 - If `application/json` is among the values in `Accept`, the body SHOULD be serialized as a JSON document with a property `message` that explains what went wrong. Additionally, the response `Content-Type` MUST be `application/json`. The document MAY contain additional properties, but their semantics would be outside the scope of this specification.
 - If the `Accept` header is missing or does not contain `application/json`, the response body SHOULD be plain text and use the `text/plain` Content Type.
+
+## Public Node SRV records
+
+Because this binding uses the Transmission Control Protocol (TCP; [RFC 793](https://tools.ietf.org/html/rfc793)), SRV records for PDC servers implementing this binding MUST use the `tcp` protocol.
+
+For example, a public endpoint like `example.social` could specify an SRV record as follows:
+
+```
+_rpdc._tcp.example.social. 300 IN SRV 0 1 443 relaynet-endpoint.example.social.
+```
 
 ## HTTP Considerations
 

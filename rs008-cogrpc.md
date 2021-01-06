@@ -58,6 +58,16 @@ A node sending cargo MUST attach a UUID4 to each individual message. The recipie
 {% include_relative diagrams/rs008/cogrpc.proto %}
 ```
 
+## Public Gateway SRV records
+
+Because this binding uses the Transmission Control Protocol (TCP; [RFC 793](https://tools.ietf.org/html/rfc793)), SRV records for CRC servers implementing this binding MUST use the `tcp` protocol.
+
+For example, a public gateway like `example.com` could specify an SRV record as follows:
+
+```
+_rcrc._tcp.example.com. 300 IN SRV 0 1 443 relaynet-gateway-crc.example.com.
+```
+
 ## Relevant Specifications
 
 [Relaynet Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [cargo relay bindings](rs000-core.md#cargo-relay-binding) specifically, all of which apply to CogRPC. Amongst other things, it defines the use Transport Layer Security (TLS) or equivalent, as well as when it is safe to return acknowledgement messages.
