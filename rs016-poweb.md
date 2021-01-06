@@ -121,7 +121,7 @@ Because this binding uses the Transmission Control Protocol (TCP; [RFC 793](http
 For example, a public gateway like `example.com` could specify an SRV record as follows:
 
 ```
-_rgsc._tcp.example.com. 300 IN SRV 0 1 443 relaynet-gateway-gsc.example.com.
+_rgsc._tcp.example.com. 300 IN SRV 0 1 443 poweb.example.com.
 ```
 
 ## Relevant Specifications
