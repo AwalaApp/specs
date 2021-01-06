@@ -10,7 +10,7 @@ permalink: /RS-005
 
 ## Abstract
 
-This document will describe _PoSocket_, a binding for [local Parcel Delivery Connections (PDC)](rs000-core.md#internal-pdc) on top of TCP or Unix sockets. As a purpose-built [Application Layer](https://en.wikipedia.org/wiki/Application_layer) protocol, this is the most efficient binding to deliver parcels.
+This document will describe _PoSocket_, a binding for Gateway Synchronization Connections on top of TCP or Unix sockets. As a purpose-built [Application Layer](https://en.wikipedia.org/wiki/Application_layer) protocol, this is the most efficient binding to deliver parcels.
 
 ## Open Questions
 

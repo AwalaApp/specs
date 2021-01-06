@@ -12,7 +12,7 @@ permalink: /RS-016
 ## Abstract
 {: .no_toc }
 
-This document describes _PoWeb_, a binding for local [Parcel Delivery Connections (PDC)](rs000-core.md#parcel-delivery-binding) on top of the HTTP and [WebSockets (RFC-6455)](https://tools.ietf.org/html/rfc6455) protocols.
+This document describes _PoWeb_, a binding for [Gateway Synchronization Connections (GSC)](rs000-core.md#gateway-synchronization-binding) on top of the HTTP and [WebSockets (RFC-6455)](https://tools.ietf.org/html/rfc6455) protocols.
 
 ## Table of contents
 {: .no_toc }
@@ -22,9 +22,9 @@ This document describes _PoWeb_, a binding for local [Parcel Delivery Connection
 
 ## Introduction
 
-As a local PDC, the ultimate objective of PoWeb is to enable a gateway to relay parcels for its private endpoints or its private peers. In other words, a private gateway would implement a PoWeb service to exchange parcels with its local endpoints, whilst a public gateway would implement a PoWeb service to exchange parcels with its private gateways.
+As a GSC, the ultimate objective of PoWeb is to enable a gateway to relay parcels for its private endpoints or its private peers. In other words, a private gateway would implement a PoWeb service to exchange parcels with its local endpoints, whilst a public gateway would implement a PoWeb service to exchange parcels with its private gateways.
 
-PoWeb owes its name to the fact it uses Web-based, Application Layer protocols with its clients: HTTP for remote procedure calls, and WebSockets to stream messages (e.g., parcels). This specification describes the HTTP and WebSocket endpoints that comprise PoWeb, along with their inputs, outputs and any side effects. The serialisation format of the messages exchanged via this protocol are outside the scope of this document, as they are agnostic of the concrete PDC binding.
+PoWeb owes its name to the fact it uses Web-based, Application Layer protocols with its clients: HTTP for remote procedure calls, and WebSockets to stream messages (e.g., parcels). This specification describes the HTTP and WebSocket endpoints that comprise PoWeb, along with their inputs, outputs and any side effects. The serialisation format of the messages exchanged via this protocol are outside the scope of this document, as they are agnostic of the concrete GSC binding.
 
 The private or public gateway implementing the PoWeb service will be referred to as the "server", whilst the private endpoint or private gateway connecting to its will be referred to as the "client".
 
@@ -113,6 +113,16 @@ Both the client and the server SHOULD send each other _ping_ messages and they M
 ## Security Considerations
 
 To prevent web pages from trying to make unauthorised requests to the server of a private gateway, the server MUST NOT support CORS and WebSocket connections MUST be refused with the status code `1008` if the HTTP request included the header `Origin`.
+
+## Public Gateway SRV records
+
+Because this binding uses the Transmission Control Protocol (TCP; [RFC 793](https://tools.ietf.org/html/rfc793)), SRV records for GSC servers implementing this binding MUST use the `tcp` protocol.
+
+For example, a public gateway like `example.com` could specify an SRV record as follows:
+
+```
+_rgsc._tcp.example.com. 300 IN SRV 0 1 443 poweb.example.com.
+```
 
 ## Relevant Specifications
 
