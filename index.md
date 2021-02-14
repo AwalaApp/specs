@@ -25,7 +25,6 @@ The following specifications are available for informational purposes only, and 
 
 - [RS-019 (Security Threats)](rs019-threats.md) describes the general security threats that end users, service providers, couriers and software vendors should be aware of when implementing and using Relaynet.
 - [RS-012 (Service Integration Scale)](rs012-service-integration.md) categorizes the degrees to which Relaynet can be integrated in a service. This can be useful to understand the vision of the project and how future applications could be built on top of Relaynet.
-- [RS-020 (The Zen of Relaynet)](rs020-zen.md) describes the guiding principles of Relaynet since its conception.
 
 ## Future Extensions
 
