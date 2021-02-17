@@ -42,7 +42,7 @@ The following diagram illustrates the various components of the network and how 
 
 ![](diagrams/rs000/protocol-layers.svg)
 
-- A **service** is a collection of _applications_ that communicate amongst themselves. A service can be centralized (client-server) or decentralized (peer-to-peer).
+- A **service** is a collection of _applications_ that communicate amongst themselves. If the sender or recipient is a server, the service is _centralised_; otherwise, the service is _decentralised_.
 - **Applications** exchange _messages_ amongst themselves, and because they can't communicate directly, they each use an _endpoint_ as a broker.
 - A **(service) message** is serialized in the format determined by the service and does not have to be encrypted or signed.
 - An **endpoint** receives a message from its application and converts it into a _parcel_ for the target application's endpoint, and because they still can't communicate directly, they each use a _gateway_ as a broker. When an endpoint receives a parcel from the gateway, it has to decrypt the message and pass it to its application.
