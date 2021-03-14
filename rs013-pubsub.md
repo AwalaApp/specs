@@ -11,7 +11,7 @@ permalink: /RS-013
 
 ## Abstract
 
-This specification will extend [Relaynet Core (RS-000)](rs000-core.md) to support the [Publish-Subscribe pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html) through a [Distributed Hash Table (DHT)](https://en.wikipedia.org/wiki/Distributed_hash_table). This document is a just placeholder because this functionality is not a top priority as of this writing.
+This specification will extend [Awala Core (RS-000)](rs000-core.md) to support the [Publish-Subscribe pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html) through a [Distributed Hash Table (DHT)](https://en.wikipedia.org/wiki/Distributed_hash_table). This document is a just placeholder because this functionality is not a top priority as of this writing.
 
 ## Overview
 

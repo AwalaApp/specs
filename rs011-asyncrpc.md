@@ -2,7 +2,7 @@
 nav_exclude: true
 permalink: /RS-011
 ---
-# AsyncRPC: RPC Encapsulation in Relaynet
+# AsyncRPC: RPC Encapsulation in Awala
 {: .no_toc }
 
 - Id: RS-011.
@@ -12,7 +12,7 @@ permalink: /RS-011
 ## Abstract
 {: .no_toc }
 
-_AsyncRPC_ is a Relaynet service whose messages are [Application Layer](https://en.wikipedia.org/wiki/Application_layer) packets such as HTTP requests, HTTP responses, SMTP messages, amongst others. Its purpose is to facilitate the integration of Relaynet in pre-existing, centralised services by keeping the server-side unchanged with the use of a server-side adapter.
+_AsyncRPC_ is a Awala service whose messages are [Application Layer](https://en.wikipedia.org/wiki/Application_layer) packets such as HTTP requests, HTTP responses, SMTP messages, amongst others. Its purpose is to facilitate the integration of Awala in pre-existing, centralised services by keeping the server-side unchanged with the use of a server-side adapter.
 
 ## Table of contents
 {: .no_toc }

@@ -1,5 +1,5 @@
-title: Relaynet Specs
-description: Specifications of the Relaynet Protocol Suite
+title: Awala Specs
+description: Specifications of the Awala Protocol Suite
 
 remote_theme: "pmarsceill/just-the-docs@v0.2.7"
 
@@ -10,5 +10,5 @@ exclude:
 # Theme-specific options
 search_enabled: true
 aux_links:
-  "Relaynet Specs on GitHub":
-    - "https://github.com/relaynet/specs"
+  "Awala Specs on GitHub":
+    - "https://github.com/AwalaNetwork/specs"

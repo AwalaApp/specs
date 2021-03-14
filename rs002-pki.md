@@ -1,18 +1,18 @@
 ---
 permalink: /RS-002
 ---
-# Relaynet Public Key Infrastructure and Revocation Profile
+# Awala Public Key Infrastructure and Revocation Profile
 {: .no_toc }
 
 - Id: RS-002.
 - Status: Working draft.
 - Type: Implementation.
-- Issue tracking label: [`spec-pki`](https://github.com/relaynet/specs/labels/spec-pki).
+- Issue tracking label: [`spec-pki`](https://github.com/AwalaNetwork/specs/labels/spec-pki).
 
 ## Abstract
 {: .no_toc }
 
-This document describes how to issue, revoke and process X.509 certificates in Relaynet [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this Public Key Infrastructure (PKI) profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) as used in the TLS protocol.
+This document describes how to issue, revoke and process X.509 certificates in Awala [messaging protocols](rs000-core.md#messaging-protocols). Despite the use of X.509 certificates, this Public Key Infrastructure (PKI) profile is independent of and incompatible with the [Internet PKI profile](https://tools.ietf.org/html/rfc5280) as used in the TLS protocol.
 
 ## Table of contents
 {: .no_toc }
@@ -22,11 +22,11 @@ This document describes how to issue, revoke and process X.509 certificates in R
 
 ## Introduction
 
-Relaynet relies extensively on its PKI in order to authenticate and authorize nodes without a real-time connection to an external authentication/authorization server, as well as to encrypt payloads when the [Channel Session Protocol](./rs003-key-agreement.md) is not employed.
+Awala relies extensively on its PKI in order to authenticate and authorize nodes without a real-time connection to an external authentication/authorization server, as well as to encrypt payloads when the [Channel Session Protocol](./rs003-key-agreement.md) is not employed.
 
-One prominent use of the Relaynet PKI is in the [Relaynet Abstract Message Format (RAMF)](./rs001-ramf.md), where certificates are used to authenticate the sender of the message and ensure the integrity of the message. Any valid certificate can be used to sign a message bound for a public node, but every message bound for a private node has to be signed with a certificate issued by the recipient (in which case the certificate will be called a _delivery authorization_).
+One prominent use of the Awala PKI is in the [Awala Abstract Message Format (RAMF)](./rs001-ramf.md), where certificates are used to authenticate the sender of the message and ensure the integrity of the message. Any valid certificate can be used to sign a message bound for a public node, but every message bound for a private node has to be signed with a certificate issued by the recipient (in which case the certificate will be called a _delivery authorization_).
 
-This PKI applies to the long-term keys that identify endpoints and gateways in Relaynet, and it also serves as the basis for issuing certificates for initial keys in the Channel Session Protocol. The requirements and recommendations in this document do not apply to the Internet PKI certificates used in [Message Transport Bindings](./rs000-core.md#message-transport-bindings).
+This PKI applies to the long-term keys that identify endpoints and gateways in Awala, and it also serves as the basis for issuing certificates for initial keys in the Channel Session Protocol. The requirements and recommendations in this document do not apply to the Internet PKI certificates used in [Message Transport Bindings](./rs000-core.md#message-transport-bindings).
 
 ## General Constraints and Attributes
 
@@ -74,7 +74,7 @@ The [ASN.1](https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf
 ```
 PKIPDARateLimitId OBJECT IDENTIFIER ::= {
     itu-t(0) identified-organization(4) etsi(0) reserved(127) etsi-identified-organization(0)
-        relaycorp(17) relaynet(0) pki(0) 0
+        relaycorp(17) awala(0) pki(0) 0
     }
 ```
 
@@ -109,7 +109,7 @@ Endpoints and gateways MAY use multiple certificates, with the same or different
 
 An endpoint or gateway initiating a certificate rotation MUST share the new certificate using a _Certificate Rotation Message_ (CRM) through the appropriate [messaging channels](rs000-core.md#messaging-protocols). Such a message MUST:
 
-- Be serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md), using the octet `0x10` as its _concrete message type_.
+- Be serialized with the [Awala Abstract Message Format (RAMF)](rs001-ramf.md), using the octet `0x10` as its _concrete message type_.
 - Be signed with a certificate that the target endpoint/gateway already trusts.
 - Have their payload encrypted as specified in the [Core](rs000-core.md) and [RAMF](rs001-ramf.md) specifications.
 - Have its payload plaintext contain only the new certificate.

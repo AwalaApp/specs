@@ -7,12 +7,12 @@ permalink: /RS-019
 - Id: RS-019.
 - Status: Working draft.
 - Type: Informational.
-- Issue tracking label: [`spec-threats`](https://github.com/relaynet/specs/labels/spec-threats).
+- Issue tracking label: [`spec-threats`](https://github.com/AwalaNetwork/specs/labels/spec-threats).
 
 ## Abstract
 {: .no_toc }
 
-This document describes the general security threats that end users, service providers, couriers and software vendors should be aware of when implementing and using Relaynet. The likelihood and impact of each threat will depend entirely on the context where Relaynet is used, so this document does not constitute a threat model but it can be used in a threat modelling process.
+This document describes the general security threats that end users, service providers, couriers and software vendors should be aware of when implementing and using Awala. The likelihood and impact of each threat will depend entirely on the context where Awala is used, so this document does not constitute a threat model but it can be used in a threat modelling process.
 
 ## Table of contents
 {: .no_toc }
@@ -22,17 +22,17 @@ This document describes the general security threats that end users, service pro
 
 ## Introduction
 
-Nothing has ever been more important throughout the design of Relaynet than the security, safety and privacy of end users -- After all, it was conceived to help vulnerable people fight back against repressive regimes. However, no system is impenetrable and Relaynet may be targeted by powerful adversaries as its userbase grows, so the best way to mitigate the risks is by being upfront and open about the threats, which this document summarizes.
+Nothing has ever been more important throughout the design of Awala than the security, safety and privacy of end users -- After all, it was conceived to help vulnerable people fight back against repressive regimes. However, no system is impenetrable and Awala may be targeted by powerful adversaries as its userbase grows, so the best way to mitigate the risks is by being upfront and open about the threats, which this document summarizes.
 
-This is meant to be a living document, unlike other Relaynet specifications. Only threats that are inherent to the implementation and use of the technology are eligible to be listed here -- Therefore, specific security vulnerabilities should be fixed in their corresponding implementations and/or specifications.
+This is meant to be a living document, unlike other Awala specifications. Only threats that are inherent to the implementation and use of the technology are eligible to be listed here -- Therefore, specific security vulnerabilities should be fixed in their corresponding implementations and/or specifications.
 
-The term "providers" is used throughout the specification to refer to service providers, couriers and Relaynet software vendors collectively. Providers should conduct their own threat modelling process as this document is only meant to be an input to their models. Two elements that are notably missing from this document are the likelihood and impact of each threat, which should be identified in each threat model.
+The term "providers" is used throughout the specification to refer to service providers, couriers and Awala software vendors collectively. Providers should conduct their own threat modelling process as this document is only meant to be an input to their models. Two elements that are notably missing from this document are the likelihood and impact of each threat, which should be identified in each threat model.
 
 Despite the recommendations to address the various threats, this specification remains informational and providers are not required to adopt such recommendations. Providers are strongly encouraged to adopt the most appropriate countermeasures to their specific circumstances.
 
 ## Threats
 
-| Title | [STRIDE](https://en.wikipedia.org/wiki/STRIDE_(security)) Threat Type | Relaynet Node Type | Relevant Roles |
+| Title | [STRIDE](https://en.wikipedia.org/wiki/STRIDE_(security)) Threat Type | Awala Node Type | Relevant Roles |
 |:-:|:-:|:-:|:-:|
 | [Private Keys Compromise](#private-keys-compromise) | Spoofing, Tampering, Repudiation, Information disclosure | All | All |
 | [Software or Hardware Backdoor](#backdoor) | All | All | All |
@@ -43,7 +43,7 @@ Despite the recommendations to address the various threats, this specification r
 
 ### Private Keys Compromise {#private-keys-compromise}
 
-Relaynet uses asymmetric encryption extensively, with both long-term and ephemeral key pairs. An attacker may want to have access to the private keys so that they can impersonate the node and/or decrypt messages from other devices. They could use methods such as theft, evil maid attacks, cold boot attacks or [backdoors](#backdoors) to achieve this.
+Awala uses asymmetric encryption extensively, with both long-term and ephemeral key pairs. An attacker may want to have access to the private keys so that they can impersonate the node and/or decrypt messages from other devices. They could use methods such as theft, evil maid attacks, cold boot attacks or [backdoors](#backdoors) to achieve this.
 
 Full-disk encryption, which is generally advisable, is a good starting point to mitigate this attack. Hardware-level methods like security tokens and tamper-evidence technology may also be appropriate in some circumstances.
 
@@ -51,7 +51,7 @@ To protect private keys, software vendors should set appropriate file permission
 
 ### Software or Hardware Backdoor {#backdoor}
 
-A backdoor at the Operating System, firmware or hardware level could allow an attacker to take full control of the host system, including the local Relaynet node(s). Such backdoors can be difficult to identify and they could, for example, achieve the following:
+A backdoor at the Operating System, firmware or hardware level could allow an attacker to take full control of the host system, including the local Awala node(s). Such backdoors can be difficult to identify and they could, for example, achieve the following:
 
 - [Compromise the private keys](#private-keys-compromise).
 - Copy the plaintext of incoming and outgoing messages.
@@ -61,9 +61,9 @@ If backdoors are part of the threat model, providers should incorporate appropri
 
 ### Tampered Copy of Software {#tampered-software}
 
-An attacker could distribute tampered copies of Relaynet libraries, applications, endpoints or gateways in order to have a backdoor in the affected node.
+An attacker could distribute tampered copies of Awala libraries, applications, endpoints or gateways in order to have a backdoor in the affected node.
 
-Service providers and Relaynet software vendors should distribute their software in such a way that their users can be certain of its authenticity and integrity. The specific methods will depend on the nature of the software (e.g., mobile app, server-side app), but it will typically involve digital signatures.
+Service providers and Awala software vendors should distribute their software in such a way that their users can be certain of its authenticity and integrity. The specific methods will depend on the nature of the software (e.g., mobile app, server-side app), but it will typically involve digital signatures.
 
 ### Denial of Service from Legitimate Node {#dos-legitimate-node}
 
@@ -81,7 +81,7 @@ An attacker may also target the DNS records of endpoints and gateways, also caus
 
 ### Public Endpoint Address Exposed to Gateway {#public-endpoint-address}
 
-Gateways have to know the sender and the recipient of the parcels they relay, which means that they could find out the service that a parcel belongs to by looking at the public endpoint address (e.g., `rne+https://relaynet.twitter.com/`). Thanks to the use of end-to-end encryption in Relaynet, gateways would not be able to see the contents of the parcel; however, exposing the endpoint address could be cause for concern in some circumstances.
+Gateways have to know the sender and the recipient of the parcels they relay, which means that they could find out the service that a parcel belongs to by looking at the public endpoint address (e.g., `twitter.com`). Thanks to the use of end-to-end encryption in Awala, gateways would not be able to see the contents of the parcel; however, exposing the endpoint address could be cause for concern in some circumstances.
 
 This information could be persisted and used subsequently, causing privacy issues -- And even more severe risks to certain end users, such as journalists. A public gateway operator may also be coerced to use this information to censor a particular service.
 
@@ -89,4 +89,4 @@ Users that wish to conceal the address of the centralized services they use shou
 
 ## Acknowledgements
 
-This work is based on a lightweight threat analysis by [Include Security](http://www.includesecurity.com/) as part of a [security audit commissioned by the Open Technology Fund](https://relaynet.network/archives/security-audit-2019-03.pdf).
+This work is based on a lightweight threat analysis by [Include Security](http://www.includesecurity.com/) as part of a [security audit commissioned by the Open Technology Fund](https://awala.network/archives/security-audit-2019-03.pdf).

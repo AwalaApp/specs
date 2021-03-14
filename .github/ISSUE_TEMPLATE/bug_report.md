@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report an bug in the protocol suite or its documentation
+about: Report a bug in the protocol suite or its documentation
 title: ''
 labels: bug
 assignees: ''
@@ -9,7 +9,7 @@ assignees: ''
 
 # Executive summary
 
-<!-- A succinct description of the issue aimed at technical people who may not necessarily be familiar with Relaynet terminology. It should ideally be just one paragraph, but could span two or three. -->
+<!-- A succinct description of the issue aimed at technical people who may not necessarily be familiar with Awala terminology. It should ideally be just one paragraph, but could span two or three. -->
 
 # Describe the bug
 

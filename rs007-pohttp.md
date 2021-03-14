@@ -7,7 +7,7 @@ permalink: /RS-007
 - Id: RS-007.
 - Status: Working draft.
 - Type: Implementation.
-- Issue tracking label: [`spec-pohttp`](https://github.com/relaynet/specs/labels/spec-pohttp).
+- Issue tracking label: [`spec-pohttp`](https://github.com/AwalaNetwork/specs/labels/spec-pohttp).
 
 ## Abstract
 {: .no_toc }
@@ -22,7 +22,7 @@ This document describes PoHTTP, a [parcel delivery binding](rs000-core.md#parcel
 
 ## Introduction
 
-PoHTTP was specifically designed to make it easier for maintainers of existing systems to support Relaynet. For example, an organization maintaining a REST API could collect parcels by implementing a new API endpoint (e.g., `/relaynet`), or they could integrate an [Enterprise Service Bus](https://en.wikipedia.org/wiki/Enterprise_service_bus) to convert Relaynet service messages to API calls.
+PoHTTP was specifically designed to make it easier for maintainers of existing systems to support Awala. For example, an organization maintaining a REST API could collect parcels by implementing a webhook or they could integrate an [Enterprise Service Bus](https://en.wikipedia.org/wiki/Enterprise_service_bus) to convert Awala service messages to API calls.
 
 In some cases, it may also be desirable for a public gateway to expose an HTTP interface so it can receive parcels from certain endpoints. For example, a Shell script in a legacy system could use `curl` to deliver parcels.
 
@@ -32,8 +32,8 @@ As a PDC, the only operation supported by this binding is [parcel delivery](#par
 
 To deliver each parcel, the client MUST make a `POST` request to the HTTP URL corresponding to the node address, with the parcel as the body and the following headers:
 
-- `Content-Type` MUST be set to `application/vnd.relaynet.parcel`.
-- If the client is a public gateway, `X-Relaynet-Gateway` MUST provide the target endpoint with its address using the request header `X-Relaynet-Gateway`. For example, `X-Relaynet-Gateway: https://gateway.humanitarian.org`.
+- `Content-Type` MUST be set to `application/vnd.awala.parcel`.
+- If the client is a public gateway, `X-Awala-Gateway` MUST provide the target endpoint with its address using the request header `X-Awala-Gateway`. For example, `X-Awala-Gateway: https://gateway.humanitarian.org`.
 
 The server MUST respond with one of the following status codes:
 
@@ -42,7 +42,7 @@ The server MUST respond with one of the following status codes:
 - `400` if the request does not meet the requirements specified in this document.
 - `403` if the overall request meets the requirements in this document but the parcel specified in the request body is invalid (e.g., it expired, it is bound for another address). The client MUST NOT try to send the parcel again.
 - A public gateway MAY return a `507` (Insufficient Storage) response when it no longer has the capacity to accept parcels for the target endpoint or its gateway. In this case, the client SHOULD retry to deliver the parcel at a later point but before it expires.
-- Any other standard status code in the range 400-599 that the server regards applicable. For example, a `415 Unsupported Media Type` code could be returned if the `Content-Type` request header did not match `application/vnd.relaynet.parcel`.
+- Any other standard status code in the range 400-599 that the server regards applicable. For example, a `415 Unsupported Media Type` code could be returned if the `Content-Type` request header did not match `application/vnd.awala.parcel`.
 
 An error response (status code 40X or 50X) MAY have a body, in which case it will be subject to the value of the request header `Accept`:
 
@@ -73,4 +73,4 @@ Headers other than the ones described in this specification MAY be used, but def
 
 ## Relevant Specifications
 
-[Relaynet Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [parcel delivery bindings](rs000-core.md#parcel-delivery-binding) specifically, all of which apply to PoHTTP.
+[Awala Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [parcel delivery bindings](rs000-core.md#parcel-delivery-binding) specifically, all of which apply to PoHTTP.

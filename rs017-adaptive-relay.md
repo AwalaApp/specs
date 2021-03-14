@@ -12,7 +12,7 @@ permalink: /RS-017
 ## Abstract
 {: .no_toc }
 
-This specification extends [Relaynet Core (RS-000)](rs000-core.md) to keep latencies low when the underlying network (e.g., the Internet) is available.
+This specification extends [Awala Core (RS-000)](rs000-core.md) to keep latencies low when the underlying network (e.g., the Internet) is available.
 
 ## Table of contents
 {: .no_toc }
@@ -22,7 +22,7 @@ This specification extends [Relaynet Core (RS-000)](rs000-core.md) to keep laten
 
 ## Introduction
 
-Relaynet was originally conceived to connect two nodes that might never be connected through a traditional network infrastructure, so a [store-and-forward pattern](https://en.wikipedia.org/wiki/Store_and_forward) was naturally adopted. With this approach, the data travels through one or more intermediaries, where each will keep a copy of the data until it safely reaches the next node in the route.
+Awala was originally conceived to connect two nodes that might never be connected through a traditional network infrastructure, so a [store-and-forward pattern](https://en.wikipedia.org/wiki/Store_and_forward) was naturally adopted. With this approach, the data travels through one or more intermediaries, where each will keep a copy of the data until it safely reaches the next node in the route.
 
 This approach helps ensure that data will reach its destination, but it adds latency and complexity when the two nodes can actually communicate directly -- For example, when the Internet is available.
 
@@ -57,4 +57,4 @@ For example, if the gateway has the ability to know whether the computer is conn
 ## Open Questions
 
 - How can the private gateway send [key rotation](rs002-pki.md#certificate-and-key-rotation) and [certificate revocation](rs002-pki.md) messages? Maybe bindings for local PDCs should be changed so that the _parcel delivery_ and _parcel delivery acknowledgement_ messages becomes more generic, like _message delivery_ and _message delivery acknowledgement_, respectively.
-- Should private gateways be allowed to deliver parcels via its public gateway as well? That would effectively negate the need for VPNs when using Relaynet.
+- Should private gateways be allowed to deliver parcels via its public gateway as well? That would effectively negate the need for VPNs when using Awala.

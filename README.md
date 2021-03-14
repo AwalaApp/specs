@@ -1,6 +1,6 @@
-# Relaynet Protocol Suite Specifications
+# Awala Protocol Suite Specifications
 
-This is a [Jekyll](https://jekyllrb.com/) site for all the official [Relaynet](https://relaynet.network/) specifications. A live version of the site is available at [specs.relaynet.network](https://specs.relaynet.network).
+This is a [Jekyll](https://jekyllrb.com/) site for all the official [Awala](https://awala.network/) specifications. A live version of the site is available at [specs.awala.network](https://specs.awala.network).
 
 ## Run locally
 

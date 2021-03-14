@@ -1,13 +1,13 @@
 ---
 permalink: /RS-003
 ---
-# Relaynet Channel Session Protocol
+# Awala Channel Session Protocol
 {: .no_toc }
 
 - Id: RS-003.
 - Status: Working draft.
 - Type: Implementation.
-- Issue tracking label: [`spec-channel-session`](https://github.com/relaynet/specs/labels/spec-channel-session).
+- Issue tracking label: [`spec-channel-session`](https://github.com/AwalaNetwork/specs/labels/spec-channel-session).
 
 ## Abstract
 {: .no_toc }
@@ -22,11 +22,11 @@ This document describes an asynchronous key agreement and management protocol to
 
 ## Introduction
 
-Relaynet Core defines messaging channels that use end-to-end encryption to guarantee confidentiality. But since messages are always encrypted using the same keys, compromising the keys will compromise past and future messages -- In other words, Relaynet Core does not offer perfect forward secrecy.
+Awala Core defines messaging channels that use end-to-end encryption to guarantee confidentiality. But since messages are always encrypted using the same keys, compromising the keys will compromise past and future messages -- In other words, Awala Core does not offer perfect forward secrecy.
 
-This protocol extends Relaynet to add perfect forward secrecy, future secrecy and replay attack mitigation. It is heavily based on the [Extended Triple Diffie-Hellman protocol](https://signal.org/docs/specifications/x3dh/) and the [double ratchet algorithm](https://signal.org/docs/specifications/doubleratchet/) from the Signal project, with some notable differences:
+This protocol extends Awala to add perfect forward secrecy, future secrecy and replay attack mitigation. It is heavily based on the [Extended Triple Diffie-Hellman protocol](https://signal.org/docs/specifications/x3dh/) and the [double ratchet algorithm](https://signal.org/docs/specifications/doubleratchet/) from the Signal project, with some notable differences:
 
-- There is no central server that can provide certificates or public keys for any node in Relaynet, but that is not necessary because peers always have each other's certificates. For example, a client-side application will be distributed with the certificate of the server-side endpoint, and similarly, private gateways could be distributed with the certificate of their public gateway (or provided by a trusted courier in a cargo relay connection).
+- There is no central server that can provide certificates or public keys for any node in Awala, but that is not necessary because peers always have each other's certificates. For example, a client-side application will be distributed with the certificate of the server-side endpoint, and similarly, private gateways could be distributed with the certificate of their public gateway (or provided by a trusted courier in a cargo relay connection).
 - This protocol must be [tolerant to disruptions](https://en.wikipedia.org/wiki/Delay-tolerant_networking): Messages are most likely to arrive late, in batches and out of order, or they may be lost.
 - This protocol is not limited to the X25519 and X448 curves, or the HMAC-based Extract-and-Expand Key Derivation Function (HKDF) from RFC 5869. To lower the barrier to adoption, algorithms that are more widely available are also supported.
 
@@ -36,7 +36,7 @@ The end result is a key agreement and management protocol where ephemeral keys a
 
 This document refers to the two nodes in the session as _Alice_ and _Bob_, and assumes that Alice wants to initiate a session with Bob.
 
-Since this protocol applies to sessions on Relaynet channels, Alice and Bob MUST be either endpoints or gateways, but not a combination of the two -- That is, this protocol does not apply to [bindings](rs000-core.md#message-transport-bindings).
+Since this protocol applies to sessions on Awala channels, Alice and Bob MUST be either endpoints or gateways, but not a combination of the two -- That is, this protocol does not apply to [bindings](rs000-core.md#message-transport-bindings).
 
 ## Parameters
 
@@ -48,7 +48,7 @@ A channel implementation MUST specify the following parameters:
 - Cryptographic hashing function: Any function allowed by [RS-018](rs018-algorithms.md).
 - Channel id: An ASCII string identifying the channel. This is only needed when using HKDF as the KDF.
 
-For example, a Relaynet service may configure its endpoints to use ECDH with P-256 as the key exchange algorithm, X9.63 as the KDF, AES-128 (KW and GCM) as the cipher, SHA-256 as the hashing function and `My Service` as the channel id.
+For example, a Awala service may configure its endpoints to use ECDH with P-256 as the key exchange algorithm, X9.63 as the KDF, AES-128 (KW and GCM) as the cipher, SHA-256 as the hashing function and `My Service` as the channel id.
 
 ## Notation
 
@@ -158,14 +158,14 @@ Implementations MUST store the recipient's ephemeral key identifier as the seria
 ```
 OriginatorEphemeralCertificateSerialNumberId OBJECT IDENTIFIER ::= {
     itu-t(0) identified-organization(4) etsi(0) reserved(127) etsi-identified-organization(0)
-        relaycorp(17) relaynet(0) channel-session(1) 0
+        relaycorp(17) awala(0) channel-session(1) 0
     }
 ```
 
 ## Limitations
 
-This protocol will not work with unidirectional communication as might be the case between two endpoints (if one of the endpoints is private and does not issue Parcel Delivery Authorizations to its peer). Consequently, a Relaynet service with one-way communication would not get perfect forward secrecy or future secrecy, unless it enables two-way communication as a workaround until there is an equivalent protocol for unidirectional communication.
+This protocol will not work with unidirectional communication as might be the case between two endpoints (if one of the endpoints is private and does not issue Parcel Delivery Authorizations to its peer). Consequently, a Awala service with one-way communication would not get perfect forward secrecy or future secrecy, unless it enables two-way communication as a workaround until there is an equivalent protocol for unidirectional communication.
 
 ## Relevant Specifications
 
-[RS-018 (Cryptographic Algorithms)](rs018-algorithms.md) defines the requirements and recommendations for the use of cryptographic algorithms in Relaynet.
+[RS-018 (Cryptographic Algorithms)](rs018-algorithms.md) defines the requirements and recommendations for the use of cryptographic algorithms in Awala.

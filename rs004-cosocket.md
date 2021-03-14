@@ -8,7 +8,7 @@ permalink: /RS-004
 - Id: RS-004.
 - Status: Abandoned.
 - Type: Implementation.
-- Proof of concept: https://github.com/relaynet/poc/tree/master/CoSocket
+- Proof of concept: https://github.com/AwalaNetwork/poc/tree/master/CoSocket
 
 ## Abstract
 {: .no_toc }
@@ -42,7 +42,7 @@ Each packet starts with a tag that identifies the type of packet. The tag itself
 
 ### Handshake Packets
 
-Per Relaynet Core, the handshake involves three steps:
+Per Awala Core, the handshake involves three steps:
 
 1. The courier _challenges_ the gateway to sign a nonce with its key(s).
 1. The gateway signs the nonce with each of its keys and sends the signatures to the courier.
@@ -150,4 +150,4 @@ TODO: Upload sequence diagram.
 
 ## Relevant Specifications
 
-[Relaynet Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [cargo relay bindings](rs000-core.md#cargo-relay-binding) specifically, all of which apply to CoSocket. Amongst other things, it defines the use Transport Layer Security (TLS).
+[Awala Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [cargo relay bindings](rs000-core.md#cargo-relay-binding) specifically, all of which apply to CoSocket. Amongst other things, it defines the use Transport Layer Security (TLS).

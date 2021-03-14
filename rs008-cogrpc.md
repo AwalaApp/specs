@@ -7,7 +7,7 @@ permalink: /RS-008
 - Id: RS-008.
 - Status: Draft.
 - Type: Implementation.
-- Issue tracking label: [`spec-cogrpc`](https://github.com/relaynet/specs/labels/spec-cogrpc).
+- Issue tracking label: [`spec-cogrpc`](https://github.com/AwalaNetwork/specs/labels/spec-cogrpc).
 
 ## Abstract
 {: .no_toc }
@@ -44,7 +44,7 @@ The cargo sent to the server MAY originate in different gateways.
 
 This bidirectional streaming RPC MUST be used to collect cargo from the server. The server MUST send zero or more [RAMF](rs001-ramf.md)-serialized cargo messages and the client MUST acknowledge the receipt of each cargo per the requirements and recommendations in RS-000.
 
-This call MUST be authenticated by setting the `Authorization` metadata to the string `Relaynet-CCA ${crcBase64}`, where `${crcBase64}` is the Base64-encoded serialization of a valid [Cargo Collection Authorization (CCA)](./rs000-core.md#cca). As a consequence, each call is bound to exactly one target gateway. The server MUST end the call with a `GRPC_STATUS_UNAUTHENTICATED` error when the client fails to provide a valid CCA.
+This call MUST be authenticated by setting the `Authorization` metadata to the string `Awala-CCA ${crcBase64}`, where `${crcBase64}` is the Base64-encoded serialization of a valid [Cargo Collection Authorization (CCA)](./rs000-core.md#cca). As a consequence, each call is bound to exactly one target gateway. The server MUST end the call with a `GRPC_STATUS_UNAUTHENTICATED` error when the client fails to provide a valid CCA.
 
 The server MUST end the gRPC call when it has no further cargoes to send to the client. The underlying connection MAY remain open in case the client wishes to use the `DeliverCargo` RPC next.
 
@@ -70,4 +70,4 @@ _rcrc._tcp.example.com. 300 IN SRV 0 1 443 cogrpc.example.com.
 
 ## Relevant Specifications
 
-[Relaynet Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [cargo relay bindings](rs000-core.md#cargo-relay-binding) specifically, all of which apply to CogRPC. Amongst other things, it defines the use Transport Layer Security (TLS) or equivalent, as well as when it is safe to return acknowledgement messages.
+[Awala Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [cargo relay bindings](rs000-core.md#cargo-relay-binding) specifically, all of which apply to CogRPC. Amongst other things, it defines the use Transport Layer Security (TLS) or equivalent, as well as when it is safe to return acknowledgement messages.

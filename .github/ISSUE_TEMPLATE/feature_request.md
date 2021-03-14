@@ -9,7 +9,7 @@ assignees: ''
 
 # Executive summary
 
-<!-- A succinct description of the issue aimed at technical people who may not necessarily be familiar with Relaynet terminology. It should ideally be just one paragraph, but could span two or three. -->
+<!-- A succinct description of the issue aimed at technical people who may not necessarily be familiar with Awala terminology. It should ideally be just one paragraph, but could span two or three. -->
 
 # The problem you're trying to solve
 

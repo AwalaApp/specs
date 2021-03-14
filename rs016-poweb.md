@@ -28,7 +28,7 @@ PoWeb owes its name to the fact it uses Web-based, Application Layer protocols w
 
 The private or public gateway implementing the PoWeb service will be referred to as the "server", whilst the private endpoint or private gateway connecting to its will be referred to as the "client".
 
-Clients are required to register their endpoints with the gateway before they can start exchanging messages (e.g., parcels), given that those operations require the client to produce digital signatures using [Relaynet PKI](rs002-pki.md) certificates previously issued by the server.
+Clients are required to register their endpoints with the gateway before they can start exchanging messages (e.g., parcels), given that those operations require the client to produce digital signatures using [Awala PKI](rs002-pki.md) certificates previously issued by the server.
 
 ## Endpoints
 
@@ -46,18 +46,18 @@ If the server approves the pre-registration, it MUST output a single-use _Privat
 
 To pre-register a private node, the client MUST make a POST request to `/pre-registration` with the SHA-256 hexadecimal digest of the private node's public key. The request Content-Type MUST be `text/plain`. The server MUST respond with one of the following:
 
-- A `200 OK` if the pre-registration is authorised. The response body MUST be the PNRA and the Content-Type MUST be `application/vnd.relaynet.node-registration.authorization`.
+- A `200 OK` if the pre-registration is authorised. The response body MUST be the PNRA and the Content-Type MUST be `application/vnd.awala.node-registration.authorization`.
 - A `400 Bad Request` if the client did not adhere to the requirements above.
 
 Servers SHOULD refuse request bodies larger than 64 octets.
 
 #### Registration endpoint
 
-To complete the registration, the client MUST produce a _Private Node Registration Request_ (PNRR) by signing the PNRA with the key of the node being registered. The PNRR MUST then be sent in the body of a POST request to `/nodes`, using the Content-Type `application/vnd.relaynet.node-registration.request`.
+To complete the registration, the client MUST produce a _Private Node Registration Request_ (PNRR) by signing the PNRA with the key of the node being registered. The PNRR MUST then be sent in the body of a POST request to `/nodes`, using the Content-Type `application/vnd.awala.node-registration.request`.
 
 The server MUST respond with one of the following:
 
-- `200 OK` if the registration was successfully completed. The response body MUST be a _Private Node Registration_ (PNR), which encapsulates the newly-issued certificate for the private endpoint, as well as the certificate for the underlying gateway behind the server. The response Content-Type MUST be `application/vnd.relaynet.node-registration.registration`.
+- `200 OK` if the registration was successfully completed. The response body MUST be a _Private Node Registration_ (PNR), which encapsulates the newly-issued certificate for the private endpoint, as well as the certificate for the underlying gateway behind the server. The response Content-Type MUST be `application/vnd.awala.node-registration.registration`.
 - `400 Bad Request` if the PNRR sent by the client is malformed or its digital signature is invalid.
 - `403 Forbidden` if the client is using a PNRA issued for a different private node.
 
@@ -65,7 +65,7 @@ Servers SHOULD refuse request bodies larger than 1 MiB.
 
 ### Parcel delivery
 
-To deliver a parcel to the server, the client MUST send the parcel in the body of a POST request to `/parcels` using the Content-Type `application/vnd.relaynet.parcel`. Additionally, it MUST countersign the parcel with the private node's keys and include the base64 encoding of the resulting digital signature in the `Authorization` header, using the `Relaynet-Countersignature` type.
+To deliver a parcel to the server, the client MUST send the parcel in the body of a POST request to `/parcels` using the Content-Type `application/vnd.awala.parcel`. Additionally, it MUST countersign the parcel with the private node's keys and include the base64 encoding of the resulting digital signature in the `Authorization` header, using the `Awala-Countersignature` type.
 
 The server MUST respond with one of the following:
 
@@ -76,7 +76,7 @@ The server MUST respond with one of the following:
 
 ### Parcel collection
 
-To collect parcels from the server, the client MUST start a WebSocket connection with the endpoint `/parcel-collection`. The client MAY optionally specify whether the server should close the connection as soon as all queued parcels have been collected by setting the HTTP request header `X-Relaynet-Streaming-Mode` to `close-upon-completion`; otherwise, the server will try to keep the connection open indefinitely.
+To collect parcels from the server, the client MUST start a WebSocket connection with the endpoint `/parcel-collection`. The client MAY optionally specify whether the server should close the connection as soon as all queued parcels have been collected by setting the HTTP request header `X-Awala-Streaming-Mode` to `close-upon-completion`; otherwise, the server will try to keep the connection open indefinitely.
 
 The server MUST send a challenge message to the client as soon as the connection starts. This challenge MUST encapsulate a cryptographic nonce. The client MUST reply to the challenge by sending a response that encapsulates the digital signatures for the nonce using the keys for each private node on whose behalf parcels will be collected. The digital signatures MUST meet the following requirements:
 
@@ -89,7 +89,7 @@ The server MUST close the WebSocket connection with the status code `1003` if th
 
 If the handshake is completed successfully, the server MUST send any queued parcels to the client, and the client MUST send an acknowledgement message back to the server for each parcel that is successfully stored or forwarded. Upon reception of each acknowledgement, the server MUST delete the parcel immediately or schedule its deletion.
 
-Finally, the server MUST close the connection with the status code `1000` if the client set the HTTP request header `X-Relaynet-Streaming-Mode` to `close-upon-completion` and all parcels were send and acknowledged. Otherwise, both peers SHOULD try to keep the connection open indefinitely, and the server MUST send any new parcels as soon as they are received.
+Finally, the server MUST close the connection with the status code `1000` if the client set the HTTP request header `X-Awala-Streaming-Mode` to `close-upon-completion` and all parcels were send and acknowledged. Otherwise, both peers SHOULD try to keep the connection open indefinitely, and the server MUST send any new parcels as soon as they are received.
 
 ## Undocumented HTTP status codes
 
@@ -126,4 +126,4 @@ _rgsc._tcp.example.com. 300 IN SRV 0 1 443 poweb.example.com.
 
 ## Relevant Specifications
 
-[Relaynet Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [parcel delivery bindings](rs000-core.md#parcel-delivery-binding) specifically, all of which apply to PoWeb. [Relaynet PKI (RS-002)](rs002-pki.md) is also particularly relevant to this specification.
+[Awala Core (RS-000)](rs000-core.md) defines the requirements for [message transport bindings](rs000-core.md#message-transport-bindings) in general and [parcel delivery bindings](rs000-core.md#parcel-delivery-binding) specifically, all of which apply to PoWeb. [Awala PKI (RS-002)](rs002-pki.md) is also particularly relevant to this specification.

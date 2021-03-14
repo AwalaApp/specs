@@ -1,18 +1,18 @@
 ---
 permalink: /RS-000
 ---
-# Relaynet Core
+# Awala Core
 {: .no_toc }
 
 - Id: RS-000.
 - Status: Working draft.
 - Type: Implementation.
-- Issue tracking label: [`spec-core`](https://github.com/relaynet/specs/labels/spec-core).
+- Issue tracking label: [`spec-core`](https://github.com/AwalaNetwork/specs/labels/spec-core).
 
 ## Abstract
 {: .no_toc }
 
-This document describes the core elements of the Relaynet protocol suite, whose purpose is to make distributed systems tolerant to potentially large network latencies through the use of [asynchronous messaging](https://www.techopedia.com/definition/26454/asynchronous-messaging).
+This document describes the core elements of the Awala protocol suite, whose purpose is to make distributed systems tolerant to potentially large network latencies through the use of [asynchronous messaging](https://www.techopedia.com/definition/26454/asynchronous-messaging).
 
 ## Table of contents
 {: .no_toc }
@@ -30,7 +30,7 @@ In contrast to RPCs, distributed systems using asynchronous messaging are implem
 
 Decoupling the two nodes in the connection makes it possible to transport the data using alternative methods when the network unavailable. For example, in places where [sneakernets](https://en.wikipedia.org/wiki/Sneakernet) are used to consume foreign content, people could also use it to connect their applications to the Internet if those applications were tolerant to large RTTs.
 
-Relaynet makes it easy to build distributed systems using asynchronous messaging in such a way that data can be securely transported on alternative media (e.g., sneakernets) when a conventional computer network is unavailable. The result is a [delay-tolerant](https://en.wikipedia.org/wiki/Delay-tolerant_networking), [overlay](https://en.wikipedia.org/wiki/Overlay_network) network with [onion routing](https://en.wikipedia.org/wiki/Onion_routing).
+Awala makes it easy to build distributed systems using asynchronous messaging in such a way that data can be securely transported on alternative media (e.g., sneakernets) when a conventional computer network is unavailable. The result is a [delay-tolerant](https://en.wikipedia.org/wiki/Delay-tolerant_networking), [overlay](https://en.wikipedia.org/wiki/Overlay_network) network with [onion routing](https://en.wikipedia.org/wiki/Onion_routing).
 
 Asynchronous messaging also happens to be a better integration style, for reasons that Hohpe and Woolf eloquently summarize in [Enterprise Integration Patterns](https://en.wikipedia.org/wiki/Enterprise_Integration_Patterns) (page 54):
 
@@ -53,19 +53,19 @@ The following diagram illustrates the various components of the network and how 
 - A **cargo** encapsulates one or more parcels, and it is encrypted with the target gateway's certificate and signed with the origin gateway's key.
 - A **courier** is the individual, organization or technology that transports the cargo between gateways when they can't reach each other via the Internet. For example, it could be a sneakernet operated by volunteers or a [scatternet](https://en.wikipedia.org/wiki/Scatternet) operated by users themselves.
 
-For example, if Twitter supported Relaynet, Twitter would be the _service_, the Twitter mobile apps would be _applications_ and the Twitter API would be another _application_. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the _endpoint_ in the Twitter API could be a new API endpoint (e.g., `https://api.twitter.com/relaynet`).
+For example, if Twitter supported Awala, Twitter would be a _service_ with Awala-compatible, mobile and server-side apps. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the server-side app will have `twitter.com` as the _public endpoint_.
 
-Relaynet can also be described in terms of the [OSI model](https://en.wikipedia.org/wiki/OSI_model) as shown in the diagram below -- With [same-layer and adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) defined by [_messaging protocols_](#messaging-protocols) and [_message transport bindings_](#message-transport-bindings), respectively.
+Awala can also be described in terms of the [OSI model](https://en.wikipedia.org/wiki/OSI_model) as shown in the diagram below -- With [same-layer and adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) defined by [_messaging protocols_](#messaging-protocols) and [_message transport bindings_](#message-transport-bindings), respectively.
 
 ![](diagrams/rs000/osi-layers-mapping.svg)
 
-Note that defining same-layer interactions at the application and relay layers is outside the scope of the protocol suite. Relaynet only prescribes the interactions with their adjacent layers. Each service has full control over its applications (see [_service messaging protocol_](#service-messaging-protocol)), and each courier has full control over its relay layer.
+Note that defining same-layer interactions at the application and relay layers is outside the scope of the protocol suite. Awala only prescribes the interactions with their adjacent layers. Each service has full control over its applications (see [_service messaging protocol_](#service-messaging-protocol)), and each courier has full control over its relay layer.
 
 ## Addressing
 
 This document only defines [point-to-point](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PointToPointChannel.html) message delivery.
 
-Each endpoint and gateway in Relaynet MUST have a unique, opaque address known as _private address_. It MAY also have a unique internet address known as _public address_ if the node can be reached through an internet. A node is public if it has a public address, otherwise it is private.
+Each endpoint and gateway in Awala MUST have a unique, opaque address known as _private address_. It MAY also have a unique internet address known as _public address_ if the node can be reached through an internet. A node is public if it has a public address, otherwise it is private.
 
 The private address of a node MUST equal to the digest of its public key, computed as `"0" || sha256(publicKey)`, where the `0` (zero) prefix denotes the version of the address format defined in this document, `||` denotes the concatenation of two strings, `publicKey` is the DER encoding of the `SubjectPublicKeyInfo` structure from [RFC 5280](https://tools.ietf.org/html/rfc5280) and `sha256()` outputs the SHA-256 digest in hexadecimal. For example, `0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private address.
 
@@ -75,16 +75,16 @@ A public address MUST be a valid [Uniform Resource Identifier (URI)](https://too
 
 These protocols establish the corresponding [_channels_](https://www.enterpriseintegrationpatterns.com/patterns/messaging/MessageChannel.html) for applications, endpoints and gateways. Building on the OSI model mapping above, these protocols define the [same-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/).
 
-Endpoints and gateways MUST comply with the [Relaynet PKI profile](rs002-pki.md), which specifies the use of certificates in these protocols. The [Internet PKI profile](https://tools.ietf.org/html/rfc5280) does not apply to messaging protocols.
+Endpoints and gateways MUST comply with the [Awala PKI profile](rs002-pki.md), which specifies the use of certificates in these protocols. The [Internet PKI profile](https://tools.ietf.org/html/rfc5280) does not apply to messaging protocols.
 
 Endpoint and gateway channels transmit two types of messages:
 
-- Payload-carrying messages, which MUST be serialized with the [Relaynet Abstract Message Format (RAMF)](rs001-ramf.md). Nodes and couriers MUST enforce the post-deserialization validation described in the RAMF specification on every message they receive.
+- Payload-carrying messages, which MUST be serialized with the [Awala Abstract Message Format (RAMF)](rs001-ramf.md). Nodes and couriers MUST enforce the post-deserialization validation described in the RAMF specification on every message they receive.
 - Control messages, which allow the two nodes to coordinate their work. Such messages are serialized with ASN.1/DER.
 
 Each message format MUST begin with a 10-octet-long format signature that declares the type of the message:
 
-1. Prefix (8 octets): "Relaynet" in ASCII (hexadecimal sequence: `52 65 6c 61 79 6e 65 74`).
+1. Prefix (8 octets): "Awala" in ASCII (hexadecimal sequence: `52 65 6c 61 79 6e 65 74`).
 1. Concrete message type (1 octet).
 1. Concrete message format version (1 octet). 
 
@@ -187,11 +187,11 @@ CargoCollectionRequest ::= SEQUENCE {
 }
 ```
 
-Where `cargoDeliveryAuthorization` is the DER-encoded, Relaynet PKI certificate for the [Cargo Delivery Authorization (CDA)](./rs002-pki.md#cargo-delivery-authorization-cda) issued by Gateway A to Gateway B.
+Where `cargoDeliveryAuthorization` is the DER-encoded, Awala PKI certificate for the [Cargo Delivery Authorization (CDA)](./rs002-pki.md#cargo-delivery-authorization-cda) issued by Gateway A to Gateway B.
 
 ## Message Transport Bindings
 
-A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) in Relaynet. Its objective is to facilitate the exchange of messages in endpoint and gateway messaging protocols (e.g., parcels, cargoes, acknowledgements). This document describes the requirements applicable to all bindings, but does not define any concrete binding.
+A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) in Awala. Its objective is to facilitate the exchange of messages in endpoint and gateway messaging protocols (e.g., parcels, cargoes, acknowledgements). This document describes the requirements applicable to all bindings, but does not define any concrete binding.
 
 Bindings will typically leverage [Layer 7](https://en.wikipedia.org/wiki/Application_layer) protocols, such as HTTP or purpose-built ones, but they can also use an Inter-Process Communication (IPC) mechanism provided by the host system.
 
@@ -219,7 +219,7 @@ This specification forbids the use the original domain name in the public addres
 
 This is a protocol that establishes a _Gateway Synchronization Connection_ (GSC) between a private node (a private endpoint or a private gateway) and its gateway, with the primary purpose of exchanging parcels bidirectionally. The private node and its gateway MUST act as the client and server, respectively.
 
-Before the nodes can exchange parcels, the private node MUST register with its gateway. If the gateway behind the server accepts the registration, it MUST issue a [Relaynet PKI certificate](rs002-pki.md) to the private node. The private node MUST use its certificate to sign requests to exchange parcels with its gateway.
+Before the nodes can exchange parcels, the private node MUST register with its gateway. If the gateway behind the server accepts the registration, it MUST issue a [Awala PKI certificate](rs002-pki.md) to the private node. The private node MUST use its certificate to sign requests to exchange parcels with its gateway.
 
 If the server corresponds to a private gateway, it SHOULD listen on port `276` if it has the appropriate permission to do so or port `13276` if it does not. Alternatively, if using Unix domain sockets, the client SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems).
 
@@ -301,7 +301,7 @@ Gateways SHOULD defer the encapsulation of parcels and other messages into cargo
 
 Gateways MUST NOT delete parcels as a consequence of encapsulating them in cargo sent to couriers as that would be incompatible with the requirements of the [Parcel Delivery Binding](#parcel-delivery-binding) (there is no guarantee that the courier will be able to deliver those parcels before they expire).
 
-Note that couriers are not assigned Relaynet PKI certificates, but per the requirements for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. Consequently, the node acting as server MUST provide a valid certificate which MAY NOT be issued by a Certificate Authority trusted by the client when the server is a courier: Couriers are unlikely to get certificates issued by widely trusted authorities because they are not Internet hosts, but this is deemed to be acceptable from a security standpoint because the purpose of TLS (or equivalent) in this case is to provide confidentiality from eavesdroppers, not to authenticate the server.
+Note that couriers are not assigned Awala PKI certificates, but per the requirements for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. Consequently, the node acting as server MUST provide a valid certificate which MAY NOT be issued by a Certificate Authority trusted by the client when the server is a courier: Couriers are unlikely to get certificates issued by widely trusted authorities because they are not Internet hosts, but this is deemed to be acceptable from a security standpoint because the purpose of TLS (or equivalent) in this case is to provide confidentiality from eavesdroppers, not to authenticate the server.
 
 Public gateways MUST use `rcrc` as the service string for the SRV record corresponding to their CRC server(s).
 
@@ -311,10 +311,10 @@ CRC servers in couriers SHOULD listen on port `21473`, which stands for "too lat
 
 Devices disconnected from the Internet will not typically have the ability to keep their clocks in synchronization with the current time. This situation, commonly known as _clock drift_, will be particularly bad in old devices that have never been connected to the Internet, and it could be exacerbated with a recent daylight saving time switch.
 
-For this reason, Relaynet implementations SHOULD be tolerant to clock drifts of up two hours in all channel- or binding-level communications where at least one of the peers is a private node. For instance, this tolerance applies to the validity period of RAMF messages and Relaynet PKI certificates, as well as the validity of TLS certificates of couriers in a CRC.
+For this reason, Awala implementations SHOULD be tolerant to clock drifts of up two hours in all channel- or binding-level communications where at least one of the peers is a private node. For instance, this tolerance applies to the validity period of RAMF messages and Awala PKI certificates, as well as the validity of TLS certificates of couriers in a CRC.
 
 For the avoidance of doubt, this recommendation does not apply to the CRC between a courier and a public gateway because neither peer is a private node. Consequently, in this scenario, couriers are still required to refuse any TLS certificate that is not valid at the time the connection takes places, but it is still recommended that the public gateway be tolerant to a potential clock drift in the channels with private gateways.
 
 ## Open Questions
 
-- This specification only defines how to make Relaynet work on sneakernets. Maybe all the definitions specific to sneakernets should be moved to a separate spec so the core spec is agnostic of the relay layer? Using the Internet as the relay layer is already in a separate spec ([RS-017](rs017-adaptive-relay.md)).
+- This specification only defines how to make Awala work on sneakernets. Maybe all the definitions specific to sneakernets should be moved to a separate spec so the core spec is agnostic of the relay layer? Using the Internet as the relay layer is already in a separate spec ([RS-017](rs017-adaptive-relay.md)).

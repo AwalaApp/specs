@@ -1,18 +1,18 @@
 ---
 permalink: /RS-001
 ---
-# Relaynet Abstract Message Format, Version 1
+# Awala Abstract Message Format, Version 1
 {: .no_toc }
 
 - Id: RS-001.
 - Status: Working draft.
 - Type: Implementation.
-- Issue tracking label: [`spec-ramf`](https://github.com/relaynet/specs/labels/spec-ramf).
+- Issue tracking label: [`spec-ramf`](https://github.com/AwalaNetwork/specs/labels/spec-ramf).
 
 ## Abstract
 {: .no_toc }
 
-This document defines version 1 of the _Relaynet Abstract Message Format_ (RAMF), a binary format used to serialize Relaynet [channel](./rs000-core.md#messaging-protocols) messages. RAMF is based on the [ASN.1 Distinguished Encoding Rules](https://www.itu.int/rec/T-REC-X.680-X.693-201508-I/en) (DER) and the [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652). It also defines a series of requirements for recipients and intermediaries processing such messages.
+This document defines version 1 of the _Awala Abstract Message Format_ (RAMF), a binary format used to serialize Awala [channel](./rs000-core.md#messaging-protocols) messages. RAMF is based on the [ASN.1 Distinguished Encoding Rules](https://www.itu.int/rec/T-REC-X.680-X.693-201508-I/en) (DER) and the [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652). It also defines a series of requirements for recipients and intermediaries processing such messages.
 
 ## Table of contents
 {: .no_toc }
@@ -26,7 +26,7 @@ Messages exchanged within an endpoint or gateway channel require metadata attach
 
 Every endpoint and gateway channel message is serialized as a _RAMF message_, which encapsulates the payload along with relevant metadata to be used for routing, authentication and authorization purposes. The message payload and metadata, collectively known as the _message fields_, are serialized as an ASN.1 DER value.
 
-A RAMF message begins with a sequence of octets, collectively known as _the format signature_, which specify the type of the message (e.g., a parcel) and its format version (e.g., version 1). The format signature is followed by a DER-encoded [CMS Signed-data](https://tools.ietf.org/html/rfc5652#section-5) value that encapsulates the message fields and the digital signature (including the [Relaynet PKI](rs002-pki.md) certificate of the sender).
+A RAMF message begins with a sequence of octets, collectively known as _the format signature_, which specify the type of the message (e.g., a parcel) and its format version (e.g., version 1). The format signature is followed by a DER-encoded [CMS Signed-data](https://tools.ietf.org/html/rfc5652#section-5) value that encapsulates the message fields and the digital signature (including the [Awala PKI](rs002-pki.md) certificate of the sender).
 
 By specifying the message type and version in the format signature, future RAMF versions could use different serialization formats, including formats incompatible with ASN.1.
 
@@ -34,7 +34,7 @@ By specifying the message type and version in the format signature, future RAMF 
 
 The format signature MUST span the first 10 octets of the message, representing the following sequence (encoded in little-endian):
 
-1. Prefix (8 octets): "Relaynet" in ASCII (hex: `52 65 6c 61 79 6e 65 74`).
+1. Prefix (8 octets): "Awala" in ASCII (hex: `52 65 6c 61 79 6e 65 74`).
 1. Concrete message type (1 octet).
 1. Concrete message format version (1 octet). This MUST be an 8-bit unsigned integer. 
 
@@ -42,8 +42,8 @@ The format signature MUST be followed by a DER-encoded CMS signed-data value whe
 
   - `digestAlgorithms`, the collection of message digest algorithm identifiers, MUST contain exactly one OID and it MUST correspond to a valid algorithm per [RS-018](rs018-algorithms.md).
   - `encapContentInfo`, the signed content, MUST include signed ciphertext -- In this case, the message fields.
-  - `certificates` MUST contain the sender's certificate and it SHOULD also include the rest of the certificates in the chain. All certificates MUST comply with the [Relaynet PKI](rs002-pki.md).
-  - `crls` MUST be empty, since certificate revocation is part of the [Relaynet PKI](rs002-pki.md).
+  - `certificates` MUST contain the sender's certificate and it SHOULD also include the rest of the certificates in the chain. All certificates MUST comply with the [Awala PKI](rs002-pki.md).
+  - `crls` MUST be empty, since certificate revocation is part of the [Awala PKI](rs002-pki.md).
   - `signerInfos` MUST contain exactly one signer (`SignerInfo`), and whose `signatureAlgorithm` MUST be valid per [RS-018](rs018-algorithms.md).
 
 The message fields MUST be represented as the DER serialization of the ASN.1 `RAMF` type below:
@@ -60,7 +60,7 @@ Where the items in the `RAMFMessage` sequence are defined as follows:
 - `ttl` MUST represent the time-to-live of the message -- That is, the number of seconds since `creationTimeUtc` during which the message is regarded valid. It MUST NOT be less than zero or greater than 15552000 (180 days).
 - `payload` MUST be the service data unit (SDU) encapsulated in a DER-encoded [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652) value. If the payload requires encryption, it MUST be encapsulated in a CMS Enveloped-Data value; otherwise, it MUST be encapsulated in a CMS Data-Content value. The absence of the payload MUST be represented as an empty sequence of octets.
 
-  If the payload is encrypted, its Enveloped-Data value MUST have exactly one recipient (`RecipientInfo`). The encryption key SHOULD be generated with the [Relaynet Channel Session Protocol](rs003-key-agreement.md) -- Alternatively, the key MAY be that of the target node's certificate, in which case the CMS value MUST be serialized with the `KeyTransRecipientInfo` choice.
+  If the payload is encrypted, its Enveloped-Data value MUST have exactly one recipient (`RecipientInfo`). The encryption key SHOULD be generated with the [Awala Channel Session Protocol](rs003-key-agreement.md) -- Alternatively, the key MAY be that of the target node's certificate, in which case the CMS value MUST be serialized with the `KeyTransRecipientInfo` choice.
 
   This field MUST NOT span more than 8 MiB (8388608 octets). For this reason, implementations SHOULD enforce a lower limit on the SDU depending on how it is to be encapsulated: Any SDU to be encrypted SHOULD be at least 65 KiB below the limit (up to 8322048 octets), and any SDU to be encapsulated as-is SHOULD be at least 1 KiB below the limit (up to 8387584 octets).
 
@@ -75,21 +75,21 @@ Recipients and brokers of a RAMF message MUST validate the message as soon as it
 - The message date MUST NOT be in the future.
 - The message TTL MUST NOT resolve to a date in the past.
 - The message date MUST be within the period of time during which the sender certificate was valid.
-- All certificates MUST be valid per [Relaynet PKI](rs002-pki.md).
+- All certificates MUST be valid per [Awala PKI](rs002-pki.md).
 - The signature MUST be valid according to the [CMS verification process](https://tools.ietf.org/html/rfc5652#section-5.6) and the specified signature algorithm. Additionally, the signature MUST be deemed invalid if the signature algorithm is unsupported or the hashing algorithm is unsupported.
-- If the recipient address is [private](./rs000-core.md#addressing), the sender's certificate MUST be issued by the message recipient. That is, the private address of the public key in the issuing certificate MUST match the private address set as the message recipient. Such sender certificates are known as _delivery authorizations_ in the Relaynet PKI.
+- If the recipient address is [private](./rs000-core.md#addressing), the sender's certificate MUST be issued by the message recipient. That is, the private address of the public key in the issuing certificate MUST match the private address set as the message recipient. Such sender certificates are known as _delivery authorizations_ in the Awala PKI.
 
 ## Security Considerations
 
 To avoid replay attacks, the message id SHOULD be persisted until the TTL expires, and until then, reject any incoming message from the same sender and the same id.
 
-Nodes can further protect from replay attacks, amongst other attack vectors, by establishing a secure session with the [Relaynet Key Agreement Protocol](rs003-key-agreement.md).
+Nodes can further protect from replay attacks, amongst other attack vectors, by establishing a secure session with the [Awala Key Agreement Protocol](rs003-key-agreement.md).
 
 Note that all cryptographic algorithms MUST comply with [RS-018](rs018-algorithms.md).
 
 ## Reserved Concrete Message Types
 
-The following concrete types have been reserved by other Relaynet specifications:
+The following concrete types have been reserved by other Awala specifications:
 
 - `0x10` for [certificate rotation](rs002-pki.md#certificate-and-key-rotation).
 - `0x11` for [gateway certificate revocation](rs002-pki.md#gateway-certificate-revocation-gcr).

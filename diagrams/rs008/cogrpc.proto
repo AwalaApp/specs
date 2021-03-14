@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package relaynet.cogrpc;
+package awala.cogrpc;
 
 service CargoRelay {
     rpc DeliverCargo (stream CargoDelivery) returns (stream CargoDeliveryAck);

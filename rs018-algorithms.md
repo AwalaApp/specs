@@ -1,18 +1,18 @@
 ---
 permalink: /RS-018
 ---
-# Relaynet Cryptographic Algorithms, Version 1
+# Awala Cryptographic Algorithms, Version 1
 {: .no_toc }
 
 - Id: RS-018.
 - Status: Working draft.
 - Type: Implementation.
-- Issue tracking label: [`spec-crypto-algorithms`](https://github.com/relaynet/specs/labels/spec-crypto-algorithms).
+- Issue tracking label: [`spec-crypto-algorithms`](https://github.com/AwalaNetwork/specs/labels/spec-crypto-algorithms).
 
 ## Abstract
 {: .no_toc }
 
-This document specifies the requirements and recommendations for the support and selection of cryptographic algorithms in Relaynet. Every implementation of the Relaynet protocol suite is required to comply with this specification.
+This document specifies the requirements and recommendations for the support and selection of cryptographic algorithms in Awala. Every implementation of the Awala protocol suite is required to comply with this specification.
 
 ## Table of contents
 {: .no_toc }
@@ -34,9 +34,9 @@ Implementations MUST support 2048-bit RSA keys. They SHOULD also support 3072-bi
 
 ## Required and Recommended Algorithms
 
-Each supported algorithm is accompanied with its corresponding Object ID (OID) when available, as required by the [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652), which is extensively used in Relaynet.
+Each supported algorithm is accompanied with its corresponding Object ID (OID) when available, as required by the [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652), which is extensively used in Awala.
 
-For security and compatibility reasons, Relaynet implementations SHOULD NOT support any algorithm that is not mentioned in this document.
+For security and compatibility reasons, Awala implementations SHOULD NOT support any algorithm that is not mentioned in this document.
 
 ### Cryptographic Hash Functions {#hashing}
 
@@ -67,7 +67,7 @@ Implementations MUST support RSA-PSS (OID `1.2.840.113549.1.1.10`). They SHOULD 
 
 Implementations MUST support the Key Derivation Function (KDF) from ANSI X9.63. They SHOULD also support the HMAC-based Extract-and-Expand Key Derivation Function (HKDF) defined by [RFC 5869](https://tools.ietf.org/html/rfc5869).
 
-Any KDF not mentioned in this specification MAY be used if and only if it is regarded secure for pseudorandom secrets. The use of user-generated secrets (e.g., passwords) is outside the scope of Relaynet and therefore KDFs for such values are not considered in this specification.
+Any KDF not mentioned in this specification MAY be used if and only if it is regarded secure for pseudorandom secrets. The use of user-generated secrets (e.g., passwords) is outside the scope of Awala and therefore KDFs for such values are not considered in this specification.
 
 For the avoidance of doubt, this document applies to any other algorithm used by the KDF. For example, when using the ANSI X9.63 KDF or HKDF, the hashing function must be allowed by this document.
 
@@ -83,4 +83,4 @@ The DH or ECDH shared key MUST NOT be used directly to produce a ciphertext. Ins
 
 ## Algorithm Selection
 
-Relaynet-compliant software SHOULD default to the required algorithms for interoperability reasons, but they MAY allow systems administrators or advanced end users to use algorithms that offer better security guarantees.
+Awala-compliant software SHOULD default to the required algorithms for interoperability reasons, but they MAY allow systems administrators or advanced end users to use algorithms that offer better security guarantees.
