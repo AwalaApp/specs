@@ -65,7 +65,7 @@ Because this binding uses the Transmission Control Protocol (TCP; [RFC 793](http
 For example, a public gateway like `example.com` could specify an SRV record as follows:
 
 ```
-_rcrc._tcp.example.com. 300 IN SRV 0 1 443 cogrpc.example.com.
+_awala-crc._tcp.example.com. 300 IN SRV 0 1 443 cogrpc.example.com.
 ```
 
 ## Relevant Specifications

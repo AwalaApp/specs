@@ -56,7 +56,7 @@ Because this binding uses the Transmission Control Protocol (TCP; [RFC 793](http
 For example, a public endpoint like `example.social` could specify an SRV record as follows:
 
 ```
-_rpdc._tcp.example.social. 300 IN SRV 0 1 443 pohttp.example.social.
+_awala-pdc._tcp.example.social. 300 IN SRV 0 1 443 pohttp.example.social.
 ```
 
 ## HTTP Considerations

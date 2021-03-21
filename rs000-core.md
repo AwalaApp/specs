@@ -223,7 +223,7 @@ Before the nodes can exchange parcels, the private node MUST register with its g
 
 If the server corresponds to a private gateway, it SHOULD listen on port `276` if it has the appropriate permission to do so or port `13276` if it does not. Alternatively, if using Unix domain sockets, the client SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems).
 
-If the server corresponds to a public gateway, it MUST use `rgsc` as the service string in the SRV record.
+If the server corresponds to a public gateway, it MUST use `awala-gsc` as the service string in the SRV record.
 
 In addition to sending parcels to each other, the client MAY also register [Parcel Delivery Deauthorizations (PDD)](#pdd) with the server.
 
@@ -247,7 +247,7 @@ If the client is a private or public gateway, it SHOULD include the Internet add
 
 The client MUST close the underlying connection as soon as all parcels have been delivered.
 
-Servers MUST use `rpdc` as the service string for the SRV record corresponding to their PDC server(s).
+Servers MUST use `awala-pdc` as the service string for the SRV record corresponding to their PDC server(s).
 
 PDCs MUST always use TLS (or equivalent in non-TCP connections).
 
@@ -303,7 +303,7 @@ Gateways MUST NOT delete parcels as a consequence of encapsulating them in cargo
 
 Note that couriers are not assigned Awala PKI certificates, but per the requirements for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. Consequently, the node acting as server MUST provide a valid certificate which MAY NOT be issued by a Certificate Authority trusted by the client when the server is a courier: Couriers are unlikely to get certificates issued by widely trusted authorities because they are not Internet hosts, but this is deemed to be acceptable from a security standpoint because the purpose of TLS (or equivalent) in this case is to provide confidentiality from eavesdroppers, not to authenticate the server.
 
-Public gateways MUST use `rcrc` as the service string for the SRV record corresponding to their CRC server(s).
+Public gateways MUST use `awala-crc` as the service string for the SRV record corresponding to their CRC server(s).
 
 CRC servers in couriers SHOULD listen on port `21473`, which stands for "too late".
 
