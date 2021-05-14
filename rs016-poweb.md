@@ -71,8 +71,9 @@ The server MUST respond with one of the following:
 
 - `202 Accepted` if the parcel and its countersignature are both valid, and the parcel was successfully stored or forwarded.
 - `400 Bad Request` if the parcel is malformed.
-- `401 Unauthorized` if the countersignature was missing or invalid.
-- `403 Forbidden` if the parcel was well-formed but invalid; e.g., the [RAMF](rs001-ramf.md) signature verification failed.
+- `401 Unauthorized` if the countersignature was missing or malformed.
+- `403 Forbidden` if the countersignature was invalid for the parcel.
+- `422 Unprocessable Entity` if the parcel was well-formed but invalid; e.g., the [RAMF](rs001-ramf.md) signature verification failed.
 
 ### Parcel collection
 
