@@ -106,9 +106,10 @@ The client MAY attempt another collection immediately, following a `4000` code f
 
 The client and the server use WebSocket pings to detect broken connections.
 
-The server MUST send a ping to the client every 10 seconds, and the client MUST respond to each ping with a pong message as soon as possible.
+The server MUST send a ping to the client every 10 seconds, and the client MUST respond to each ping with a pong message as soon as possible. In order to tolerate delays of up to 3 seconds in each direction:
 
-The server SHOULD terminate the connection after 3 seconds of sending a ping that hasn't been acknowledged. Similarly, the client SHOULD terminate the connection if 13 seconds have elapsed since the last ping. This way, both can tolerate network delays of up to 3 seconds.
+- The client SHOULD terminate the connection after 13 seconds of receiving the last ping.
+- The server SHOULD terminate the connection after 6 seconds of sending a ping that hasn't been acknowledged.
 
 ### Close codes
 
