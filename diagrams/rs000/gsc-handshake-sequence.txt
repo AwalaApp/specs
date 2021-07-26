@@ -1,0 +1,7 @@
+Client->Server: Initiate connection
+note over Server: Generate nonce
+Server->Client: Challenge to sign nonce
+note over Client: Sign nonce with each key
+Client->Server: Respond with nonce signatures
+note over Server: Verify each signature
+Server->Client: Completed

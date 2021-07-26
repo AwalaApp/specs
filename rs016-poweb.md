@@ -77,7 +77,7 @@ The server MUST respond with one of the following:
 
 ### Parcel collection
 
-To collect parcels from the server, the client MUST start a WebSocket connection with the endpoint `/parcel-collection`. The client MAY optionally specify whether the server should close the connection as soon as all queued parcels have been collected by setting the HTTP request header `X-Awala-Streaming-Mode` to `close-upon-completion`; otherwise, the server will try to keep the connection open indefinitely.
+To collect parcels from the server, the client MUST start a WebSocket connection with the endpoint `/parcel-collection`.
 
 The server MUST send a challenge message to the client as soon as the connection starts. This challenge MUST encapsulate a cryptographic nonce. The client MUST reply to the challenge by sending a response that encapsulates the digital signatures for the nonce using the keys for each private node on whose behalf parcels will be collected. The digital signatures MUST meet the following requirements:
 
@@ -91,6 +91,31 @@ The server MUST close the WebSocket connection with the status code `1003` if th
 If the handshake is completed successfully, the server MUST send any queued parcels to the client, and the client MUST send an acknowledgement message back to the server for each parcel that is successfully stored or forwarded. Upon reception of each acknowledgement, the server MUST delete the parcel immediately or schedule its deletion.
 
 Finally, the server MUST close the connection with the status code `1000` if the client set the HTTP request header `X-Awala-Streaming-Mode` to `close-upon-completion` and all parcels were send and acknowledged. Otherwise, both peers SHOULD try to keep the connection open indefinitely, and the server MUST send any new parcels as soon as they are received.
+
+### Streaming mode
+
+The client MAY optionally specify whether the server should close the connection as soon as all queued parcels have been collected by setting the HTTP request header `X-Awala-Streaming-Mode`.
+
+If the header is set to `close-upon-completion`, the server MUST close the connection as soon as all parcels have been collected. The server MUST use the close code `1000` (normal closure) if the all parcels were sent. Alternatively, the server MUST use the code `4000` when not all parcels may have been sent, but the connection has to be closed nonetheless.
+
+If the header is to set to `keep-alive`, the server SHOULD keep the connection open until the client closes it. If the server has to close the connection sooner, it MUST end the connection with the WebSocket status code `4000`.
+
+The client MAY attempt another collection immediately, following a `4000` code from the server.
+
+### Close codes
+
+If the server initiates the closure of the connection, it SHOULD use one of the following WebSocket codes:
+
+- `1000` to signal that the collection completed successfully and all queued parcels were collected. It only applies to the `close-upon-completion` streaming mode.
+- `1003` if the client sent an invalid handshake response or collection acknowledgement.
+- `1008` if the client is likely to be a Web browser (i.e., the request included the `Origin` header).
+- `1011` if there was an internal error in the server, which prevented the collection request from being fulfilled.
+- `4000` if the client may re-attempted to collect parcels immediately.
+
+On the other hand, if the client initiates the closure of the connection, it SHOULD use one of the following codes:
+
+- `1000` if the collection should be interrupted.
+- `1003` if the server sent an invalid handshake challenge or collection.
 
 ## Undocumented HTTP status codes
 

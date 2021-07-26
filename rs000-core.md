@@ -231,7 +231,7 @@ In addition to sending parcels to each other, the client MAY also register [Parc
 
 As soon as the connection is established, a handshake MUST be performed for the gateway to authenticate the private node(s). The client will be challenged to sign a nonce with the key of each private node it claims to own, as shown in the following sequence diagram.
 
-![](diagrams/rs000/pdc-handshake-sequence.png)
+![](diagrams/rs000/gsc-handshake-sequence.png)
 
 The connection MUST be closed if the handshake fails.
 
