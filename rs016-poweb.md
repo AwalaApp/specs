@@ -102,6 +102,14 @@ If the header is to set to `keep-alive`, the server SHOULD keep the connection o
 
 The client MAY attempt another collection immediately, following a `4000` code from the server.
 
+### Pings
+
+The client and the server use WebSocket pings to detect broken connections.
+
+The server MUST send a ping to the client every 10 seconds, and the client MUST respond to each ping with a pong message as soon as possible.
+
+The server SHOULD terminate the connection after 3 seconds of sending a ping that hasn't been acknowledged. Similarly, the client SHOULD terminate the connection if 13 seconds have elapsed since the last ping. This way, both can tolerate network delays of up to 3 seconds.
+
 ### Close codes
 
 If the server initiates the closure of the connection, it SHOULD use one of the following WebSocket codes:
