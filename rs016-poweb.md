@@ -106,10 +106,10 @@ The client MAY attempt another collection immediately, following a `4000` code f
 
 The client and the server use WebSocket pings to detect broken connections.
 
-The server MUST send a ping to the client every 10 seconds, and the client MUST respond to each ping with a pong message as soon as possible. In order to tolerate delays of up to 3 seconds in each direction:
+The server MUST send a ping to the client every 5 seconds, to which the client MUST respond with a pong frame as soon as is practical. Additionally:
 
-- The client SHOULD terminate the connection after 13 seconds of receiving the last ping.
-- The server SHOULD terminate the connection after 6 seconds of sending a ping that hasn't been acknowledged.
+- The client SHOULD terminate the connection if 5 seconds or more have elapsed since the last ping.
+- The server SHOULD terminate the connection if 5 seconds or more have elapsed since the last pong.
 
 ### Close codes
 
@@ -139,11 +139,13 @@ If the server is a private gateway, it SHOULD listen on port 276 if it has the a
 
 If the server is a public gateway, it SHOULD listen on port 443.
 
+## HTTP Considerations
+
+Clients and servers implementing this specification MUST comply with HTTP version 1.1.
+
 ## WebSocket Considerations
 
-Clients and servers implementing this specification MUST support HTTP version 1.1.
-
-Both the client and the server SHOULD send each other _ping_ messages and they MUST respond with a _pong_ message for every ping they receive.
+Clients and servers implementing this specification MUST comply with the WebSocket specification ([RFC 6455](https://datatracker.ietf.org/doc/html/rfc6455)).
 
 ## Security Considerations
 
