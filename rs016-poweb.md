@@ -108,8 +108,8 @@ The client and the server use WebSocket pings to detect broken connections.
 
 The server MUST send a ping to the client every 5 seconds, to which the client MUST respond with a pong frame as soon as is practical. Additionally:
 
-- The client SHOULD terminate the connection if 5 seconds or more have elapsed since the last ping.
-- The server SHOULD terminate the connection if 5 seconds or more have elapsed since the last pong.
+- The client SHOULD terminate the connection if 7 seconds or more have elapsed since the last ping.
+- The server SHOULD terminate the connection if 9 seconds or more have elapsed since the last pong.
 
 ### Close codes
 
