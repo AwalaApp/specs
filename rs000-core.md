@@ -189,6 +189,24 @@ CargoCollectionRequest ::= SEQUENCE {
 
 Where `cargoDeliveryAuthorization` is the DER-encoded, Awala PKI certificate for the [Cargo Delivery Authorization (CDA)](./rs002-pki.md#cargo-delivery-authorization-cda) issued by Gateway A to Gateway B.
 
+### Public Node Connection Parameters
+
+Operators of public gateways and public endpoints MAY use the _Public Node Connection Parameters_ (PNCP) format to share their connection parameters in a standard format, defined as follows in ASN.1/DER:
+
+```
+PublicNodeConnectionParameters ::= SEQUENCE {
+    publicAddress  VisibleString,
+    identityPublicKey  OCTET STRING,
+    sessionPublicKey  OCTET STRING
+}
+```
+
+Where:
+
+- `publicAddress` is the public address of the node.
+- `identityPublicKey` is the DER serialization of the public key in the node's identity key pair per [RS-002](./rs002-pki.md).
+- `sessionPublicKey` is the DER serialization of the public key in the node's session key pair per [RS-003](./rs003-key-agreement.md).
+
 ## Message Transport Bindings
 
 A message transport binding, or simply _binding_, defines the [adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) in Awala. Its objective is to facilitate the exchange of messages in endpoint and gateway messaging protocols (e.g., parcels, cargoes, acknowledgements). This document describes the requirements applicable to all bindings, but does not define any concrete binding.
