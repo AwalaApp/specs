@@ -197,7 +197,12 @@ Operators of public gateways and public endpoints MAY use the _Public Node Conne
 PublicNodeConnectionParameters ::= SEQUENCE {
     publicAddress  VisibleString,
     identityPublicKey  OCTET STRING,
-    sessionPublicKey  OCTET STRING
+    sessionKey  SessionKey
+}
+
+SessionKey ::= SEQUENCE {
+   id OCTET STRING,
+   publicKey OCTET STRING
 }
 ```
 
@@ -205,7 +210,9 @@ Where:
 
 - `publicAddress` is the public address of the node.
 - `identityPublicKey` is the DER serialization of the public key in the node's identity key pair per [RS-002](./rs002-pki.md).
-- `sessionPublicKey` is the DER serialization of the public key in the node's session key pair per [RS-003](./rs003-key-agreement.md).
+- `sessionPublicKey` represents the node's session key pair per [RS-003](./rs003-key-agreement.md). This sequence is further defined as follows:
+  - `id`: the unique identifier of the key pair.
+  - `publicKey`: the DER serialization of the public key.
 
 ## Message Transport Bindings
 
