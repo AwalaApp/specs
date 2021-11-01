@@ -12,7 +12,7 @@ permalink: /RS-003
 ## Abstract
 {: .no_toc }
 
-This document describes an asynchronous key agreement and management protocol to establish and maintain secure sessions in bidirectional [messaging channels](rs000-core.md#messaging-protocols). Its purpose is to add perfect forward secrecy, [future secrecy](https://signal.org/blog/advanced-ratcheting/) and replay attack mitigation to [endpoint](rs000-core.md#endpoint-messaging-protocol) and [gateway channels](rs000-core.md#gateway-messaging-protocol). It also extends [RS-002](./rs002-pki.md) with a new certificate type.
+This document describes an asynchronous key agreement and management protocol to establish and maintain secure sessions in bidirectional [messaging channels](rs000-core.md#messaging-protocols). Its purpose is to add perfect forward secrecy, [future secrecy](https://signal.org/blog/advanced-ratcheting/) and replay attack mitigation to [endpoint](rs000-core.md#endpoint-messaging-protocol) and [gateway channels](rs000-core.md#gateway-messaging-protocol).
 
 ## Table of contents
 {: .no_toc }
@@ -26,7 +26,7 @@ Awala Core defines messaging channels that use end-to-end encryption to guarante
 
 This protocol extends Awala to add perfect forward secrecy, future secrecy and replay attack mitigation. It is heavily based on the [Extended Triple Diffie-Hellman protocol](https://signal.org/docs/specifications/x3dh/) and the [double ratchet algorithm](https://signal.org/docs/specifications/doubleratchet/) from the Signal project, with some notable differences:
 
-- There is no central server that can provide certificates or public keys for any node in Awala, but that is not necessary because peers always have each other's certificates. For example, a client-side application will be distributed with the certificate of the server-side endpoint, and similarly, private gateways could be distributed with the certificate of their public gateway (or provided by a trusted courier in a cargo relay connection).
+- There is no central server that can provide public keys for any node in Awala, but that is not necessary because peers always have each other's public keys. For example, a client-side application will be distributed with the public key of the server-side endpoint, and similarly, private gateways could be distributed with the public key of their public gateway (or provided by a trusted courier in a cargo relay connection).
 - This protocol must be [tolerant to disruptions](https://en.wikipedia.org/wiki/Delay-tolerant_networking): Messages are most likely to arrive late, in batches and out of order, or they may be lost.
 - This protocol is not limited to the X25519 and X448 curves, or the HMAC-based Extract-and-Expand Key Derivation Function (HKDF) from RFC 5869. To lower the barrier to adoption, algorithms that are more widely available are also supported.
 
@@ -145,10 +145,10 @@ When using a [CMS EnvelopedData](https://tools.ietf.org/html/rfc5652#section-6) 
 
 Amongst other things, the RFCs above require the [`RecipientInfo`](https://tools.ietf.org/html/rfc5652#section-6.2) to use the [`KeyAgreeRecipientInfo`](https://tools.ietf.org/html/rfc5652#section-6.2.2) choice. They also require K<sub>a,1</sub><sup>public</sup> or K<sub>x,m</sub><sup>public</sup> to be stored as the originator's public key, and K<sub>b,1</sub><sup>id</sup> or K<sub>y,n</sub><sup>id</sup> to be stored as the recipient's ephemeral key identifier.
 
-Implementations MUST store the recipient's ephemeral key identifier as the serial number in the `issuerAndSerialNumber` choice of the `KeyAgreeRecipientIdentifier`. They MUST also store the originator's ephemeral key identifier (K<sub>a,1</sub><sup>id</sup> or K<sub>x,m</sub><sup>id</sup>) under the `unprotectedAttrs` field of the EnvelopedData value as the integer representation of the corresponding serial number and use the following OID:
+Implementations MUST store the recipient's ephemeral key identifier in the `subjectKeyIdentifier` choice of the `KeyAgreeRecipientIdentifier`. They MUST also store the originator's ephemeral key identifier (K<sub>a,1</sub><sup>id</sup> or K<sub>x,m</sub><sup>id</sup>) under the `unprotectedAttrs` field of the EnvelopedData value as the integer representation of the corresponding serial number and use the following OID:
 
 ```
-OriginatorEphemeralCertificateSerialNumberId OBJECT IDENTIFIER ::= {
+OriginatorEphemeralKeyId OBJECT IDENTIFIER ::= {
     itu-t(0) identified-organization(4) etsi(0) reserved(127) etsi-identified-organization(0)
         relaycorp(17) awala(0) channel-session(1) 0
     }
@@ -156,7 +156,7 @@ OriginatorEphemeralCertificateSerialNumberId OBJECT IDENTIFIER ::= {
 
 ## Limitations
 
-This protocol will not work with unidirectional communication as might be the case between two endpoints (if one of the endpoints is private and does not issue Parcel Delivery Authorizations to its peer). Consequently, a Awala service with one-way communication would not get perfect forward secrecy or future secrecy, unless it enables two-way communication as a workaround until there is an equivalent protocol for unidirectional communication.
+This protocol will not work with unidirectional communication as might be the case between two endpoints (if one of the endpoints is private and does not issue Parcel Delivery Authorizations to its peer). Consequently, an Awala service with one-way communication would not get perfect forward secrecy or future secrecy, unless it enables two-way communication as a workaround until there is an equivalent protocol for unidirectional communication.
 
 ## Relevant Specifications
 
