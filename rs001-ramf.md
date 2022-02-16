@@ -12,7 +12,7 @@ permalink: /RS-001
 ## Abstract
 {: .no_toc }
 
-This document defines version 1 of the _Awala Abstract Message Format_ (RAMF), a binary format used to serialize Awala [channel](./rs000-core.md#messaging-protocols) messages. RAMF is based on the [ASN.1 Distinguished Encoding Rules](https://www.itu.int/rec/T-REC-X.680-X.693-201508-I/en) (DER) and the [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652). It also defines a series of requirements for recipients and intermediaries processing such messages.
+This document defines version 1 of the _Awala Abstract Message Format_ (RAMF), a binary format used to serialize Awala [channel](./rs000-core.md#messaging-protocols) messages. RAMF uses the [ASN.1 Distinguished Encoding Rules](https://www.itu.int/rec/T-REC-X.680-X.693-201508-I/en) (DER) and the [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652). It also defines a series of requirements for recipients and intermediaries processing such messages.
 
 ## Table of contents
 {: .no_toc }
@@ -91,7 +91,7 @@ Note that all cryptographic algorithms MUST comply with [RS-018](rs018-algorithm
 
 The following concrete types have been reserved by other Awala specifications:
 
-- `0x10` for [certificate rotation](rs002-pki.md#certificate-and-key-rotation).
+- `0x10` for [certificate rotation](rs000-core.md#gcr).
 - `0x11` for [gateway certificate revocation](rs002-pki.md#gateway-certificate-revocation-gcr).
 - `0x43` ("C" in ASCII) for [cargoes](rs000-core.md#cargo).
 - `0x44` for [cargo collection authorizations](rs000-core.md#cca).
