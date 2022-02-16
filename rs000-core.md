@@ -164,14 +164,7 @@ Similarly, a private gateway MUST process the certificate contained in a GCR mes
 
 Public gateways MUST ignore any GCR received from a peer, as that not supported.
 
-A GCR message MUST be serialized as a control message of concrete type `0x10` and be followed by the DER representation of the `GatewayCertificateRotation` ASN.1 type defined below:
-
-```
-GatewayCertificateRotation ::= SEQUENCE
-{
-  certificate OCTET STRING
-}
-```
+A GCR message MUST be serialized as a `CertificateRotation` message defined in [RS-002](./rs002-pki.md#certificate-rotation).
 
 #### Cargo
 

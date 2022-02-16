@@ -91,7 +91,7 @@ Note that all cryptographic algorithms MUST comply with [RS-018](rs018-algorithm
 
 The following concrete types have been reserved by other Awala specifications:
 
-- `0x10` for [certificate rotation](rs000-core.md#gcr).
+- `0x10` for [certificate rotation](rs002-pki.md#certificate-rotation).
 - `0x11` for [gateway certificate revocation](rs002-pki.md#gateway-certificate-revocation-gcr).
 - `0x43` ("C" in ASCII) for [cargoes](rs000-core.md#cargo).
 - `0x44` for [cargo collection authorizations](rs000-core.md#cca).

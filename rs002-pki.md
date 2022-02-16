@@ -118,6 +118,21 @@ Certificate rotation may cause a node to have multiple valid certificates for th
 
 Nodes SHOULD delete certificates that are no longer valid.
 
+A GCR message MUST be serialized as a control message of concrete type `0x10` and be followed by the DER representation of the `CertificateRotation` ASN.1 type defined below:
+
+```
+CertificateRotation ::= SEQUENCE
+{
+  subjectCertificate OCTET STRING,
+  chain              SET OF OCTET STRING
+}
+```
+
+Where:
+
+- `subjectCertificate` is the DER serialization of the newly-issued certificate for the peer.
+- `chain` is the set of DER serializations for all the certificates in the chain. At a minimum, it MUST contain the issuer's certificate.
+
 ## Key Rotation
 
 Endpoints and gateways MAY use multiple certificates with different asymmetric keys (and therefore different addresses), at any point in time, in order to facilitate key rotation.
