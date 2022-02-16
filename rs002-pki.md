@@ -101,26 +101,30 @@ Certificates issued by peers MUST be used to sign channel and binding messages l
 
 Any certificate issued by a private gateway to a public one is regarded as a Cargo Delivery Authorization (CDA), and it authorizes the public gateway to send cargo to the private gateway.
 
-CDAs SHOULD be valid for at least 24 hours, and they MUST NOT be valid for more than 30 days.
+CDAs SHOULD be valid for at least 24 hours.
 
-## Certificate and Key Rotation
+## Certificate Validity Period
 
-Endpoints and gateways MAY use multiple certificates, with the same or different asymmetric keys (and therefore different addresses), at any point in time, in order to facilitate certificate or key rotation. 
+Certificates MUST NOT be valid for more than 180 days.
 
-An endpoint or gateway initiating a certificate rotation MUST share the new certificate using a _Certificate Rotation Message_ (CRM) through the appropriate [messaging channels](rs000-core.md#messaging-protocols). Such a message MUST:
+## Certificate Rotation
 
-- Be serialized with the [Awala Abstract Message Format (RAMF)](rs001-ramf.md), using the octet `0x10` as its _concrete message type_.
-- Be signed with a certificate that the target endpoint/gateway already trusts.
-- Have their payload encrypted as specified in the [Core](rs000-core.md) and [RAMF](rs001-ramf.md) specifications.
-- Have its payload plaintext contain only the new certificate.
+Each node SHOULD rotate its certificate once half of the validity period has elapsed, in order to avoid disruption. For example, a certificate valid for 180 days should be rotated 90 days before its expiry date or soon thereafter.
 
-CRMs MUST be top-level messages in the [endpoint channel](rs000-core.md#endpoint-messaging-protocol), but they MUST be encapsulated in cargo in the [gateway channel](rs000-core.md#gateway-messaging-protocol) (along with parcels) to prevent malicious couriers from identifying and dropping such messages.
+Certificate rotation may cause a node to have multiple valid certificates for the same channel. When that happens, they should be used as follows:
 
-Since a recipient could have multiple keys at any point in time, endpoints and gateways MUST include the appropriate metadata to identify the correct certificate in any [Cryptographic Message Syntax (CMS)](https://tools.ietf.org/html/rfc5652) enveloped-data values that they generate.
+- The certificate with the latest expiry date MUST be used to produce new digital signatures (e.g., certificate issuance, RAMF message signing).
+- All valid certificates MUST be used to verify digital signatures (e.g., certification path verification, RAMF message integrity/authentication checks).
+
+Nodes SHOULD delete certificates that are no longer valid.
+
+## Key Rotation
+
+Endpoints and gateways MAY use multiple certificates with different asymmetric keys (and therefore different addresses), at any point in time, in order to facilitate key rotation.
 
 ## Certificate Revocation
 
-Certificates MUST be revoked when their private keys are compromised, when a [rotation](#certificate-and-key-rotation) is complete, or when deemed appropriate by their subject or issuer.
+Certificates MUST be revoked when their private keys are compromised, when a certificate/key rotation is complete, or when deemed appropriate by their subject or issuer.
 
 ### Endpoint Self-Signed Certificate Revocation
 

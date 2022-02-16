@@ -117,7 +117,7 @@ This protocol establishes the channel between two gateways, and its primary purp
 
 The two gateways MUST maintain a single session using the [Channel Session Protocol](rs003-key-agreement.md), and all keys used to encrypt payloads in this channel MUST be derived from that session.
 
-In addition to relaying messages from the endpoint messaging protocol, this protocol supports the following messages.
+In addition to relaying messages from the endpoint messaging protocol (e.g., parcels), this protocol supports the following messages.
 
 #### Parcel Collection Acknowledgement (PCA) {#pca}
 
@@ -155,6 +155,23 @@ ParcelDeliveryDeauthorization ::= SEQUENCE
 ```
 
 Gateways MUST enforce PDDs for as long as they are active. Public gateways MAY additionally cache PDDs until they expire in order to refuse future parcels whose PDA has been revoked.
+
+#### Gateway Certificate Rotation (GCR) {#gcr}
+
+When fulfilling cargo collection requests, public gateways MUST check if their private peers' certificates are eligible for rotation per [RS-002](./rs002-pki.md#certificate-rotation). If that is the case, they MUST issue a new certificate and include it as a _Gateway Certificate Rotation_ (GCR) message in one of the cargoes output.
+
+Similarly, a private gateway MUST process the certificate contained in a GCR message following the rules defined in [RS-002](./rs002-pki.md#certificate-rotation).
+
+Public gateways MUST ignore any GCR received from a peer, as that not supported.
+
+A GCR message MUST be serialized as a control message of concrete type `0x10` and be followed by the DER representation of the `GatewayCertificateRotation` ASN.1 type defined below:
+
+```
+GatewayCertificateRotation ::= SEQUENCE
+{
+  certificate OCTET STRING
+}
+```
 
 #### Cargo
 

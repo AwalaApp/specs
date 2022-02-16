@@ -56,5 +56,4 @@ For example, if the gateway has the ability to know whether the computer is conn
 
 ## Open Questions
 
-- How can the private gateway send [key rotation](rs002-pki.md#certificate-and-key-rotation) and [certificate revocation](rs002-pki.md) messages? Maybe bindings for local PDCs should be changed so that the _parcel delivery_ and _parcel delivery acknowledgement_ messages becomes more generic, like _message delivery_ and _message delivery acknowledgement_, respectively.
 - Should private gateways be allowed to deliver parcels via its public gateway as well? That would effectively negate the need for VPNs when using Awala.
