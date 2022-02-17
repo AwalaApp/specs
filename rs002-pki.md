@@ -118,7 +118,7 @@ Certificate rotation may cause a node to have multiple valid certificates for th
 
 Nodes SHOULD delete certificates that are no longer valid.
 
-A GCR message MUST be serialized as a control message of concrete type `0x10` and be followed by the DER representation of the `CertificateRotation` ASN.1 type defined below:
+A certificate rotation message MUST be serialized as a control message of concrete type `0x10` and be followed by the DER representation of the `CertificateRotation` ASN.1 type defined below:
 
 ```
 CertificateRotation ::= SEQUENCE
