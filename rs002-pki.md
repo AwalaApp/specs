@@ -118,20 +118,7 @@ Certificate rotation may cause a node to have multiple valid certificates for th
 
 Nodes SHOULD delete certificates that are no longer valid.
 
-A certificate rotation message MUST be serialized as a control message of concrete type `0x10` and be followed by the DER representation of the `CertificateRotation` ASN.1 type defined below:
-
-```
-CertificateRotation ::= SEQUENCE
-{
-  subjectCertificate OCTET STRING,
-  chain              SET OF OCTET STRING
-}
-```
-
-Where:
-
-- `subjectCertificate` is the DER serialization of the newly-issued certificate for the peer.
-- `chain` is the set of DER serializations for all the certificates in the chain. At a minimum, it MUST contain the issuer's certificate.
+A certificate rotation message MUST be serialized as a control message of concrete type `0x10` and be followed by the DER representation of the [`CertificationPath`](#certification-path), where the leaf certificate MUST be the newly-issued certificate.
 
 ## Key Rotation
 
@@ -174,3 +161,20 @@ Except for self-issued certificates, all certificates MUST include the Authority
 ### Subject Key Identifier
 
 All certificates MUST include the Subject Key Identifier extension as defined in the X.509 v3 specification.
+
+## Certification Path
+
+When serialized, a certification path MUST be represented with the `CertificationPath` ASN.1 type defined below:
+
+```
+CertificationPath ::= SEQUENCE
+{
+  leafCertificate        OCTET STRING,
+  certificateAuthorities SEQUENCE OF OCTET STRING
+}
+```
+
+Where:
+
+- `leafCertificate` is the DER serialization of the leaf certificate in the path.
+- `certificateAuthorities` is the sequence of DER serializations of the remaining certificates in the chain, starting with the issuer of `leafCertificate`.
