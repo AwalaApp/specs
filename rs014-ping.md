@@ -39,10 +39,10 @@ This service employs the following messages.
 
 ### Ping
 
-This is the message that initiates a transaction. Its type MUST be `application/vnd.awala.ping-v1.ping`, and its payload MUST comply with the following byte sequence ([little-endian](https://en.wikipedia.org/wiki/Endianness)):
+This is the message that initiates a transaction. Its type MUST be `application/vnd.awala.ping-v1.ping`, and its payload MUST be JSON-serialized with the following properties:
 
-1. The ping id: A sequence of exactly 36 octets. It SHOULD be a UUID4 value.
-1. The DER serialization of the [Parcel Delivery Authorization](rs002-pki.md#parcel-delivery-authorization-pda) (PDA) to use to reply with a pong message. This value MUST be length-prefixed with a 14-bit unsigned integer (2 octets), so the maximum length of the DER-encoded PDA is 16 KiB.
+1. `id`: The ping id, a sequence of exactly 36 octets. It SHOULD be a UUID4 value.
+1. `pda_path`: The DER-serialized, [CertificationPath](rs002-pki.md#certification-path) of the [Parcel Delivery Authorization](rs002-pki.md#parcel-delivery-authorization-pda) (PDA) to use to reply with a pong message.
 
 ### Pong
 
