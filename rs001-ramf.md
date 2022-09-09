@@ -46,7 +46,7 @@ The format signature MUST be followed by a DER-encoded CMS signed-data value whe
   - `crls` MUST be empty, since certificate revocation is part of the [Awala PKI](rs002-pki.md).
   - `signerInfos` MUST contain exactly one signer (`SignerInfo`), and whose `signatureAlgorithm` MUST be valid per [RS-018](rs018-algorithms.md).
 
-The message fields MUST be represented as the DER serialization of the ASN.1 `RAMF` type below:
+The message fields MUST be represented as the DER serialization of the ASN.1 `RAMFMessage` type below:
 
 ```
 {% include_relative diagrams/rs001/ramf.asn1 %}
