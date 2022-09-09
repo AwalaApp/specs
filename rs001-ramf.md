@@ -1,5 +1,6 @@
 ---
 permalink: /RS-001
+nav_order: 2
 ---
 # Awala Abstract Message Format, Version 1
 {: .no_toc }
@@ -12,7 +13,7 @@ permalink: /RS-001
 ## Abstract
 {: .no_toc }
 
-This document defines version 1 of the _Awala Abstract Message Format_ (RAMF), a binary format used to serialize Awala [channel](./rs000-core.md#messaging-protocols) messages. RAMF uses the [ASN.1 Distinguished Encoding Rules](https://www.itu.int/rec/T-REC-X.680-X.693-201508-I/en) (DER) and the [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652). It also defines a series of requirements for recipients and intermediaries processing such messages.
+This document defines version 1 of the _Awala Abstract Message Format_ (_RAMF_ for historic reasons), a binary format used to serialize Awala [channel](./rs000-core.md#messaging-protocols) messages. RAMF uses the [ASN.1 Distinguished Encoding Rules](https://www.itu.int/rec/T-REC-X.680-X.693-201508-I/en) (DER) and the [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652). It also defines a series of requirements for recipients and intermediaries processing such messages.
 
 ## Table of contents
 {: .no_toc }
@@ -76,7 +77,7 @@ Recipients and brokers of a RAMF message MUST validate the message as soon as it
 - The message TTL MUST NOT resolve to a date in the past.
 - The message date MUST be within the period of time during which the sender certificate was valid.
 - All certificates MUST be valid per [Awala PKI](rs002-pki.md).
-- The signature MUST be valid according to the [CMS verification process](https://tools.ietf.org/html/rfc5652#section-5.6) and the specified signature algorithm. Additionally, the signature MUST be deemed invalid if the signature algorithm is unsupported or the hashing algorithm is unsupported.
+- The signature MUST be valid according to the [CMS verification process](https://tools.ietf.org/html/rfc5652#section-5.6) and the specified signature algorithm. Additionally, the signature MUST be deemed invalid if the cryptographic algorithms are not valid per [RS-018](./rs018-algorithms.md).
 - If the recipient address is [private](./rs000-core.md#addressing), the sender's certificate MUST be issued by the message recipient. That is, the private address of the public key in the issuing certificate MUST match the private address set as the message recipient. Such sender certificates are known as _delivery authorizations_ in the Awala PKI.
 
 ## Security Considerations

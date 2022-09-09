@@ -1,5 +1,6 @@
 ---
 permalink: /RS-000
+nav_order: 1
 ---
 # Awala Core
 {: .no_toc }
@@ -46,12 +47,14 @@ The following diagram illustrates the various components of the network and how 
 - **Applications** exchange _messages_ amongst themselves, and because they can't communicate directly, they each use an _endpoint_ as a broker.
 - A **(service) message** is serialized in the format determined by the service and does not have to be encrypted or signed.
 - An **endpoint** receives a message from its application and converts it into a _parcel_ for the target application's endpoint, and because they still can't communicate directly, they each use a _gateway_ as a broker. When an endpoint receives a parcel from the gateway, it has to decrypt the message and pass it to its application.
-- A **parcel** encapsulates exactly one service message, which is encrypted with the target endpoint's certificate and signed with the origin endpoint's key.
+- A **parcel** encapsulates exactly one service message. Parcels are end-to-end encrypted and signed (with different keys).
 - A **gateway** receives parcels from endpoints and puts them into cargo for another gateway, using a _courier_ as a broker. When a gateway receives cargo from a courier, it decrypts the cargo and delivers the encapsulated parcels to their corresponding target endpoints.
   - A **private gateway** is a specific type of gateway that runs on a end-user device and serves the endpoints on that device.
-  - A **public gateway** is a specific type of gateway that allows the endpoints behind its private gateways to reach another network (typically the Internet).
-- A **cargo** encapsulates one or more parcels, and it is encrypted with the target gateway's certificate and signed with the origin gateway's key.
+  - An **Internet gateway** is a specific type of gateway whose sole role is to route parcels between its private gateways and the Internet.
+- A **cargo** encapsulates one or more messages (e.g., parcels) between gateways. Cargoes are only used when the two gateways have to communicate via an untrusted broker (e.g., couriers). Cargoes are end-to-end encrypted and signed (with different keys).
 - A **courier** is the individual, organization or technology that transports the cargo between gateways when they can't reach each other via the Internet. For example, it could be a sneakernet operated by volunteers or a [scatternet](https://en.wikipedia.org/wiki/Scatternet) operated by users themselves.
+
+Gateways and endpoints are also collectively called **nodes**. Each node has an _identity key pair_ for [authentication](rs002-pki.md) and routing purposes. Couriers are not nodes.
 
 For example, if Twitter supported Awala, Twitter would be a _service_ with Awala-compatible, mobile and server-side apps. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the server-side app will have `twitter.com` as the _public endpoint_.
 
@@ -65,11 +68,9 @@ Note that defining same-layer interactions at the application and relay layers i
 
 This document only defines [point-to-point](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PointToPointChannel.html) message delivery.
 
-Each endpoint and gateway in Awala MUST have a unique, opaque address known as _private address_. It MAY also have a unique internet address known as _public address_ if the node can be reached through an internet. A node is public if it has a public address, otherwise it is private.
+Each node MUST be uniquely identified with an ASCII-encoded _id_ equal to the `0` (zero) character (denoting the first version of the id format), followed by the SHA-256 digest of the DER encoding of the identity public key as a `SubjectPublicKeyInfo` structure from [RFC 5280](https://tools.ietf.org/html/rfc5280). For example, `0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid id.
 
-The private address of a node MUST equal to the digest of its public key, computed as `"0" || sha256(publicKey)`, where the `0` (zero) prefix denotes the version of the address format defined in this document, `||` denotes the concatenation of two strings, `publicKey` is the DER encoding of the `SubjectPublicKeyInfo` structure from [RFC 5280](https://tools.ietf.org/html/rfc5280) and `sha256()` outputs the SHA-256 digest in hexadecimal. For example, `0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private address.
-
-A public address MUST be a valid [Uniform Resource Identifier (URI)](https://tools.ietf.org/html/rfc3986) without port, path, query or fragment components. Its host name MUST be a domain name, not an IP address. Refer to [public address resolution](#public-address-resolution) to learn how these domain names should be used.
+If the node is also directly reachable from the Internet (i.e., it is an Internet host), the node would be known as an _Internet endpoint_ or an _Internet gateway_, and it would be subject to the [Internet address resolution](#internet-address-resolution) below.
 
 ## Messaging Protocols
 
@@ -242,13 +243,13 @@ The node delivering a message MUST NOT remove it until the peer has acknowledged
 
 Bindings MAY extend this specification, but they MUST NOT override it.
 
-### Public Address Resolution
+### Internet Address Resolution
 
-The host name in a public address MUST be an [SRV record](https://tools.ietf.org/html/rfc2782), where the service name and OSI Layer 4 protocol is determined by the respective binding.
+The Internet address MUST be a DNSSEC-secured domain name resolved as an [SRV record](https://tools.ietf.org/html/rfc2782) whose service name and OSI Layer 4 protocol are to be defined in extensions to this specification.
 
-The target host in the SRV record MUST be used exclusively in the client-server connection. For example, if the public node `example.com` resolves to the host `foo.example.com`, then `foo.example.com` should be specified in the TLS Server Name Identification (SNI) value and the HTTP `Host` request header (assuming that the binding uses the TLS and HTTP protocols).
+The target host in the SRV record MUST be used exclusively in the client-server connection. For example, if the Awala Internet node `example.com` resolves to the host `foo.example.com`, then `foo.example.com` should be specified in the TLS Server Name Identification (SNI) value and the HTTP `Host` request header (assuming that the binding uses the TLS and HTTP protocols).
 
-This specification forbids the use the original domain name in the public address in order to allow the same public gateway instance to share a single public IP address across its binding implementations. However, to prevent hijacking through DNS spoofing, clients MUST use DNSSEC and refuse results whose DNSSEC validation fails. A client MAY delegate DNSSEC validation to a DNS-over-HTTPS or DNS-over-TLS/DTLS resolver.
+The node Internet address MUST NOT be used as the host in the TLS/HTTP connection in order to allow the same Internet node to share a single public IP address across its binding implementations. However, to prevent hijacking through DNS spoofing, clients MUST use DNSSEC and refuse results whose DNSSEC validation fails. A client MAY delegate DNSSEC validation to a trusted DNS-over-HTTPS or DNS-over-TLS/DTLS resolver.
 
 ### Gateway Synchronization Binding
 
