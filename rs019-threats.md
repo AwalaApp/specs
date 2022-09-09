@@ -39,7 +39,7 @@ Despite the recommendations to address the various threats, this specification r
 | [Tampered Copy of Software](#tampered-software) | Spoofing, Tampering, Repudiation, Information disclosure, DoS | All | All |
 | [DoS from Legitimate Node](#dos-legitimate-node) | DoS | All | All |
 | [DoS via Binding](#dos-binding) | DoS | All | All |
-| [Public Endpoint Address Exposed to Gateway](#public-endpoint-address) | Information disclosure, DoS | Public gateway | End users |
+| [Internet endpoint Address Exposed to Gateway](#internet-endpoint-address) | Information disclosure, DoS | Internet gateway | End users |
 
 ### Private Keys Compromise {#private-keys-compromise}
 
@@ -67,25 +67,25 @@ Service providers and Awala software vendors should distribute their software in
 
 ### Denial of Service from Legitimate Node {#dos-legitimate-node}
 
-Attackers may use freshly-generated, private addresses to conduct a DoS attack against public nodes, or use [compromised private keys](#private-keys-compromise) to achieve the same attack against private and public nodes. This would be an attack at the [channel](rs000-core.md#messaging-protocols) level.
+Attackers may use freshly-generated, node ids to conduct a DoS attack against Internet nodes, or use [compromised private keys](#private-keys-compromise) to achieve the same attack against private and Internet nodes. This would be an attack at the [channel](rs000-core.md#messaging-protocols) level.
 
 Providers should have monitoring in place to detect ongoing DoS attacks, as well as an appropriate response plan. They should also employ appropriate rate limiting constraints; for example, private endpoints could issue [Parcel Delivery Authorizations (PDAs)](rs002-pki.md#parcel-delivery-authorization-pda) that employ the [rate limiting extension](rs002-pki.md#rate-limiting-extension).
 
 ### Denial of Service via Message Transport Binding {#dos-binding}
 
-Public endpoints and gateways are inherently susceptible to DoS attacks at the [binding](rs000-core.md#message-transport-bindings) level. Such attacks could be distributed (DDoS) or could come from a single origin. [SYN](https://en.wikipedia.org/wiki/SYN_flood) and [application-layer floods](https://en.wikipedia.org/wiki/Denial_of_Service_attack#Application-layer_floods) are examples of such attacks.
+Internet endpoints and gateways are inherently susceptible to DoS attacks at the [binding](rs000-core.md#message-transport-bindings) level. Such attacks could be distributed (DDoS) or could come from a single origin. [SYN](https://en.wikipedia.org/wiki/SYN_flood) and [application-layer floods](https://en.wikipedia.org/wiki/Denial_of_Service_attack#Application-layer_floods) are examples of such attacks.
 
-Providers should have the appropriate network-level protections in place, such as network- and application-level firewalls. They should also have adequate monitoring to detect the attack and an adequate plan to respond to it. Where possible, public gateways should only accept [Cargo Relay Connections](rs000-core.md#cargo-relay-binding) from a set of whitelisted IP addresses.
+Providers should have the appropriate network-level protections in place, such as network- and application-level firewalls. They should also have adequate monitoring to detect the attack and an adequate plan to respond to it. Where possible, Internet gateways should only accept [Cargo Relay Connections](rs000-core.md#cargo-relay-binding) from a set of whitelisted IP addresses.
 
 An attacker may also target the DNS records of endpoints and gateways, also causing a denial of service. Even though the sender will continue to retry the delivery of the parcel or cargo until the target server uses a valid TLS certificate, the attack may last until some messages expire, forcing the sender to drop them.
 
-### Public Endpoint Address Exposed to Gateway {#public-endpoint-address}
+### Internet endpoint Address Exposed to Gateway {#internet-endpoint-address}
 
-Gateways have to know the sender and the recipient of the parcels they relay, which means that they could find out the service that a parcel belongs to by looking at the public endpoint address (e.g., `twitter.com`). Thanks to the use of end-to-end encryption in Awala, gateways would not be able to see the contents of the parcel; however, exposing the endpoint address could be cause for concern in some circumstances.
+Gateways have to know the sender and the recipient of the parcels they relay, which means that they could find out the service that a parcel belongs to by looking at the Internet endpoint address (e.g., `twitter.com`). Thanks to the use of end-to-end encryption in Awala, gateways would not be able to see the contents of the parcel; however, exposing the endpoint address could be cause for concern in some circumstances.
 
-This information could be persisted and used subsequently, causing privacy issues -- And even more severe risks to certain end users, such as journalists. A public gateway operator may also be coerced to use this information to censor a particular service.
+This information could be persisted and used subsequently, causing privacy issues -- And even more severe risks to certain end users, such as journalists. A Internet gateway operator may also be coerced to use this information to censor a particular service.
 
-Users that wish to conceal the address of the centralized services they use should consider using a public gateway that does not persist or use that information in any way. They may do so by using the services of a third party provider or by hosting the gateway on a server under their control.
+Users that wish to conceal the address of the centralized services they use should consider using a Internet gateway that does not persist or use that information in any way. They may do so by using the services of a third party provider or by hosting the gateway on a server under their control.
 
 ## Acknowledgements
 

@@ -22,11 +22,11 @@ This document describes _PoWeb_, a binding for [Gateway Synchronization Connecti
 
 ## Introduction
 
-As a GSC, the ultimate objective of PoWeb is to enable a gateway to relay parcels for its private endpoints or its private peers. In other words, a private gateway would implement a PoWeb service to exchange parcels with its local endpoints, whilst a public gateway would implement a PoWeb service to exchange parcels with its private gateways.
+As a GSC, the ultimate objective of PoWeb is to enable a gateway to relay parcels for its private endpoints or its private peers. In other words, a private gateway would implement a PoWeb service to exchange parcels with its local endpoints, whilst a Internet gateway would implement a PoWeb service to exchange parcels with its private gateways.
 
 PoWeb owes its name to the fact it uses Web-based, Application Layer protocols with its clients: HTTP for remote procedure calls, and WebSockets to stream messages (e.g., parcels). This specification describes the HTTP and WebSocket endpoints that comprise PoWeb, along with their inputs, outputs and any side effects. The serialisation format of the messages exchanged via this protocol are outside the scope of this document, as they are agnostic of the concrete GSC binding.
 
-The private or public gateway implementing the PoWeb service will be referred to as the "server", whilst the private endpoint or private gateway connecting to its will be referred to as the "client".
+The private or Internet gateway implementing the PoWeb service will be referred to as the "server", whilst the private endpoint or private gateway connecting to its will be referred to as the "client".
 
 Clients are required to register their endpoints with the gateway before they can start exchanging messages (e.g., parcels), given that those operations require the client to produce digital signatures using [Awala PKI](rs002-pki.md) certificates previously issued by the server.
 
@@ -137,7 +137,7 @@ The server MAY return any of the following status codes, but their semantics are
 
 If the server is a private gateway, it SHOULD listen on port 276 if it has the appropriate permissions to do so. If not, it SHOULD listen on port 13276.
 
-If the server is a public gateway, it SHOULD listen on port 443.
+If the server is a Internet gateway, it SHOULD listen on port 443.
 
 ## HTTP Considerations
 
@@ -151,11 +151,11 @@ Clients and servers implementing this specification MUST comply with the WebSock
 
 To prevent web pages from trying to make unauthorised requests to the server of a private gateway, the server MUST NOT support CORS and WebSocket connections MUST be refused with the status code `1008` if the HTTP request included the header `Origin`.
 
-## Public Gateway SRV records
+## Internet gateway SRV records
 
 Because this binding uses the Transmission Control Protocol (TCP; [RFC 793](https://tools.ietf.org/html/rfc793)), SRV records for GSC servers implementing this binding MUST use the `tcp` protocol.
 
-For example, a public gateway like `example.com` could specify an SRV record as follows:
+For example, a Internet gateway like `example.com` could specify an SRV record as follows:
 
 ```
 _awala-gsc._tcp.example.com. 300 IN SRV 0 1 443 poweb.example.com.

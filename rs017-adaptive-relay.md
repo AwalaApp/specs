@@ -26,27 +26,27 @@ Awala was originally conceived to connect two nodes that might never be connecte
 
 This approach helps ensure that data will reach its destination, but it adds latency and complexity when the two nodes can actually communicate directly -- For example, when the Internet is available.
 
-In those cases where the target endpoint of a parcel can be reached, the gateway could deliver the parcel immediately and directly, without a courier or a public gateway. It may even start transmitting the parcel as soon as the first few bytes are received, since the target endpoint is one of the first few fields in a [RAMF](rs001-ramf.md) message. This approach is known as [cut-through mode](https://en.wikipedia.org/wiki/Cut-through_switching) in networking.
+In those cases where the target endpoint of a parcel can be reached, the gateway could deliver the parcel immediately and directly, without a courier or a Internet gateway. It may even start transmitting the parcel as soon as the first few bytes are received, since the target endpoint is one of the first few fields in a [RAMF](rs001-ramf.md) message. This approach is known as [cut-through mode](https://en.wikipedia.org/wiki/Cut-through_switching) in networking.
 
-When a gateway operates in cut-through mode, it will not use a [Cargo Relay Binding](rs000-core.md#cargo-relay-binding) to connect to a courier. Instead, it will use a binding for [local Parcel Delivery Connections (PDCs)](rs000-core.md#internal-pdc) to get incoming parcels from its public gateway. 
+When a gateway operates in cut-through mode, it will not use a [Cargo Relay Binding](rs000-core.md#cargo-relay-binding) to connect to a courier. Instead, it will use a binding for [local Parcel Delivery Connections (PDCs)](rs000-core.md#internal-pdc) to get incoming parcels from its Internet gateway. 
 
 The following diagram shows how parcels would be delivered in a centralized service (one with clients and servers) using cut-through mode:
 
 ![](diagrams/rs017/cut-through-mode.svg)
 
-Note that bindings will remain unchanged, but the roles of client and server would change: The private gateway will become an [Internet-based PDC](rs000-core.md#external-pdc) client to public endpoints and a local PDC client to the public gateway. Similarly, this will be transparent to applications and endpoints, and only gateways need to be changed to support this specification.
+Note that bindings will remain unchanged, but the roles of client and server would change: The private gateway will become an [Internet-based PDC](rs000-core.md#external-pdc) client to Internet endpoints and a local PDC client to the Internet gateway. Similarly, this will be transparent to applications and endpoints, and only gateways need to be changed to support this specification.
 
-The role of the public gateway in this scenario would be analogous to that of [STUN](https://en.wikipedia.org/wiki/STUN) servers: To allow computers in private networks to get data from the Internet as if they were Internet hosts.
+The role of the Internet gateway in this scenario would be analogous to that of [STUN](https://en.wikipedia.org/wiki/STUN) servers: To allow computers in private networks to get data from the Internet as if they were Internet hosts.
 
 This technique can be seen as a form of [adaptive switching](https://en.wikipedia.org/wiki/Adaptive_switching) in computer networking -- Hence the name of this specification.
 
 ## Local PDC Between Gateways
 
-The local PDC between the private gateway and the public gateway will be almost identical to one between an endpoint and its gateway, except that the private gateway MUST NOT deliver parcels to the public gateway.
+The local PDC between the private gateway and the Internet gateway will be almost identical to one between an endpoint and its gateway, except that the private gateway MUST NOT deliver parcels to the Internet gateway.
 
-Given the nature of the connection, when the private gateway requests a certificate from the public gateway, it would be requesting a [Gateway Certificate](rs002-pki.md#gateway-certificate) for itself.
+Given the nature of the connection, when the private gateway requests a certificate from the Internet gateway, it would be requesting a [Gateway Certificate](rs002-pki.md#gateway-certificate) for itself.
 
-The private gateway SHOULD send any [Parcel Delivery Deauthorizations (PDDs)](rs000-core.md#pdd) before signalling that it is ready to collect parcels, so that the public gateway can discard any parcels that should not be sent.
+The private gateway SHOULD send any [Parcel Delivery Deauthorizations (PDDs)](rs000-core.md#pdd) before signalling that it is ready to collect parcels, so that the Internet gateway can discard any parcels that should not be sent.
 
 ## Store-and-Forward vs Cut-Through Mode Selection
 
@@ -56,4 +56,4 @@ For example, if the gateway has the ability to know whether the computer is conn
 
 ## Open Questions
 
-- Should private gateways be allowed to deliver parcels via its public gateway as well? That would effectively negate the need for VPNs when using Awala.
+- Should private gateways be allowed to deliver parcels via its Internet gateway as well? That would effectively negate the need for VPNs when using Awala.

@@ -24,7 +24,7 @@ This document describes how to issue, revoke and process X.509 certificates in A
 
 Awala relies extensively on its PKI in order to authenticate and authorize nodes without a real-time connection to an external authentication/authorization server, as well as to encrypt payloads when the [Channel Session Protocol](./rs003-key-agreement.md) is not employed.
 
-One prominent use of the Awala PKI is in the [Awala Abstract Message Format (RAMF)](./rs001-ramf.md), where certificates are used to authenticate the sender of the message and ensure the integrity of the message. Any valid certificate can be used to sign a message bound for a public node, but every message bound for a private node has to be signed with a certificate issued by the recipient (in which case the certificate will be called a _delivery authorization_).
+One prominent use of the Awala PKI is in the [Awala Abstract Message Format (RAMF)](./rs001-ramf.md), where certificates are used to authenticate the sender of the message and ensure the integrity of the message. Any valid certificate can be used to sign a message bound for a Internet node, but every message bound for a private node has to be signed with a certificate issued by the recipient (in which case the certificate will be called a _delivery authorization_).
 
 This PKI applies to the long-term keys that identify endpoints and gateways in Awala, and it also serves as the basis for issuing certificates for initial keys in the Channel Session Protocol. The requirements and recommendations in this document do not apply to the Internet PKI certificates used in [Message Transport Bindings](./rs000-core.md#message-transport-bindings).
 
@@ -32,7 +32,7 @@ This PKI applies to the long-term keys that identify endpoints and gateways in A
 
 Certificates in this PKI profile MUST be represented as [X.509 v3 certificates](https://www.itu.int/rec/T-REC-X.509/en).
 
-The _Distinguished Name_ MUST only contain the _Common Name_ (CN) attribute, and it MUST be set to the node's private address (e.g., `CN=0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c`).
+The _Distinguished Name_ MUST only contain the _Common Name_ (CN) attribute, and it MUST be set to the node's id (e.g., `CN=0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c`).
 
 A certificate MUST NOT be valid before its issuer is valid or after its issuer expires.
 
@@ -44,20 +44,20 @@ Endpoints and gateways can use the following types of certificates.
 
 An endpoint certificate MUST be issued by one of the following Certificate Authorities (CAs):
 
-- Itself, if it is a public endpoint.
+- Itself, if it is a Internet endpoint.
 - Its private gateway, if it is a private endpoint.
 - Another endpoint, resulting in a [_parcel delivery authorization_](#parcel-delivery-authorization-pda).
 
 ### Parcel Delivery Authorization (PDA)
 
-Given private Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its public gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a special endpoint certificate called _Parcel Delivery Authorization_ (PDA).
+Given private Endpoint A and Endpoint B, Endpoint A MAY instruct its gateway and its Internet gateway to accept parcels from Endpoint B by signing Endpoint B's certificate, which will result in a special endpoint certificate called _Parcel Delivery Authorization_ (PDA).
 
 The certification path of a PDA is formed of the following sequence (from end entity to root):
 
 1. Endpoint B's certificate.
 1. Endpoint A's certificate.
 1. Endpoint A's private gateway.
-1. Endpoint A's public gateway.
+1. Endpoint A's Internet gateway.
 
 When relaying parcels where the recipient is a private endpoint, gateways MUST refuse those where the certificate for the sender of the parcel was not issued by the target endpoint. In other words, the Common Name of the second certificate MUST match the recipient of the RAMF-serialized parcel.
 
@@ -65,7 +65,7 @@ When relaying parcels where the recipient is a private endpoint, gateways MUST r
 
 Endpoint A MAY rate limit the volume of parcels that Endpoint B may send with the PDA by including the non-critical extension _PDA Rate Limiting_.
 
-Gateways SHOULD enforce the rate limiting specified by the extension, if present. When evaluating the eligibility of a message for rate limiting purposes, public gateways MUST use the time when the message was received, whilst private gateways MUST use the date specified in the RAMF message.
+Gateways SHOULD enforce the rate limiting specified by the extension, if present. When evaluating the eligibility of a message for rate limiting purposes, Internet gateways MUST use the time when the message was received, whilst private gateways MUST use the date specified in the RAMF message.
 
 The target endpoint (Endpoint A) MAY enforce the rate limiting.
 
@@ -91,15 +91,15 @@ Where, `limit` specifies how many parcels can be sent within a given number of s
 
 ### Gateway Certificate
 
-Each gateway has at least two certificates for the same long-term key pair: One self-issued and one certificate issued by each of its peers. Consequently, every private gateway has exactly two certificates because it has exactly one peer, while a public gateway may have more certificates.
+Each gateway has at least two certificates for the same long-term key pair: One self-issued and one certificate issued by each of its peers. Consequently, every private gateway has exactly two certificates because it has exactly one peer, while a Internet gateway may have more certificates.
 
 Self-issued certificates MUST only be used to issue certificates to peers, and therefore such certificates will be the root for a PDA or a [Cargo Delivery Authorization (CDA)](#cargo-delivery-authorization-cda). Self-issued certificates MUST NOT be used to sign channel or binding messages. Peers MAY use the self-issued certificate to encrypt payloads when not using the Channel Session Protocol.
 
-Certificates issued by peers MUST be used to sign channel and binding messages like cargoes. A certificate issued by a private gateway to its public peer is known as a CDA, and additional requirements and recommendations apply.
+Certificates issued by peers MUST be used to sign channel and binding messages like cargoes. A certificate issued by a private gateway to its Internet peer is known as a CDA, and additional requirements and recommendations apply.
 
 ### Cargo Delivery Authorization (CDA)
 
-Any certificate issued by a private gateway to a public one is regarded as a Cargo Delivery Authorization (CDA), and it authorizes the public gateway to send cargo to the private gateway.
+Any certificate issued by a private gateway to a public one is regarded as a Cargo Delivery Authorization (CDA), and it authorizes the Internet gateway to send cargo to the private gateway.
 
 CDAs SHOULD be valid for at least 24 hours.
 

@@ -43,6 +43,7 @@ This is the message that initiates a transaction. Its type MUST be `application/
 
 1. `id`: The ping id, a sequence of exactly 36 octets. It SHOULD be a UUID4 value.
 1. `pda_path`: The DER-serialized, [CertificationPath](rs002-pki.md#certification-path) of the [Parcel Delivery Authorization](rs002-pki.md#parcel-delivery-authorization-pda) (PDA) to use to reply with a pong message.
+1. `endpoint_internet_address`: The Internet address of the endpoint sending the ping (which should receive the pong message). This will typically be the Internet gateway paired to the sender's private address.
 
 ### Pong
 

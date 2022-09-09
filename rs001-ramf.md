@@ -1,5 +1,6 @@
 ---
 permalink: /RS-001
+nav_order: 2
 ---
 # Awala Abstract Message Format, Version 1
 {: .no_toc }
@@ -12,7 +13,7 @@ permalink: /RS-001
 ## Abstract
 {: .no_toc }
 
-This document defines version 1 of the _Awala Abstract Message Format_ (RAMF), a binary format used to serialize Awala [channel](./rs000-core.md#messaging-protocols) messages. RAMF uses the [ASN.1 Distinguished Encoding Rules](https://www.itu.int/rec/T-REC-X.680-X.693-201508-I/en) (DER) and the [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652). It also defines a series of requirements for recipients and intermediaries processing such messages.
+This document defines version 1 of the _Awala Abstract Message Format_ (_RAMF_ for historic reasons), a binary format used to serialize Awala [channel](./rs000-core.md#messaging-protocols) messages. RAMF uses the [ASN.1 Distinguished Encoding Rules](https://www.itu.int/rec/T-REC-X.680-X.693-201508-I/en) (DER) and the [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652). It also defines a series of requirements for recipients and intermediaries processing such messages.
 
 ## Table of contents
 {: .no_toc }
@@ -34,7 +35,7 @@ By specifying the message type and version in the format signature, future RAMF 
 
 The format signature MUST span the first 10 octets of the message, representing the following sequence (encoded in little-endian):
 
-1. Prefix (8 octets): "Awala" in ASCII (hex: `52 65 6c 61 79 6e 65 74`).
+1. Prefix (5 octets): "Awala" in ASCII (hex: `41 77 61 6C 61`).
 1. Concrete message type (1 octet).
 1. Concrete message format version (1 octet). This MUST be an 8-bit unsigned integer. 
 
@@ -46,7 +47,7 @@ The format signature MUST be followed by a DER-encoded CMS signed-data value whe
   - `crls` MUST be empty, since certificate revocation is part of the [Awala PKI](rs002-pki.md).
   - `signerInfos` MUST contain exactly one signer (`SignerInfo`), and whose `signatureAlgorithm` MUST be valid per [RS-018](rs018-algorithms.md).
 
-The message fields MUST be represented as the DER serialization of the ASN.1 `RAMF` type below:
+The message fields MUST be represented as the DER serialization of the ASN.1 `RAMFMessage` type below:
 
 ```
 {% include_relative diagrams/rs001/ramf.asn1 %}
@@ -54,7 +55,7 @@ The message fields MUST be represented as the DER serialization of the ASN.1 `RA
 
 Where the items in the `RAMFMessage` sequence are defined as follows:
 
-- `recipientAddress` MUST be the public or private address of the recipient. It MUST NOT span more than 1024 octets.
+- `recipient` MUST contain the addressing information for the recipient. Its `internetAddress` MUST be specified when the message is bound for the Internet.
 - `messageId` MUST be the unique identifier assigned to this message by its sender. It MUST NOT span more than 256 octets.
 - `creationTimeUtc` MUST be the creation date of the message (in UTC).
 - `ttl` MUST represent the time-to-live of the message -- That is, the number of seconds since `creationTimeUtc` during which the message is regarded valid. It MUST NOT be less than zero or greater than 15552000 (180 days).
@@ -76,8 +77,8 @@ Recipients and brokers of a RAMF message MUST validate the message as soon as it
 - The message TTL MUST NOT resolve to a date in the past.
 - The message date MUST be within the period of time during which the sender certificate was valid.
 - All certificates MUST be valid per [Awala PKI](rs002-pki.md).
-- The signature MUST be valid according to the [CMS verification process](https://tools.ietf.org/html/rfc5652#section-5.6) and the specified signature algorithm. Additionally, the signature MUST be deemed invalid if the signature algorithm is unsupported or the hashing algorithm is unsupported.
-- If the recipient address is [private](./rs000-core.md#addressing), the sender's certificate MUST be issued by the message recipient. That is, the private address of the public key in the issuing certificate MUST match the private address set as the message recipient. Such sender certificates are known as _delivery authorizations_ in the Awala PKI.
+- The signature MUST be valid according to the [CMS verification process](https://tools.ietf.org/html/rfc5652#section-5.6) and the specified signature algorithm. Additionally, the signature MUST be deemed invalid if the cryptographic algorithms are not valid per [RS-018](./rs018-algorithms.md).
+- If the recipient address is [private](./rs000-core.md#addressing), the sender's certificate MUST be issued by the message recipient. That is, the id of the public key in the issuing certificate MUST match the id set as the message recipient. Such sender certificates are known as _delivery authorizations_ in the Awala PKI.
 
 ## Security Considerations
 

@@ -1,5 +1,6 @@
 ---
 permalink: /RS-000
+nav_order: 1
 ---
 # Awala Core
 {: .no_toc }
@@ -46,14 +47,16 @@ The following diagram illustrates the various components of the network and how 
 - **Applications** exchange _messages_ amongst themselves, and because they can't communicate directly, they each use an _endpoint_ as a broker.
 - A **(service) message** is serialized in the format determined by the service and does not have to be encrypted or signed.
 - An **endpoint** receives a message from its application and converts it into a _parcel_ for the target application's endpoint, and because they still can't communicate directly, they each use a _gateway_ as a broker. When an endpoint receives a parcel from the gateway, it has to decrypt the message and pass it to its application.
-- A **parcel** encapsulates exactly one service message, which is encrypted with the target endpoint's certificate and signed with the origin endpoint's key.
+- A **parcel** encapsulates exactly one service message. Parcels are end-to-end encrypted and signed (with different keys).
 - A **gateway** receives parcels from endpoints and puts them into cargo for another gateway, using a _courier_ as a broker. When a gateway receives cargo from a courier, it decrypts the cargo and delivers the encapsulated parcels to their corresponding target endpoints.
   - A **private gateway** is a specific type of gateway that runs on a end-user device and serves the endpoints on that device.
-  - A **public gateway** is a specific type of gateway that allows the endpoints behind its private gateways to reach another network (typically the Internet).
-- A **cargo** encapsulates one or more parcels, and it is encrypted with the target gateway's certificate and signed with the origin gateway's key.
+  - An **Internet gateway** is a specific type of gateway whose sole role is to route parcels between its private gateways and the Internet.
+- A **cargo** encapsulates one or more messages (e.g., parcels) between gateways. Cargoes are only used when the two gateways have to communicate via an untrusted broker (e.g., couriers). Cargoes are end-to-end encrypted and signed (with different keys).
 - A **courier** is the individual, organization or technology that transports the cargo between gateways when they can't reach each other via the Internet. For example, it could be a sneakernet operated by volunteers or a [scatternet](https://en.wikipedia.org/wiki/Scatternet) operated by users themselves.
 
-For example, if Twitter supported Awala, Twitter would be a _service_ with Awala-compatible, mobile and server-side apps. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the server-side app will have `twitter.com` as the _public endpoint_.
+Gateways and endpoints are also collectively called **nodes**. Each node has an _identity key pair_ for [authentication](rs002-pki.md) and routing purposes. Couriers are not nodes.
+
+For example, if Twitter supported Awala, Twitter would be a _service_ with Awala-compatible, mobile and server-side apps. The _endpoints_ in the mobile apps could simply be Java (Android) or Swift (iOS) libraries, whilst the server-side app will have `twitter.com` as the _Internet endpoint address_.
 
 Awala can also be described in terms of the [OSI model](https://en.wikipedia.org/wiki/OSI_model) as shown in the diagram below -- With [same-layer and adjacent-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/) defined by [_messaging protocols_](#messaging-protocols) and [_message transport bindings_](#message-transport-bindings), respectively.
 
@@ -65,11 +68,9 @@ Note that defining same-layer interactions at the application and relay layers i
 
 This document only defines [point-to-point](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PointToPointChannel.html) message delivery.
 
-Each endpoint and gateway in Awala MUST have a unique, opaque address known as _private address_. It MAY also have a unique internet address known as _public address_ if the node can be reached through an internet. A node is public if it has a public address, otherwise it is private.
+Each node MUST be uniquely identified with an ASCII-encoded _id_ equal to the `0` (zero) character (denoting the first version of the id format), followed by the SHA-256 digest of the DER encoding of the identity public key as a `SubjectPublicKeyInfo` structure from [RFC 5280](https://tools.ietf.org/html/rfc5280). For example, `0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid id.
 
-The private address of a node MUST equal to the digest of its public key, computed as `"0" || sha256(publicKey)`, where the `0` (zero) prefix denotes the version of the address format defined in this document, `||` denotes the concatenation of two strings, `publicKey` is the DER encoding of the `SubjectPublicKeyInfo` structure from [RFC 5280](https://tools.ietf.org/html/rfc5280) and `sha256()` outputs the SHA-256 digest in hexadecimal. For example, `0b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c` is a valid private address.
-
-A public address MUST be a valid [Uniform Resource Identifier (URI)](https://tools.ietf.org/html/rfc3986) without port, path, query or fragment components. Its host name MUST be a domain name, not an IP address. Refer to [public address resolution](#public-address-resolution) to learn how these domain names should be used.
+If the node is also directly reachable from the Internet (i.e., it is an Internet host), the node would be known as an _Internet endpoint_ or an _Internet gateway_, and it would be subject to the [Internet address resolution](#internet-address-resolution) below.
 
 ## Messaging Protocols
 
@@ -127,19 +128,19 @@ The payload plaintext MUST be serialized with ASN.1/DER using the following sche
 
 ```
 ParcelCollectionAcknowledgement ::= SEQUENCE {
-    senderEndpointPrivateAddress  VisibleString,
-    recipientEndpointAddress  VisibleString,
-    parcelId  VisibleString
+    senderEndpointId     VisibleString,
+    recipientEndpointId  VisibleString,
+    parcelId             VisibleString
 }
 ```
 
-Where `senderEndpointPrivateAddress` represents the private address of the endpoint sending the parcel, `recipientEndpointAddress` is the target endpoint's public/private address and `parcelId` represents the RAMF message id of said parcel.
+Where `senderEndpointId` represents the sender's id, `recipientEndpointId` is the target endpoint's id and `parcelId` represents the RAMF message id of said parcel.
 
 #### Parcel Delivery Deauthorization (PDD) {#pdd}
 
 A Parcel Delivery Deauthorization (PDD) revokes one or more PDAs issued by a specific endpoint. It MAY be requested by the endpoint itself or its gateway. Regardless of which node initiated the PDD, the message sent to the peer gateway MUST have the following structure:
 
-- The private address for the endpoint whose PDAs should be revoked.
+- The id for the endpoint whose PDAs should be revoked.
 - Serial numbers of the PDAs to revoke. It may be empty to revoke all the PDAs issued by the endpoint.
 - Expiry date of the deauthorization. If revoking all PDAs from the endpoint, this MUST be the expiry date of the endpoint certificate. If revoking specific PDAs, this MUST be the expiry date of the PDA with the latest expiry date.
 
@@ -154,15 +155,15 @@ ParcelDeliveryDeauthorization ::= SEQUENCE
 }
 ```
 
-Gateways MUST enforce PDDs for as long as they are active. Public gateways MAY additionally cache PDDs until they expire in order to refuse future parcels whose PDA has been revoked.
+Gateways MUST enforce PDDs for as long as they are active. Internet gateways MAY additionally cache PDDs until they expire in order to refuse future parcels whose PDA has been revoked.
 
 #### Gateway Certificate Rotation (GCR) {#gcr}
 
-When fulfilling cargo collection requests, public gateways MUST check if their private peers' certificates are eligible for rotation per [RS-002](./rs002-pki.md#certificate-rotation). If that is the case, they MUST issue a new certificate and include it as a _Gateway Certificate Rotation_ (GCR) message in one of the cargoes output.
+When fulfilling cargo collection requests, Internet gateways MUST check if their private peers' certificates are eligible for rotation per [RS-002](./rs002-pki.md#certificate-rotation). If that is the case, they MUST issue a new certificate and include it as a _Gateway Certificate Rotation_ (GCR) message in one of the cargoes output.
 
 Similarly, a private gateway MUST process the certificate contained in a GCR message following the rules defined in [RS-002](./rs002-pki.md#certificate-rotation).
 
-Public gateways MUST ignore any GCR received from a peer, as that not supported.
+Internet gateways MUST ignore any GCR received from a peer, as that not supported.
 
 A GCR message MUST be serialized as a `CertificateRotation` message defined in [RS-002](./rs002-pki.md#certificate-rotation).
 
@@ -199,13 +200,13 @@ CargoCollectionRequest ::= SEQUENCE {
 
 Where `cargoDeliveryAuthorization` is the DER-encoded, Awala PKI certificate for the [Cargo Delivery Authorization (CDA)](./rs002-pki.md#cargo-delivery-authorization-cda) issued by Gateway A to Gateway B.
 
-### Public Node Connection Parameters
+### Node Connection Parameters
 
-Operators of public gateways and public endpoints MAY use the _Public Node Connection Parameters_ (PNCP) format to share their connection parameters in a standard format, defined as follows in ASN.1/DER:
+Nodes MAY use the _Node Connection Parameters_ (NCP) format to share their connection parameters in a standard format, defined as follows in ASN.1/DER:
 
 ```
-PublicNodeConnectionParameters ::= SEQUENCE {
-    publicAddress  VisibleString,
+NodeConnectionParameters ::= SEQUENCE {
+    internetAddress  VisibleString,
     identityPublicKey  OCTET STRING,
     sessionKey  SessionKey
 }
@@ -218,7 +219,7 @@ SessionKey ::= SEQUENCE {
 
 Where:
 
-- `publicAddress` is the public address of the node.
+- `internetAddress` is the Internet address of the node.
 - `identityPublicKey` is the DER serialization of the public key in the node's identity key pair per [RS-002](./rs002-pki.md).
 - `sessionPublicKey` represents the node's session key pair per [RS-003](./rs003-key-agreement.md). This sequence is further defined as follows:
   - `id`: the unique identifier of the key pair.
@@ -236,19 +237,19 @@ For performance reasons, nodes SHOULD use Unix domain sockets or any other IPC m
 
 For availability and performance reasons, the node sending messages SHOULD limit the number of messages pending acknowledgements to five. Consequently, the node on the receiving end MUST hold at least five incoming messaging in its processing queue at any point in time. The receiving end MAY close the connection when this limit is exceeded.
 
-For privacy and censorship-circumvention reasons, public addresses using DNS records SHOULD be resolved using [DNS-over-HTTPS](https://tools.ietf.org/html/rfc8484) or [DNS-over-TLS/DTLS](https://tools.ietf.org/html/rfc8310), using a DNS resolver trusted by the implementer. Implementations MAY allow advanced users to set the DNS resolver. Additionally, when the connection is done over TLS 1.3 or newer, the [Encrypted Server Name Identification extension](https://tools.ietf.org/html/draft-rescorla-tls-esni-00) SHOULD be used.
+For privacy and censorship-circumvention reasons, Internet addresses using DNS records SHOULD be resolved using [DNS-over-HTTPS](https://tools.ietf.org/html/rfc8484) or [DNS-over-TLS/DTLS](https://tools.ietf.org/html/rfc8310), using a DNS resolver trusted by the implementer. Implementations MAY allow advanced users to set the DNS resolver. Additionally, when the connection is done over TLS 1.3 or newer, the [Encrypted Server Name Identification extension](https://tools.ietf.org/html/draft-rescorla-tls-esni-00) SHOULD be used.
 
 The node delivering a message MUST NOT remove it until the peer has acknowledged its receipt. The acknowledgement MUST be sent after the message is safely stored. For example, if the message is being saved to a local disk, its receipt MUST be acknowledged after calling [`fdatasync`](https://linux.die.net/man/2/fdatasync) (on Unix-like systems) or [`FlushFileBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-flushfilebuffers) (on Windows).
 
 Bindings MAY extend this specification, but they MUST NOT override it.
 
-### Public Address Resolution
+### Internet Address Resolution
 
-The host name in a public address MUST be an [SRV record](https://tools.ietf.org/html/rfc2782), where the service name and OSI Layer 4 protocol is determined by the respective binding.
+The Internet address MUST be a DNSSEC-secured domain name resolved as an [SRV record](https://tools.ietf.org/html/rfc2782) whose service name and OSI Layer 4 protocol are to be defined in extensions to this specification.
 
-The target host in the SRV record MUST be used exclusively in the client-server connection. For example, if the public node `example.com` resolves to the host `foo.example.com`, then `foo.example.com` should be specified in the TLS Server Name Identification (SNI) value and the HTTP `Host` request header (assuming that the binding uses the TLS and HTTP protocols).
+The target host in the SRV record MUST be used exclusively in the client-server connection. For example, if the Awala Internet node `example.com` resolves to the host `foo.example.com`, then `foo.example.com` should be specified in the TLS Server Name Identification (SNI) value and the HTTP `Host` request header (assuming that the binding uses the TLS and HTTP protocols).
 
-This specification forbids the use the original domain name in the public address in order to allow the same public gateway instance to share a single public IP address across its binding implementations. However, to prevent hijacking through DNS spoofing, clients MUST use DNSSEC and refuse results whose DNSSEC validation fails. A client MAY delegate DNSSEC validation to a DNS-over-HTTPS or DNS-over-TLS/DTLS resolver.
+The node Internet address MUST NOT be used as the host in the TLS/HTTP connection in order to allow the same Internet node to share a single public IP address across its binding implementations. However, to prevent hijacking through DNS spoofing, clients MUST use DNSSEC and refuse results whose DNSSEC validation fails. A client MAY delegate DNSSEC validation to a trusted DNS-over-HTTPS or DNS-over-TLS/DTLS resolver.
 
 ### Gateway Synchronization Binding
 
@@ -258,7 +259,7 @@ Before the nodes can exchange parcels, the private node MUST register with its g
 
 If the server corresponds to a private gateway, it SHOULD listen on port `276` if it has the appropriate permission to do so or port `13276` if it does not. Alternatively, if using Unix domain sockets, the client SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems).
 
-If the server corresponds to a public gateway, it MUST use `awala-gsc` as the service string in the SRV record.
+If the server corresponds to a Internet gateway, it MUST use `awala-gsc` as the service string in the SRV record.
 
 In addition to sending parcels to each other, the client MAY also register [Parcel Delivery Deauthorizations (PDD)](#pdd) with the server.
 
@@ -272,13 +273,13 @@ The connection MUST be closed if the handshake fails.
 
 ### Parcel Delivery Binding
 
-This is a protocol that establishes a _Parcel Delivery Connection_ (PDC), whose sole purpose is to allow gateways and public endpoints to deliver parcels to public nodes. In this case, the sender and the recipient will act as client and server, respectively.
+This is a protocol that establishes a _Parcel Delivery Connection_ (PDC), whose sole purpose is to allow gateways and Internet endpoints to deliver parcels to Internet nodes. In this case, the sender and the recipient will act as client and server, respectively.
 
-If the recipient is a public gateway, it MUST override any previously queued parcel with the same id. The sending endpoint MAY use this to replace stale messages in the same relay -- For example, an application sending a message to replace the user's email address could use this to discard any previous message to replace this value.
+If the recipient is a Internet gateway, it MUST override any previously queued parcel with the same id. The sending endpoint MAY use this to replace stale messages in the same relay -- For example, an application sending a message to replace the user's email address could use this to discard any previous message to replace this value.
 
 The server MUST NOT require client authentication, but it MAY still refuse to serve suspicious, ill-behaved or abusive clients.
 
-If the client is a private or public gateway, it SHOULD include the Internet address of the corresponding public gateway if that gateway is able to collect parcels for the endpoint that sent the parcel.
+If the client is a private or Internet gateway, it SHOULD include the Internet address of the corresponding Internet gateway if that gateway is able to collect parcels for the endpoint that sent the parcel.
 
 The client MUST close the underlying connection as soon as all parcels have been delivered.
 
@@ -294,7 +295,7 @@ The action of transmitting a cargo over a CRC is called _hop_, and the action of
 
 To establish a CRC between a private gateway and a courier, the operator of the courier MUST first make the courier available for incoming connections from such gateways. Then the private gateway MUST initiate the connection subject to the approval of the operator of the device running the gateway. In this scenario, the gateway and the courier will play the roles of client and server, respectively.
 
-On the other hand, to establish a CRC between a courier and a public gateway, the courier MUST initiate a CRC connection with each gateway for which any cargoes and/or CCAs are bound. In this scenario, the courier and the gateway will play the roles of client and server, respectively.
+On the other hand, to establish a CRC between a courier and a Internet gateway, the courier MUST initiate a CRC connection with each gateway for which any cargoes and/or CCAs are bound. In this scenario, the courier and the gateway will play the roles of client and server, respectively.
 
 When a CRC is established, the following process should be done sequentially:
 
@@ -315,12 +316,12 @@ When a CRC is established, the following process should be done sequentially:
 
    How this step is initiated will depend on the type of node acting as the client:
    
-   - When the client is a courier, it MUST initiate this step by sending one or more CCAs to the public gateway and the public gateway MUST then return all the cargo it holds for the gateway of each CCA, if any. Additionally, the public gateway MUST sign the cargo with the Cargo Delivery Authorization contained in the respective CCA.
+   - When the client is a courier, it MUST initiate this step by sending one or more CCAs to the Internet gateway and the Internet gateway MUST then return all the cargo it holds for the gateway of each CCA, if any. Additionally, the Internet gateway MUST sign the cargo with the Cargo Delivery Authorization contained in the respective CCA.
    - When the client is a private gateway, it MUST simply deliver the cargo bound for its peer gateway, if any.
    
    The client MUST close the underlying connection at the end of this step.
 
-When a client sends a CCA, the server MUST notify the client when it is done sending cargo for that CCA, even if no cargo was sent. The client SHOULD resend a CCA one last time when the server does not finish processing it within 5 seconds since the CCA was sent or the last cargo was received, whichever happened last. Couriers MUST NOT reuse CCAs when collecting cargo from a public gateway, so each CCA SHOULD be discarded as soon as the gateway confirms it completed processing it.
+When a client sends a CCA, the server MUST notify the client when it is done sending cargo for that CCA, even if no cargo was sent. The client SHOULD resend a CCA one last time when the server does not finish processing it within 5 seconds since the CCA was sent or the last cargo was received, whichever happened last. Couriers MUST NOT reuse CCAs when collecting cargo from a Internet gateway, so each CCA SHOULD be discarded as soon as the gateway confirms it completed processing it.
 
 Cargoes SHOULD be redelivered one last time when they are not acknowledged within 5 seconds since their delivery.
 
@@ -328,9 +329,9 @@ The following diagram illustrates the binding between a private gateway and a co
 
 ![](./diagrams/rs000/crc-private_gateway-and-courier.png)
 
-And the following diagram illustrates the binding between a courier and a public gateway:
+And the following diagram illustrates the binding between a courier and a Internet gateway:
 
-![](./diagrams/rs000/crc-courier-and-public-gateway.png)
+![](./diagrams/rs000/crc-courier-and-internet-gateway.png)
 
 Gateways SHOULD defer the encapsulation of parcels and other messages into cargo until they are about to send it to the courier as that would allow them to exclude expired messages and send as few cargoes as possible. They MAY, however, set a creation date in the past to prevent an eavesdropper from tracking the time when the CRC took place.
 
@@ -338,7 +339,7 @@ Gateways MUST NOT delete parcels as a consequence of encapsulating them in cargo
 
 Note that couriers are not assigned Awala PKI certificates, but per the requirements for bindings in general, TLS certificates or equivalent must be used when the connection spans different computers. Consequently, the node acting as server MUST provide a valid certificate which MAY NOT be issued by a Certificate Authority trusted by the client when the server is a courier: Couriers are unlikely to get certificates issued by widely trusted authorities because they are not Internet hosts, but this is deemed to be acceptable from a security standpoint because the purpose of TLS (or equivalent) in this case is to provide confidentiality from eavesdroppers, not to authenticate the server.
 
-Public gateways MUST use `awala-crc` as the service string for the SRV record corresponding to their CRC server(s).
+Internet gateways MUST use `awala-crc` as the service string for the SRV record corresponding to their CRC server(s).
 
 CRC servers in couriers SHOULD listen on port `21473`, which stands for "too late".
 
@@ -348,7 +349,7 @@ Devices disconnected from the Internet will not typically have the ability to ke
 
 For this reason, Awala implementations SHOULD be tolerant to clock drifts of up two hours in all channel- or binding-level communications where at least one of the peers is a private node. For instance, this tolerance applies to the validity period of RAMF messages and Awala PKI certificates, as well as the validity of TLS certificates of couriers in a CRC.
 
-For the avoidance of doubt, this recommendation does not apply to the CRC between a courier and a public gateway because neither peer is a private node. Consequently, in this scenario, couriers are still required to refuse any TLS certificate that is not valid at the time the connection takes places, but it is still recommended that the public gateway be tolerant to a potential clock drift in the channels with private gateways.
+For the avoidance of doubt, this recommendation does not apply to the CRC between a courier and a Internet gateway because neither peer is a private node. Consequently, in this scenario, couriers are still required to refuse any TLS certificate that is not valid at the time the connection takes places, but it is still recommended that the Internet gateway be tolerant to a potential clock drift in the channels with private gateways.
 
 ## Open Questions
 
