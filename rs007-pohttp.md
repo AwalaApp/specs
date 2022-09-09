@@ -30,10 +30,7 @@ As a PDC, the only operation supported by this binding is [parcel delivery](#par
 
 ## Parcel Delivery
 
-To deliver each parcel, the client MUST make a `POST` request to the HTTP URL corresponding to the node address, with the parcel as the body and the following headers:
-
-- `Content-Type` MUST be set to `application/vnd.awala.parcel`.
-- If the client is a Internet gateway, `X-Awala-Gateway` MUST provide the target endpoint with its address using the request header `X-Awala-Gateway`. For example, `X-Awala-Gateway: https://gateway.humanitarian.org`.
+To deliver each parcel, the client MUST make a `POST` request to the HTTP URL corresponding to the node address, with the parcel as the body and the `Content-Type` request header set to `application/vnd.awala.parcel`.
 
 The server MUST respond with one of the following status codes:
 
