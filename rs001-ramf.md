@@ -34,7 +34,7 @@ By specifying the message type and version in the format signature, future RAMF 
 
 The format signature MUST span the first 10 octets of the message, representing the following sequence (encoded in little-endian):
 
-1. Prefix (8 octets): "Awala" in ASCII (hex: `52 65 6c 61 79 6e 65 74`).
+1. Prefix (5 octets): "Awala" in ASCII (hex: `41 77 61 6C 61`).
 1. Concrete message type (1 octet).
 1. Concrete message format version (1 octet). This MUST be an 8-bit unsigned integer. 
 
