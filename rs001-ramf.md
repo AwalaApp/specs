@@ -78,7 +78,7 @@ Recipients and brokers of a RAMF message MUST validate the message as soon as it
 - The message date MUST be within the period of time during which the sender certificate was valid.
 - All certificates MUST be valid per [Awala PKI](rs002-pki.md).
 - The signature MUST be valid according to the [CMS verification process](https://tools.ietf.org/html/rfc5652#section-5.6) and the specified signature algorithm. Additionally, the signature MUST be deemed invalid if the cryptographic algorithms are not valid per [RS-018](./rs018-algorithms.md).
-- If the recipient address is [private](./rs000-core.md#addressing), the sender's certificate MUST be issued by the message recipient. That is, the private address of the public key in the issuing certificate MUST match the private address set as the message recipient. Such sender certificates are known as _delivery authorizations_ in the Awala PKI.
+- If the recipient address is [private](./rs000-core.md#addressing), the sender's certificate MUST be issued by the message recipient. That is, the id of the public key in the issuing certificate MUST match the id set as the message recipient. Such sender certificates are known as _delivery authorizations_ in the Awala PKI.
 
 ## Security Considerations
 
