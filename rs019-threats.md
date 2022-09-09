@@ -67,7 +67,7 @@ Service providers and Awala software vendors should distribute their software in
 
 ### Denial of Service from Legitimate Node {#dos-legitimate-node}
 
-Attackers may use freshly-generated, ides to conduct a DoS attack against Internet nodes, or use [compromised private keys](#private-keys-compromise) to achieve the same attack against private and Internet nodes. This would be an attack at the [channel](rs000-core.md#messaging-protocols) level.
+Attackers may use freshly-generated, node ids to conduct a DoS attack against Internet nodes, or use [compromised private keys](#private-keys-compromise) to achieve the same attack against private and Internet nodes. This would be an attack at the [channel](rs000-core.md#messaging-protocols) level.
 
 Providers should have monitoring in place to detect ongoing DoS attacks, as well as an appropriate response plan. They should also employ appropriate rate limiting constraints; for example, private endpoints could issue [Parcel Delivery Authorizations (PDAs)](rs002-pki.md#parcel-delivery-authorization-pda) that employ the [rate limiting extension](rs002-pki.md#rate-limiting-extension).
 
