@@ -54,7 +54,7 @@ The message fields MUST be represented as the DER serialization of the ASN.1 `RA
 
 Where the items in the `RAMFMessage` sequence are defined as follows:
 
-- `recipientAddress` MUST be the public or private address of the recipient. It MUST NOT span more than 1024 octets.
+- `recipient` MUST contain the addressing information for the recipient. Its `internetAddress` MUST be specified when the message is bound for the Internet.
 - `messageId` MUST be the unique identifier assigned to this message by its sender. It MUST NOT span more than 256 octets.
 - `creationTimeUtc` MUST be the creation date of the message (in UTC).
 - `ttl` MUST represent the time-to-live of the message -- That is, the number of seconds since `creationTimeUtc` during which the message is regarded valid. It MUST NOT be less than zero or greater than 15552000 (180 days).
