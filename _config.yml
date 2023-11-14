@@ -11,5 +11,7 @@ remote_theme: "pmarsceill/just-the-docs@v0.7.0"
 color_scheme: dark
 search_enabled: true
 aux_links:
-  "Awala Specs on GitHub":
+  "awala.network":
+    - "https://awala.network"
+  "GitHub project":
     - "https://github.com/AwalaNetwork/specs"
