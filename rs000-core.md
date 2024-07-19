@@ -169,7 +169,7 @@ When fulfilling cargo collection requests, Internet gateways MUST check if their
 
 Similarly, a private gateway MUST process the certificate contained in a GCR message following the rules defined in [RS-002](./rs002-pki.md#certificate-rotation).
 
-Internet gateways MUST ignore any GCR received from a peer, as that not supported.
+Internet gateways MUST ignore any GCR received from a peer, as that is not supported.
 
 A GCR message MUST be serialized as a `CertificateRotation` message defined in [RS-002](./rs002-pki.md#certificate-rotation).
 
@@ -227,7 +227,7 @@ Where:
 
 - `internetAddress` is the Internet address of the node.
 - `identityPublicKey` is the DER serialization of the public key in the node's identity key pair per [RS-002](./rs002-pki.md).
-- `sessionPublicKey` represents the node's session key pair per [RS-003](./rs003-key-agreement.md). This sequence is further defined as follows:
+- `sessionKey` represents the node's session key pair per [RS-003](./rs003-key-agreement.md). This sequence is further defined as follows:
   - `id`: the unique identifier of the key pair.
   - `publicKey`: the DER serialization of the public key.
 
