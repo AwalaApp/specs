@@ -97,7 +97,8 @@ Conversely, an Internet gateway will start with one certificate (self-issued), p
 
 Self-issued certificates MUST only be used to issue certificates to peers, and therefore such certificates will be the root for a PDA or a [Cargo Delivery Authorization (CDA)](#cargo-delivery-authorization-cda). Self-issued certificates MUST NOT be used to sign channel or binding messages.
 
-Certificates issued by peers MUST be used to sign channel and binding messages like cargoes. A certificate issued by a private gateway to its Internet peer is known as a CDA, and additional requirements and recommendations apply.
+Certificates issued by peers MUST be used to sign [channel](rs000-core.md#gateway-messaging-protocol) and [binding](rs000-core.md#gateway-synchronization-binding) messages like cargoes.
+A certificate issued by a private gateway to its Internet peer is known as a CDA, and additional requirements and recommendations apply.
 
 ### Cargo Delivery Authorization (CDA)
 
