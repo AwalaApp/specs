@@ -48,9 +48,15 @@ The following diagram illustrates the various components of the network and how 
 - A **(service) message** is serialized in the format determined by the service and does not have to be encrypted or signed.
 - An **endpoint** receives a message from its application and converts it into a _parcel_ for the target application's endpoint, and because they still can't communicate directly, they each use a _gateway_ as a broker. When an endpoint receives a parcel from the gateway, it has to decrypt the message and pass it to its application.
 - A **parcel** encapsulates exactly one service message. Parcels are end-to-end encrypted and signed (with different keys).
-- A **gateway** receives parcels from endpoints and puts them into cargo for another gateway, using a _courier_ as a broker. When a gateway receives cargo from a courier, it decrypts the cargo and delivers the encapsulated parcels to their corresponding target endpoints.
-  - A **private gateway** is a specific type of gateway that runs on a end-user device and serves the endpoints on that device.
-  - An **Internet gateway** is a specific type of gateway whose sole role is to route parcels between its private gateways and the Internet.
+- Two or more **gateways** relay parcels between endpoints. There are two types of gateways:
+  - A **private gateway** runs on an end-user device and serves the endpoints on that device.
+  - An **Internet gateway** relays parcels between its private gateways and the Internet.
+
+  When a gateway needs to send parcels to another gateway without the Internet,
+  it delegates the task to a _courier_.
+  In this case, parcels are encapsulated in _cargoes_, which are end-to-end encrypted and signed,
+  so that they can't be read or tampered with in transit.
+  The receiving gateway then extracts the parcels from the cargo and passes them on to the next gateway or final endpoint.
 - A **cargo** encapsulates one or more messages (e.g., parcels) between gateways. Cargoes are only used when the two gateways have to communicate via an untrusted broker (e.g., couriers). Cargoes are end-to-end encrypted and signed (with different keys).
 - A **courier** is the individual, organization or technology that transports the cargo between gateways when they can't reach each other via the Internet. For example, it could be a sneakernet operated by volunteers or a [scatternet](https://en.wikipedia.org/wiki/Scatternet) operated by users themselves.
 
