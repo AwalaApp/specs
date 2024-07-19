@@ -91,7 +91,9 @@ Where, `limit` specifies how many parcels can be sent within a given number of s
 
 ### Gateway Certificate
 
-Each gateway has at least two certificates for the same long-term key pair: One self-issued and one certificate issued by each of its peer gateways. Consequently, every private gateway has exactly two certificates because it has exactly one peer, while a Internet gateway may have more certificates.
+Each gateway has at least one certificate for the same long-term key pair: One self-issued, plus one certificate issued by each of its peer gateways.
+Consequently, a private gateway may have only one certificate until it establishes a connection with an Internet gateway, at which point it will have two certificates.
+Conversely, an Internet gateway will start with one certificate (self-issued), plus one for each private gateway it connects to.
 
 Self-issued certificates MUST only be used to issue certificates to peers, and therefore such certificates will be the root for a PDA or a [Cargo Delivery Authorization (CDA)](#cargo-delivery-authorization-cda). Self-issued certificates MUST NOT be used to sign channel or binding messages.
 
