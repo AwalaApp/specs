@@ -22,11 +22,11 @@ This document describes how to issue, revoke and process X.509 certificates in A
 
 ## Introduction
 
-Awala relies extensively on its PKI in order to authenticate and authorize nodes without a real-time connection to an external authentication/authorization server, as well as to encrypt payloads when the [Channel Session Protocol](./rs003-key-agreement.md) is not employed.
+Awala relies extensively on its PKI in order to authenticate and authorize nodes without a real-time connection to an external authentication/authorization server.
 
 One prominent use of the Awala PKI is in the [Awala Abstract Message Format (RAMF)](./rs001-ramf.md), where certificates are used to authenticate the sender of the message and ensure the integrity of the message. Any valid certificate can be used to sign a message bound for a Internet node, but every message bound for a private node has to be signed with a certificate issued by the recipient (in which case the certificate will be called a _delivery authorization_).
 
-This PKI applies to the long-term keys that identify endpoints and gateways in Awala, and it also serves as the basis for issuing certificates for initial keys in the Channel Session Protocol. The requirements and recommendations in this document do not apply to the Internet PKI certificates used in [Message Transport Bindings](./rs000-core.md#message-transport-bindings).
+This PKI applies to the long-term keys that identify endpoints and gateways in Awala. The requirements and recommendations in this document do not apply to the Internet PKI certificates used in [Message Transport Bindings](./rs000-core.md#message-transport-bindings).
 
 ## General Constraints and Attributes
 
