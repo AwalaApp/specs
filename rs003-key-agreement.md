@@ -102,6 +102,9 @@ Bob MUST follow the following process when receiving an initial message from Ali
 1. Decrypt the ciphertext with SK<sub>1</sub>, or abort if it fails to be decrypted.
 1. Store K<sub>a,1</sub><sup>public</sup> along with K<sub>a,1</sub><sup>id</sup> in order to send messages to Alice in the future.
 
+Upon successful completion of this process,
+Bob MAY send messages to Alice using the [algorithm to send subsequent message](#sending-subsequent-messages).
+
 ## Key Management Protocol
 
 Alice and Bob MUST follow the following algorithm to exchange subsequent messages. Note that _X_ and _Y_ correspond to the sender and the recipient, respectively (Alice and Bob, or Bob and Alice).
