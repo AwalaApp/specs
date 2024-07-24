@@ -72,10 +72,7 @@ The target endpoint (Endpoint A) MAY enforce the rate limiting.
 The [ASN.1](https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf) Object Identifier of this extension is defined as follows:
 
 ```
-PKIPDARateLimitId OBJECT IDENTIFIER ::= {
-    itu-t(0) identified-organization(4) etsi(0) reserved(127) etsi-identified-organization(0)
-        relaycorp(17) awala(0) pki(0) 0
-    }
+PKIPDARateLimitId OBJECT IDENTIFIER ::= { awala(0) pki(0) 0 }
 ```
 
 The ASN.1 value of the extension is defined as follows:

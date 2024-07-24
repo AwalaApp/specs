@@ -78,6 +78,19 @@ Each node MUST be uniquely identified with an ASCII-encoded _id_ equal to the `0
 
 If the node is also directly reachable from the Internet (i.e., it is an Internet host), the node would be known as an _Internet endpoint_ or an _Internet gateway_, and it would be subject to the [Internet address resolution](#internet-address-resolution) below.
 
+## Object Identifier
+
+Where Awala introduces new ASN.1 Object Identifiers (OIDs),
+the base OID for Awala is defined as follows:
+
+```
+awala OBJECT IDENTIFIER ::= { iso(1) identified-organization(3)
+    dod(6) internet(1) private(4) enterprise(1)
+    relaycorp(58708) awala(0)}
+```
+
+In dot notation, this OID is `1.3.6.1.4.1.58708.0`.
+
 ## Messaging Protocols
 
 These protocols establish the corresponding [_channels_](https://www.enterpriseintegrationpatterns.com/patterns/messaging/MessageChannel.html) for applications, endpoints and gateways. Building on the OSI model mapping above, these protocols define the [same-layer interactions](https://upskilld.com/learn/same-layer-and-adjacent-layer-interactions/).
