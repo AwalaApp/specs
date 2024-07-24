@@ -36,28 +36,29 @@ The server MUST expose each PoWeb endpoint under a common URL prefix ending with
 
 ### Private node registration
 
-The process to register private nodes is split in two parts, at the end of which -- if successful -- the server will issue a certificate for the private node.
-
-The client MUST initiate the registration process by making a pre-registration request. This preliminary step is used to give the client a nonce to sign, thus avoiding replay attacks. Servers MUST implement the pre-registration endpoint described in this document, unless the server is part of a private gateway on a mobile platform, in which case it MUST implement a platform-specific method that also authenticates the app that owns the endpoint. Pre-registration on mobile platforms is outside the scope of this document.
-
-If the server approves the pre-registration, it MUST output a single-use _Private Node Registration Authorisation_ (PNRA) that expires in less than 10 seconds. To complete the registration, the client MUST make a registration request by passing the PNRA signed with the private node's key which, if successful, will result in the server issuing a certificate.
+Per [the core spec](rs000-core.md#private-node-registration),
+this process is divided into two steps: pre-registration and registration.
 
 #### Pre-registration endpoint
 
-To pre-register a private node, the client MUST make a POST request to `/pre-registration` with the SHA-256 hexadecimal digest of the private node's public key. The request Content-Type MUST be `text/plain`. The server MUST respond with one of the following:
+Servers MUST implement the pre-registration endpoint described in this document, unless the server is part of a private gateway on a mobile platform, in which case it MUST implement a platform-specific method that also authenticates the app that owns the endpoint.
 
-- A `200 OK` if the pre-registration is authorised. The response body MUST be the PNRA and the Content-Type MUST be `application/vnd.awala.node-registration.authorization`.
+To pre-register a private node, the client MUST make a POST request to `/pre-registration` with the SHA-256 hexadecimal digest of the private node's public key. The request Content-Type MUST be `text/plain`.
+
+The server MUST respond with one of the following:
+
+- A `200 OK` if the pre-registration is authorised. The response body MUST be the [Private Node Registration Authorisation (PNRA)](rs000-core.md#private-node-registration). The Content-Type MUST be `application/vnd.awala.node-registration.authorization`.
 - A `400 Bad Request` if the client did not adhere to the requirements above.
 
 Servers SHOULD refuse request bodies larger than 64 octets.
 
 #### Registration endpoint
 
-To complete the registration, the client MUST produce a _Private Node Registration Request_ (PNRR) by signing the PNRA with the key of the node being registered. The PNRR MUST then be sent in the body of a POST request to `/nodes`, using the Content-Type `application/vnd.awala.node-registration.request`.
+To complete the registration, the client MUST send the [Private Node Registration Request (PNRR)](rs000-core.md#private-node-registration) in the body of a POST request to `/nodes`, using the Content-Type `application/vnd.awala.node-registration.request`.
 
 The server MUST respond with one of the following:
 
-- `200 OK` if the registration was successfully completed. The response body MUST be a _Private Node Registration_ (PNR), which encapsulates the newly-issued certificate for the private endpoint, as well as the certificate for the underlying gateway behind the server. The response Content-Type MUST be `application/vnd.awala.node-registration.registration`.
+- `200 OK` if the registration was successfully completed. The response body MUST be a [Private Node Registration (PNR)](rs000-core.md#private-node-registration). The response Content-Type MUST be `application/vnd.awala.node-registration.registration`.
 - `400 Bad Request` if the PNRR sent by the client is malformed or its digital signature is invalid.
 - `403 Forbidden` if the client is using a PNRA issued for a different private node.
 

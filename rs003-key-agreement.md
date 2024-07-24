@@ -154,6 +154,18 @@ Implementations MUST store the recipient's ephemeral key identifier in the `subj
 OriginatorEphemeralKeyId OBJECT IDENTIFIER ::= { awala channel-session(1) 0 }
 ```
 
+## Public Key Representation
+
+When distributing public keys along with their respective ids,
+implementations MAY use the following ASN.1 structure:
+
+```asn1
+SessionKey ::= SEQUENCE {
+  id  OCTET STRING,
+  key SubjectPublicKeyInfo -- Per RFC 5280
+}
+```
+
 ## Limitations
 
 This protocol will not work with unidirectional communication as might be the case between two endpoints (if one of the endpoints is private and does not issue Parcel Delivery Authorizations to its peer). Consequently, an Awala service with one-way communication would not get perfect forward secrecy or future secrecy, unless it enables two-way communication as a workaround until there is an equivalent protocol for unidirectional communication.

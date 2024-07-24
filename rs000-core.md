@@ -278,9 +278,92 @@ Before the nodes can exchange parcels, the private node MUST register with its g
 
 If the server corresponds to a private gateway, it SHOULD listen on port `276` if it has the appropriate permission to do so or port `13276` if it does not. Alternatively, if using Unix domain sockets, the client SHOULD NOT initiate a connection if the socket is owned by a user other than the administrator (`root` in Unix-like systems).
 
-If the server corresponds to a Internet gateway, it MUST use `awala-gsc` as the service string in the SRV record.
+If the server corresponds to an Internet gateway, it MUST use `awala-gsc` as the service string in the SRV record.
 
 In addition to sending parcels to each other, the client MAY also register [Parcel Delivery Deauthorizations (PDD)](#pdd) with the server.
+
+##### Private node registration
+
+The process to register private nodes is split in two parts, at the end of which -- if successful -- the server will issue a certificate for the private node.
+
+The client MUST initiate the registration process by making a **pre-registration request**.
+This preliminary step is used to give the client a nonce to sign, thus avoiding replay attacks.
+The pre-registration request MUST contain the SHA-256 hexadecimal digest of the private node's public key,
+as well as any additional data required by the concrete binding.
+
+If the server approves the pre-registration,
+it MUST output a single-use **Private Node Registration Authorisation** (PNRA) that expires in less than 10 seconds.
+PNRAs have the following structure:
+
+```asn1
+PrivateNodeRegistrationAuthorisation ::= SEQUENCE {
+    expiryDateUtc DATE-TIME,
+    gatewayData   OCTET STRING,
+    signature     OCTET STRING
+}
+```
+
+Where,
+
+- `expiryDateUtc` is the date and time (UTC) when the PNRA expires.
+- `gatewayData` is an opaque value that the client MUST include in the future registration request. It MUST contain a nonce, as well as any additional data required by the concrete binding.
+- `signature` is the signature of the `expiryDateUtc` and `gatewayData` fields with the server's long-term identity key. The plaintext passed to the signing algorithm MUST be calculated as the DER serialization of the `PrivateNodeRegistrationAuthorisationPlaintext` ASN.1 type below:
+    
+    ```asn1
+    PrivateNodeRegistrationAuthorisationPlaintext ::= SEQUENCE {
+         oid           OBJECT IDENTIFIER ::= { awala private-node-registration(2) auth(0) },
+         expiryDateUtc DATE-TIME,
+         gatewayData   OCTET STRING
+    }
+    ```
+
+To complete the registration, the client MUST send a **Private Node Registration Request** (PNRR) to the server,
+which includes the PNRA signed with the private node's key.
+A PNRR has the following structure:
+
+```asn1
+PrivateNodeRegistrationRequest ::= SEQUENCE {
+    privateNodePublicKey  SubjectPublicKeyInfo, -- Per RFC 5280
+    pnra                  PrivateNodeRegistrationAuthorisation,
+    pnraCountersignature  OCTET STRING
+}
+```
+
+Where,
+
+- `privateNodePublicKey` is the public key of the private node.
+- `pnra` is the PNRA previously issued by the server.
+- `pnraCountersignature` is the signature of the PNRA with the private node's key. The plaintext passed to the signing algorithm MUST be calculated as the DER serialization of the `PrivateNodeRegistrationRequestPlaintext` ASN.1 type below:
+
+    ```asn1
+    PrivateNodeRegistrationRequestPlaintext ::= SEQUENCE {
+         oid  OBJECT IDENTIFIER ::= { awala private-node-registration(2) request(1) },
+         pnra PrivateNodeRegistrationAuthorisation
+    }
+    ```
+
+Finally, if successful, the server MUST return a **Private Node Registration** (PNR),
+which includes the certificate issued to the private node.
+A PNR has the following structure:
+
+```asn1
+PrivateNodeRegistration ::= SEQUENCE {
+    privateNodeCertificate         Certificate, -- Per T-REC-X.509
+    gatewayCertificate             Certificate, -- Per T-REC-X.509
+    internetGatewayInternetAddress VisibleString,
+    sessionKey                     SessionKey OPTIONAL -- Per RS-003
+}
+```
+
+Where,
+
+- `privateNodeCertificate` is the certificate issued to the private node.
+- `gatewayCertificate` is the server's self-issued certificate.
+- `internetGatewayInternetAddress` is the Internet address of the server (e.g., `example.com`). If the server is a private gateway, this will be the address of its Internet gateway.
+- `sessionKey` is the session key that the private node MUST use when sending messages to the server.
+  This field MUST only be set when a private gateway is registering with an Internet gateway,
+  as this is the encryption key it will need to use over the gateway channel.
+  Private endpoints that receive this field when registering with their private gateway MUST ignore it.
 
 ##### Parcel collection handshake
 
