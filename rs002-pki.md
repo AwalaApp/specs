@@ -44,9 +44,20 @@ Endpoints and gateways can use the following types of certificates.
 
 An endpoint certificate MUST be issued by one of the following Certificate Authorities (CAs):
 
-- Itself, if it is a Internet endpoint.
-- Its private gateway, if it is a private endpoint.
-- Another endpoint, resulting in a [_parcel delivery authorization_](#parcel-delivery-authorization-pda).
+- Itself, when it's a private endpoint sending parcels to an Internet endpoint.
+- Its private gateway, if it is a private endpoint, so it can issue [_Parcel Delivery Authorization_](#parcel-delivery-authorization-pda) (PDAs) to its peers.
+- A private endpoint, in which case the certificate would be a PDA.
+
+Consequently,
+a private endpoint will have at least one certificate:
+
+- The one issued by its private gateway.
+- Plus one PDA for each private peer.
+- Plus exactly one self-issued certificate when communicating with one or more Internet endpoints.
+
+On the other hand,
+an Internet endpoint will have zero to many certificates:
+One PDA for each private endpoint it communicates with.
 
 ### Parcel Delivery Authorization (PDA)
 
