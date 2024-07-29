@@ -46,7 +46,7 @@ Implementations MUST support SHA-256 (OID `2.16.840.1.101.3.4.2.1`) and they SHO
 
 Implementations MUST support AES-128, and they SHOULD also support AES-192 and AES-256. They MUST NOT support DES for security reasons.
 
-More specifically, [Key Wrap mode](https://tools.ietf.org/html/rfc3394.html) MUST be used when encrypting cryptographic key materials and [GCM](https://tools.ietf.org/html/rfc5084) MUST be used when encrypting payloads. Consequently, the following ciphers are required or recommended:
+More specifically, [Key Wrap mode](https://tools.ietf.org/html/rfc3394.html) MUST be used when encrypting cryptographic key materials and [Galois/Counter Mode GCM](https://tools.ietf.org/html/rfc5084) MUST be used when encrypting payloads. Consequently, the following ciphers are required or recommended:
 
 - AES-128-KW (required, OID `2.16.840.1.101.3.4.1.5`).
 - AES-192-KW (recommended, OID `2.16.840.1.101.3.4.1.25`).
@@ -54,6 +54,10 @@ More specifically, [Key Wrap mode](https://tools.ietf.org/html/rfc3394.html) MUS
 - AES-128-GCM (required, OID `2.16.840.1.101.3.4.1.6`).
 - AES-192-GCM (recommended, OID `2.16.840.1.101.3.4.1.26`).
 - AES-256-GCM (recommended, OID `2.16.840.1.101.3.4.1.46`).
+
+When using GCM,
+the implementation SHOULD use the Random Bit Generator (RBG) method for IV construction as defined in [NIST SP 800-38D](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf) (Section 8.2.2),
+to avoid the operational overhead of securely persisting sensitive values as required by the alternative method.
 
 ### Asymmetric Ciphers
 
