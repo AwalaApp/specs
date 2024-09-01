@@ -7,7 +7,7 @@ permalink: /RS-007
 - Id: RS-007.
 - Status: Working draft.
 - Type: Implementation.
-- Issue tracking label: [`spec-pohttp`](https://github.com/AwalaNetwork/specs/labels/spec-pohttp).
+- Issue tracking label: [`spec-pohttp`](https://github.com/AwalaApp/specs/labels/spec-pohttp).
 
 ## Abstract
 {: .no_toc }

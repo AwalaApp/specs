@@ -7,7 +7,7 @@ permalink: /RS-019
 - Id: RS-019.
 - Status: Working draft.
 - Type: Informational.
-- Issue tracking label: [`spec-threats`](https://github.com/AwalaNetwork/specs/labels/spec-threats).
+- Issue tracking label: [`spec-threats`](https://github.com/AwalaApp/specs/labels/spec-threats).
 
 ## Abstract
 {: .no_toc }

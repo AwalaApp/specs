@@ -8,7 +8,7 @@ permalink: /RS-004
 - Id: RS-004.
 - Status: Abandoned.
 - Type: Implementation.
-- Proof of concept: https://github.com/AwalaNetwork/poc/tree/master/CoSocket
+- Proof of concept: https://github.com/AwalaApp/poc/tree/master/CoSocket
 
 ## Abstract
 {: .no_toc }

@@ -7,7 +7,7 @@ permalink: /RS-009
 - Id: RS-009.
 - Status: Placeholder.
 - Type: Implementation.
-- Proof of concept: https://github.com/AwalaNetwork/poc/tree/master/PogRPC
+- Proof of concept: https://github.com/AwalaApp/poc/tree/master/PogRPC
 
 ## Abstract
 

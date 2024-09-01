@@ -8,7 +8,7 @@ nav_order: 2
 - Id: RS-001.
 - Status: Working draft.
 - Type: Implementation.
-- Issue tracking label: [`spec-ramf`](https://github.com/AwalaNetwork/specs/labels/spec-ramf).
+- Issue tracking label: [`spec-ramf`](https://github.com/AwalaApp/specs/labels/spec-ramf).
 
 ## Abstract
 {: .no_toc }

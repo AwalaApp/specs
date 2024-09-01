@@ -7,7 +7,7 @@ permalink: /RS-008
 - Id: RS-008.
 - Status: Draft.
 - Type: Implementation.
-- Issue tracking label: [`spec-cogrpc`](https://github.com/AwalaNetwork/specs/labels/spec-cogrpc).
+- Issue tracking label: [`spec-cogrpc`](https://github.com/AwalaApp/specs/labels/spec-cogrpc).
 
 ## Abstract
 {: .no_toc }

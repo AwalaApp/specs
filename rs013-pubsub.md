@@ -9,4 +9,4 @@ permalink: /RS-013
 - Status: Placeholder.
 - Type: Implementation.
 
-THIS DRAFT HAS BEEN TEMPORARILY MOVED TO https://github.com/AwalaNetwork/specs/issues/43
+THIS DRAFT HAS BEEN TEMPORARILY MOVED TO https://github.com/AwalaApp/specs/issues/43

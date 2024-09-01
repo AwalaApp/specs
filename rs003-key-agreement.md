@@ -7,7 +7,7 @@ permalink: /RS-003
 - Id: RS-003.
 - Status: Working draft.
 - Type: Implementation.
-- Issue tracking label: [`spec-channel-session`](https://github.com/AwalaNetwork/specs/labels/spec-channel-session).
+- Issue tracking label: [`spec-channel-session`](https://github.com/AwalaApp/specs/labels/spec-channel-session).
 
 ## Abstract
 {: .no_toc }

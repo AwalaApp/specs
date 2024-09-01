@@ -8,7 +8,7 @@ nav_order: 1
 - Id: RS-000.
 - Status: Working draft.
 - Type: Implementation.
-- Issue tracking label: [`spec-core`](https://github.com/AwalaNetwork/specs/labels/spec-core).
+- Issue tracking label: [`spec-core`](https://github.com/AwalaApp/specs/labels/spec-core).
 
 ## Abstract
 {: .no_toc }
